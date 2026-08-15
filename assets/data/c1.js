@@ -138,6 +138,31 @@ allerdings nicht geben.</em>
 <em>dem Bericht zufolge</em>), <em>angeblich</em>, а також модальні <em>sollen</em> і <em>wollen</em>
 з рівня B2.</p>`,
       },
+      {
+        title: '5. Слова з прикладів цієї теми',
+        html: `
+<p>Непряма мова живе в мові преси й науки, тому приклади вище побудовані саме на цій лексиці.</p>
+<table>
+<thead><tr><th>Слово</th><th>Переклад</th><th>Як ужито в темі</th></tr></thead>
+<tbody>
+<tr><td><em>zurücktreten</em></td><td>іти у відставку</td><td><em>Der Minister soll zurückgetreten sein.</em><span class="uk">Кажуть, міністр пішов у відставку.</span></td></tr>
+<tr><td><em>die Reform, -en</em></td><td>реформа</td><td><em>Die Reform sei notwendig.</em><span class="uk">Реформа, мовляв, необхідна.</span></td></tr>
+<tr><td><em>notwendig</em></td><td>необхідний</td><td>там само</td></tr>
+<tr><td><em>zuständig sein</em></td><td>відповідати за щось, бути компетентним</td><td><em>Er erklärte, er sei nicht zuständig.</em><span class="uk">Він заявив, що не належить до його компетенції.</span></td></tr>
+<tr><td><em>der Zeuge, -n</em></td><td>свідок</td><td><em>Der Zeuge gab an, er habe nichts gesehen.</em><span class="uk">Свідок заявив, що нічого не бачив.</span></td></tr>
+<tr><td><em>angeben</em></td><td>заявляти, зазначати</td><td>там само</td></tr>
+<tr><td><em>die Sitzung, -en</em></td><td>засідання</td><td><em>…, dass die Sitzung verschoben werde.</em><span class="uk">…, що засідання буде перенесено.</span></td></tr>
+<tr><td><em>die Umsetzung</em></td><td>впровадження, реалізація</td><td><em>Die Umsetzung sei verzögert worden.</em><span class="uk">Впровадження, за її словами, затрималося.</span></td></tr>
+<tr><td><em>verzögern</em></td><td>затримувати</td><td>там само</td></tr>
+<tr><td><em>der Vertrag, ¨-e</em></td><td>договір</td><td><em>Er sagte, er habe den Vertrag unterschrieben.</em><span class="uk">Він сказав, що підписав договір.</span></td></tr>
+<tr><td><em>die Lage</em></td><td>ситуація, становище</td><td><em>Die Lage sei ernst.</em><span class="uk">Ситуація, мовляв, серйозна.</span></td></tr>
+<tr><td><em>die Maßnahme, -n</em></td><td>захід (дія)</td><td><em>Weitere Maßnahmen würden geprüft.</em><span class="uk">Подальші заходи, мовляв, розглядають.</span></td></tr>
+<tr><td><em>prüfen</em></td><td>перевіряти, розглядати</td><td>там само</td></tr>
+</tbody></table>
+<div class="callout callout--tip"><strong>Як це звучить українською.</strong> Konjunktiv I не має прямого
+відповідника, тож у перекладі його передають вставними словами: <em>мовляв</em>, <em>за словами</em>,
+<em>нібито</em>, <em>як стверджує</em>. Саме тому переклади вище звучать саме так.</div>`,
+      },
     ],
 
     vocab: [
@@ -448,6 +473,31 @@ beschlossenen</span> <strong>Maßnahmen</strong></em> → «заходи, які
 <div class="callout"><strong>Не перестарайтеся.</strong> Суцільний номінальний стиль німці самі
 критикують як <em>Behördendeutsch</em>. На C1 цінують уміння <u>перемикатися</u>: складну думку
 подати номінально, а висновок — коротким дієслівним реченням.</div>`,
+      },
+      {
+        title: '5. Слова з прикладів цієї теми',
+        html: `
+<p>Партиципні означення й номінальний стиль тримаються на віддієслівних іменниках. Ось лексика,
+на якій побудовані приклади вище.</p>
+<table>
+<thead><tr><th>Слово</th><th>Переклад</th><th>Як ужито в темі</th></tr></thead>
+<tbody>
+<tr><td><em>beschließen</em></td><td>ухвалювати (рішення)</td><td><em>die beschlossenen Maßnahmen</em><span class="uk">ухвалені заходи</span></td></tr>
+<tr><td><em>die Maßnahme, -n</em></td><td>захід (дія)</td><td>там само</td></tr>
+<tr><td><em>veröffentlichen</em></td><td>публікувати</td><td><em>der gestern veröffentlichte Bericht</em><span class="uk">оприлюднений учора звіт</span></td></tr>
+<tr><td><em>der Bericht, -e</em></td><td>звіт, повідомлення</td><td>там само</td></tr>
+<tr><td><em>überzeugen</em></td><td>переконувати</td><td><em>das überzeugende Argument</em> — переконливий аргумент<span class="uk">але <em>der überzeugte Anhänger</em> — переконаний прибічник</span></td></tr>
+<tr><td><em>der Anhänger, -</em></td><td>прибічник</td><td>там само</td></tr>
+<tr><td><em>der Preisanstieg</em></td><td>зростання цін</td><td><em>Wegen des Preisanstiegs sinkt der Konsum.</em><span class="uk">Через зростання цін споживання падає.</span></td></tr>
+<tr><td><em>der Konsum</em></td><td>споживання</td><td>там само</td></tr>
+<tr><td><em>die Unterzeichnung</em></td><td>підписання</td><td><em>Nach Unterzeichnung des Vertrags …</em><span class="uk">Після підписання договору …</span></td></tr>
+<tr><td><em>der Wohnungswechsel</em></td><td>зміна місця проживання</td><td><em>im Falle eines Wohnungswechsels</em><span class="uk">у разі зміни місця проживання</span></td></tr>
+<tr><td><em>erheblich</em></td><td>значний, істотний</td><td><em>erhebliche Gedächtnisleistung</em><span class="uk">значне зусилля пам’яті</span></td></tr>
+<tr><td><em>der Aufwand</em> / <em>die Leistung</em></td><td>затрати / зусилля, результат</td><td>типова пара в таких текстах</td></tr>
+</tbody></table>
+<div class="callout callout--tip"><strong>Порада для перекладу.</strong> Поширене означення українською
+майже завжди розгортається у підрядне речення: <em>die im Bericht genannten Zahlen</em> →
+«цифри, <u>які наведено у звіті</u>». Не намагайтеся зберегти німецький порядок — вийде нечитабельно.</div>`,
       },
     ],
 

@@ -51,20 +51,30 @@ allerdings</em>), ввічливий Konjunktiv II у проханнях і чі
 <strong>для більшості дієслів вживайте <em>würde</em> + інфінітив</strong>, а для десятка найчастотніших —
 власну форму, бо «würde sein» звучить незграбно.</p>
 <table>
-<thead><tr><th>Дієслово</th><th>Konjunktiv II</th><th>Приклад</th></tr></thead>
+<thead><tr><th>Дієслово</th><th>Konjunktiv II</th><th>Приклад і переклад</th></tr></thead>
 <tbody>
-<tr><td>sein</td><td><strong>wäre</strong></td><td><em>Das wäre super!</em></td></tr>
-<tr><td>haben</td><td><strong>hätte</strong></td><td><em>Ich hätte gern einen Kaffee.</em></td></tr>
-<tr><td>werden</td><td><strong>würde</strong></td><td><em>Ich würde gern mitkommen.</em></td></tr>
-<tr><td>können</td><td><strong>könnte</strong></td><td><em>Könnten Sie mir helfen?</em></td></tr>
-<tr><td>müssen</td><td><strong>müsste</strong></td><td><em>Du müsstest mehr schlafen.</em></td></tr>
-<tr><td>dürfen</td><td><strong>dürfte</strong></td><td><em>Dürfte ich Sie kurz stören?</em></td></tr>
-<tr><td>sollen</td><td><strong>sollte</strong></td><td><em>Du solltest zum Arzt gehen.</em></td></tr>
-<tr><td>wissen</td><td><strong>wüsste</strong></td><td><em>Ich wüsste gern mehr darüber.</em></td></tr>
-<tr><td>gehen / kommen</td><td><em>ginge / käme</em></td><td>рідше, книжно</td></tr>
+<tr><td>sein — бути</td><td><strong>wäre</strong></td>
+<td><em>Das wäre super!</em><span class="uk">Це було б чудово!</span></td></tr>
+<tr><td>haben — мати</td><td><strong>hätte</strong></td>
+<td><em>Ich hätte gern einen Kaffee.</em><span class="uk">Я хотів би каву. (дослівно «мав би охоче»)</span></td></tr>
+<tr><td>werden — ставати</td><td><strong>würde</strong></td>
+<td><em>Ich würde gern mitkommen.</em><span class="uk">Я б залюбки пішов з вами.</span></td></tr>
+<tr><td>können — могти</td><td><strong>könnte</strong></td>
+<td><em>Könnten Sie mir helfen?</em><span class="uk">Чи могли б Ви мені допомогти?</span></td></tr>
+<tr><td>müssen — мусити</td><td><strong>müsste</strong></td>
+<td><em>Du müsstest mehr schlafen.</em><span class="uk">Тобі треба було б більше спати.</span></td></tr>
+<tr><td>dürfen — мати дозвіл</td><td><strong>dürfte</strong></td>
+<td><em>Dürfte ich Sie kurz stören?</em><span class="uk">Чи можу я Вас ненадовго потурбувати?</span></td></tr>
+<tr><td>sollen — слід</td><td><strong>sollte</strong></td>
+<td><em>Du solltest zum Arzt gehen.</em><span class="uk">Тобі варто піти до лікаря.</span></td></tr>
+<tr><td>wissen — знати</td><td><strong>wüsste</strong></td>
+<td><em>Ich wüsste gern mehr darüber.</em><span class="uk">Я хотів би знати про це більше.</span></td></tr>
+<tr><td>gehen / kommen — іти / приходити</td><td><em>ginge / käme</em></td>
+<td>Уживають рідше, звучить книжно.<span class="uk">У розмові краще: würde gehen / würde kommen.</span></td></tr>
 </tbody></table>
 <p><strong>Закінчення</strong> у всіх однакові: <em>-e, -est, -e, -en, -et, -en</em>.
-<em>ich wäre, du wär<strong>est</strong>, er wäre, wir wären, ihr wär<strong>et</strong>, sie wären.</em></p>
+<em>ich wäre, du wär<strong>est</strong>, er wäre, wir wären, ihr wär<strong>et</strong>, sie wären</em>
+<span class="uk">я був би, ти був би, він був би, ми були б, ви були б, вони були б</span></p>
 <div class="callout callout--tip"><strong>Як утворити самому.</strong> Візьміть форму Präteritum,
 додайте умлаут (якщо голосна a/o/u) і закінчення: <em>war → wäre</em>, <em>hatte → hätte</em>,
 <em>konnte → könnte</em>, <em>musste → müsste</em>. Виняток: <em>sollen</em> і <em>wollen</em>
@@ -76,10 +86,18 @@ allerdings</em>), ввічливий Konjunktiv II у проханнях і чі
 <table>
 <thead><tr><th>Функція</th><th>Приклад</th><th>Українською</th></tr></thead>
 <tbody>
-<tr><td><strong>Ввічливе прохання</strong></td><td><em>Könnten Sie mir bitte helfen?</em><br><em>Würden Sie das Fenster schließen?</em></td><td>Чи могли б Ви …?</td></tr>
-<tr><td><strong>Ввічливе бажання</strong></td><td><em>Ich hätte gern die Rechnung.</em><br><em>Ich würde gern einen Termin vereinbaren.</em></td><td>Я хотів би …</td></tr>
-<tr><td><strong>Порада</strong></td><td><em>Du solltest weniger arbeiten.</em><br><em>An deiner Stelle würde ich mit ihr sprechen.</em></td><td>Тобі варто … / На твоєму місці я б …</td></tr>
-<tr><td><strong>Нереальна умова</strong></td><td><em>Wenn ich Zeit hätte, würde ich mitkommen.</em></td><td>Якби я мав час, я б пішов.</td></tr>
+<tr><td><strong>Ввічливе прохання</strong></td>
+<td><em>Könnten Sie mir bitte helfen?</em><br><em>Würden Sie das Fenster schließen?</em></td>
+<td>Чи могли б Ви мені допомогти?<br>Чи зачинили б Ви вікно?</td></tr>
+<tr><td><strong>Ввічливе бажання</strong></td>
+<td><em>Ich hätte gern die Rechnung.</em><br><em>Ich würde gern einen Termin vereinbaren.</em></td>
+<td>Я хотів би рахунок.<br>Я хотів би домовитися про зустріч.</td></tr>
+<tr><td><strong>Порада</strong></td>
+<td><em>Du solltest weniger arbeiten.</em><br><em>An deiner Stelle würde ich mit ihr sprechen.</em></td>
+<td>Тобі варто менше працювати.<br>На твоєму місці я б із нею поговорив.</td></tr>
+<tr><td><strong>Нереальна умова</strong></td>
+<td><em>Wenn ich Zeit hätte, würde ich mitkommen.</em></td>
+<td>Якби я мав час, я б пішов із вами.</td></tr>
 </tbody></table>
 <div class="callout"><strong>Чому це важливо для іспиту.</strong> На B1 у частині Sprechen і Schreiben
 прохання в Indikativ (<em>Helfen Sie mir!</em>) звучить як наказ. Konjunktiv II — головний інструмент
@@ -120,6 +138,31 @@ würde ich dir helfen.</em></p>`,
 <li><em>Beinahe / Fast hätte ich den Zug verpasst.</em> — Я ледь не запізнився на потяг.</li>
 <li><em>Ich wünschte, ich könnte …</em> — Я б хотів, аби міг …</li>
 </ul>`,
+      },
+      {
+        title: '5. Слова з прикладів цієї теми',
+        html: `
+<p>Щоб приклади вище читалися без словника — усі німецькі слова, які в них трапляються
+й виходять за межі базового запасу A1–A2.</p>
+<table>
+<thead><tr><th>Слово</th><th>Переклад</th><th>Як ужито в темі</th></tr></thead>
+<tbody>
+<tr><td><em>stören</em></td><td>турбувати, заважати</td><td><em>Dürfte ich Sie kurz stören?</em></td></tr>
+<tr><td><em>vereinbaren</em></td><td>домовлятися про щось</td><td><em>einen Termin vereinbaren</em> — домовитися про зустріч</td></tr>
+<tr><td><em>die Rechnung, -en</em></td><td>рахунок</td><td><em>Ich hätte gern die Rechnung.</em></td></tr>
+<tr><td><em>mitkommen</em></td><td>іти разом з кимось</td><td><em>Ich würde gern mitkommen.</em></td></tr>
+<tr><td><em>verpassen</em></td><td>проґавити, запізнитися на</td><td><em>den Zug verpassen</em> — запізнитися на потяг</td></tr>
+<tr><td><em>vorschlagen</em></td><td>пропонувати</td><td><em>Ich würde vorschlagen, dass …</em></td></tr>
+<tr><td><em>hilfreich</em></td><td>корисний, доречний</td><td><em>Es wäre hilfreich, wenn …</em></td></tr>
+<tr><td><em>beinahe / fast</em></td><td>майже, ледь не</td><td><em>Beinahe hätte ich den Zug verpasst.</em></td></tr>
+<tr><td><em>die Bitte, -n</em></td><td>прохання</td><td><em>Ich hätte da eine Bitte.</em></td></tr>
+<tr><td><em>an deiner Stelle</em></td><td>на твоєму місці</td><td><em>An deiner Stelle würde ich …</em></td></tr>
+<tr><td><em>wünschen</em></td><td>бажати</td><td><em>Ich wünschte, ich könnte …</em></td></tr>
+<tr><td><em>möglich</em></td><td>можливий</td><td><em>Wäre es möglich, … zu …?</em></td></tr>
+</tbody></table>
+<div class="callout callout--tip"><strong>Як учити.</strong> Ці слова майже завжди йдуть у зв’язці
+з Konjunktiv II, тому запам’ятовуйте їх не поодинці, а цілими зворотами:
+<em>einen Termin vereinbaren</em>, <em>kurz stören</em>, <em>eine Bitte haben</em>.</div>`,
       },
     ],
 
@@ -320,9 +363,13 @@ Iryna Kowal`,
 <table>
 <thead><tr><th>Aktiv</th><th>Passiv</th></tr></thead>
 <tbody>
-<tr><td><em>Der Mechaniker repariert <strong>das Auto</strong>.</em></td><td><em><strong>Das Auto</strong> wird repariert.</em></td></tr>
-<tr><td><em>Man baut <strong>die Brücke</strong>.</em></td><td><em><strong>Die Brücke</strong> wird gebaut.</em></td></tr>
+<tr><td><em>Der Mechaniker repariert <strong>das Auto</strong>.</em><span class="uk">Механік ремонтує авто.</span></td>
+<td><em><strong>Das Auto</strong> wird repariert.</em><span class="uk">Авто ремонтують.</span></td></tr>
+<tr><td><em>Man baut <strong>die Brücke</strong>.</em><span class="uk">Міст будують.</span></td>
+<td><em><strong>Die Brücke</strong> wird gebaut.</em><span class="uk">Міст будується / будують.</span></td></tr>
 </tbody></table>
+<p class="muted" style="font-size:.92rem"><em>der Mechaniker</em> — механік, <em>reparieren</em> — ремонтувати,
+<em>bauen</em> — будувати, <em>die Brücke</em> — міст.</p>
 <p><strong>Механізм перетворення:</strong> прямий додаток (Akkusativ) активного речення стає підметом
 (Nominativ) пасивного. Підмет активного або зникає, або приєднується через <em>von</em>.</p>`,
       },
@@ -332,10 +379,14 @@ Iryna Kowal`,
 <table>
 <thead><tr><th>Час</th><th>Формула</th><th>Приклад</th></tr></thead>
 <tbody>
-<tr><td><strong>Präsens</strong></td><td><em>wird / werden</em> + Part. II</td><td><em>Das Haus <strong>wird</strong> renoviert.</em></td></tr>
-<tr><td><strong>Präteritum</strong></td><td><em>wurde / wurden</em> + Part. II</td><td><em>Das Haus <strong>wurde</strong> renoviert.</em></td></tr>
-<tr><td><strong>Perfekt</strong></td><td><em>ist / sind</em> + Part. II + <em>worden</em></td><td><em>Das Haus <strong>ist</strong> renoviert <strong>worden</strong>.</em></td></tr>
-<tr><td><strong>з модальним</strong></td><td>модальне + Part. II + <em>werden</em></td><td><em>Das Haus <strong>muss</strong> renoviert <strong>werden</strong>.</em></td></tr>
+<tr><td><strong>Präsens</strong></td><td><em>wird / werden</em> + Part. II</td>
+<td><em>Das Haus <strong>wird</strong> renoviert.</em><span class="uk">Будинок ремонтують (зараз).</span></td></tr>
+<tr><td><strong>Präteritum</strong></td><td><em>wurde / wurden</em> + Part. II</td>
+<td><em>Das Haus <strong>wurde</strong> renoviert.</em><span class="uk">Будинок відремонтували.</span></td></tr>
+<tr><td><strong>Perfekt</strong></td><td><em>ist / sind</em> + Part. II + <em>worden</em></td>
+<td><em>Das Haus <strong>ist</strong> renoviert <strong>worden</strong>.</em><span class="uk">Будинок було відремонтовано.</span></td></tr>
+<tr><td><strong>з модальним</strong></td><td>модальне + Part. II + <em>werden</em></td>
+<td><em>Das Haus <strong>muss</strong> renoviert <strong>werden</strong>.</em><span class="uk">Будинок треба відремонтувати.</span></td></tr>
 </tbody></table>
 <div class="callout"><strong>worden, а не geworden.</strong> У Perfekt Passiv допоміжне <em>werden</em>
 втрачає <em>ge-</em>: <em>ist gemacht <u>worden</u></em>. Форма <em>geworden</em> існує лише в активному
@@ -348,8 +399,10 @@ Iryna Kowal`,
 <table>
 <thead><tr><th>Прийменник</th><th>Що вводить</th><th>Приклад</th></tr></thead>
 <tbody>
-<tr><td><strong>von</strong> + Dativ</td><td>особа, дійова сила</td><td><em>Der Brief wurde <strong>von meiner Chefin</strong> geschrieben.</em></td></tr>
-<tr><td><strong>durch</strong> + Akkusativ</td><td>засіб, причина, посередник</td><td><em>Die Stadt wurde <strong>durch das Erdbeben</strong> zerstört.</em></td></tr>
+<tr><td><strong>von</strong> + Dativ</td><td>особа, дійова сила</td>
+<td><em>Der Brief wurde <strong>von meiner Chefin</strong> geschrieben.</em><span class="uk">Листа написала моя керівниця.</span></td></tr>
+<tr><td><strong>durch</strong> + Akkusativ</td><td>засіб, причина, посередник</td>
+<td><em>Die Stadt wurde <strong>durch das Erdbeben</strong> zerstört.</em><span class="uk">Місто зруйнував землетрус.</span></td></tr>
 </tbody></table>
 <p><strong>Часто виконавця не називають узагалі</strong> — і це головна причина вживати пасив:
 <em>Hier wird nicht geraucht.</em> — Тут не палять.</p>
@@ -379,6 +432,30 @@ Iryna Kowal`,
 <tr><td><em>sich lassen + Infinitiv</em></td><td><em>Das lässt sich reparieren.</em></td><td>це можна полагодити</td></tr>
 <tr><td><em>-bar</em></td><td><em>Das Problem ist lösbar.</em></td><td>розв’язний</td></tr>
 </tbody></table>`,
+      },
+      {
+        title: '5. Слова з прикладів цієї теми',
+        html: `
+<p>Пасив найчастіше трапляється в інструкціях, новинах і описах виробництва — звідси й лексика
+прикладів вище.</p>
+<table>
+<thead><tr><th>Слово</th><th>Переклад</th><th>Як ужито в темі</th></tr></thead>
+<tbody>
+<tr><td><em>renovieren</em></td><td>робити ремонт</td><td><em>Das Haus wird renoviert.</em></td></tr>
+<tr><td><em>reparieren</em></td><td>ремонтувати, лагодити</td><td><em>Das Auto wird repariert.</em></td></tr>
+<tr><td><em>zerstören</em></td><td>руйнувати</td><td><em>Die Stadt wurde zerstört.</em></td></tr>
+<tr><td><em>das Erdbeben, -</em></td><td>землетрус</td><td><em>durch das Erdbeben</em> — через землетрус</td></tr>
+<tr><td><em>die Chefin, -nen</em></td><td>керівниця, начальниця</td><td><em>von meiner Chefin geschrieben</em></td></tr>
+<tr><td><em>das Formular ausfüllen</em></td><td>заповнити формуляр</td><td><em>Das Formular ist auszufüllen.</em></td></tr>
+<tr><td><em>lösen</em></td><td>розв’язувати</td><td><em>Das lässt sich lösen.</em> — Це можна розв’язати.</td></tr>
+<tr><td><em>lösbar</em></td><td>розв’язний, який можна вирішити</td><td><em>Das Problem ist lösbar.</em></td></tr>
+<tr><td><em>die Vorschrift, -en</em></td><td>припис, правило</td><td>типове слово інструкцій</td></tr>
+<tr><td><em>geraucht</em> (rauchen)</td><td>палити</td><td><em>Hier wird nicht geraucht.</em> — Тут не палять.</td></tr>
+</tbody></table>
+<div class="callout"><strong>Не плутайте два <em>werden</em>.</strong>
+<em>Er wird Arzt</em> — «він стає лікарем» (активне значення «ставати»).
+<em>Das Auto wird repariert</em> — «авто ремонтують» (пасив). Розрізняйте за тим,
+чи стоїть після <em>werden</em> Partizip II.</div>`,
       },
     ],
 

@@ -103,13 +103,38 @@ hoffen, finden, sich freuen</em>, а також вирази <em>Es ist schön /
 <table>
 <thead><tr><th>Значення</th><th>Приклад</th></tr></thead>
 <tbody>
-<tr><td><strong>умова</strong> («якщо»)</td><td><em><strong>Wenn</strong> es morgen regnet, bleiben wir zu Hause.</em></td></tr>
-<tr><td><strong>повторювана дія</strong> («коли, щоразу як»)</td><td><em><strong>Wenn</strong> ich müde bin, trinke ich Kaffee.</em></td></tr>
-<tr><td><strong>майбутня одноразова подія</strong></td><td><em><strong>Wenn</strong> ich in Wien ankomme, rufe ich dich an.</em></td></tr>
+<tr><td><strong>умова</strong> («якщо»)</td>
+<td><em><strong>Wenn</strong> es morgen regnet, bleiben wir zu Hause.</em><span class="uk">Якщо завтра буде дощ, ми залишимося вдома.</span></td></tr>
+<tr><td><strong>повторювана дія</strong> («коли, щоразу як»)</td>
+<td><em><strong>Wenn</strong> ich müde bin, trinke ich Kaffee.</em><span class="uk">Коли я втомлений, я п’ю каву.</span></td></tr>
+<tr><td><strong>майбутня одноразова подія</strong></td>
+<td><em><strong>Wenn</strong> ich in Wien ankomme, rufe ich dich an.</em><span class="uk">Коли я приїду до Відня, я тобі зателефоную.</span></td></tr>
 </tbody></table>
 <div class="callout"><strong>wenn чи als?</strong> Для <u>одноразової</u> події в <u>минулому</u> вживається
 <em>als</em>, а не <em>wenn</em>: <em><strong>Als</strong> ich zehn Jahre alt war, bin ich nach Wien gezogen.</em>
-Для повторюваних дій у минулому — <em>wenn</em>: <em><strong>Wenn</strong> wir Ferien hatten, fuhren wir ans Meer.</em></div>`,
+<span class="uk">Коли мені було десять, я переїхав до Відня.</span>
+Для повторюваних дій у минулому — <em>wenn</em>: <em><strong>Wenn</strong> wir Ferien hatten, fuhren wir ans Meer.</em>
+<span class="uk">Коли в нас були канікули, ми їздили на море.</span></div>`,
+      },
+      {
+        title: '5. Слова з прикладів цієї теми',
+        html: `
+<p>Підрядні речення найчастіше потрібні, щоб пояснити причину відмови або переказати чужу думку —
+звідси й лексика прикладів вище.</p>
+<table>
+<thead><tr><th>Слово</th><th>Переклад</th><th>Як ужито в темі</th></tr></thead>
+<tbody>
+<tr><td><em>krank sein</em></td><td>хворіти</td><td><em>…, weil ich krank bin.</em><span class="uk">…, бо я хворий.</span></td></tr>
+<tr><td><em>die Prüfung, -en</em></td><td>іспит</td><td><em>…, weil ich morgen eine Prüfung habe.</em><span class="uk">…, бо завтра в мене іспит.</span></td></tr>
+<tr><td><em>recht haben</em></td><td>мати рацію</td><td><em>Ich glaube, dass er recht hat.</em><span class="uk">Я вважаю, що він має рацію.</span></td></tr>
+<tr><td><em>hoffen</em></td><td>сподіватися</td><td><em>Ich hoffe, dass das Wetter besser wird.</em><span class="uk">Сподіваюся, що погода покращиться.</span></td></tr>
+<tr><td><em>schade</em></td><td>шкода, прикро</td><td><em>Es ist schade, dass du nicht kommst.</em><span class="uk">Шкода, що ти не прийдеш.</span></td></tr>
+<tr><td><em>umziehen</em></td><td>переїжджати</td><td><em>Als ich zehn war, bin ich nach Wien gezogen.</em><span class="uk">Коли мені було десять, я переїхав до Відня.</span></td></tr>
+<tr><td><em>die Ferien</em> (мн.)</td><td>канікули</td><td><em>Wenn wir Ferien hatten, fuhren wir ans Meer.</em></td></tr>
+<tr><td><em>nachholen</em></td><td>надолужувати</td><td><em>…, dass wir das nachholen können.</em><span class="uk">…, що ми зможемо це надолужити.</span></td></tr>
+<tr><td><em>der Schirm, -e</em></td><td>парасолька</td><td><em>Es regnet, deshalb nehme ich einen Schirm mit.</em><span class="uk">Іде дощ, тому я беру парасольку.</span></td></tr>
+<tr><td><em>der Stau, -s</em></td><td>затор</td><td>часта причина запізнення в цій темі</td></tr>
+</tbody></table>`,
       },
     ],
 
@@ -366,10 +391,36 @@ Oksana`,
 </tbody></table>
 <p><strong>Дрібні орфографічні особливості:</strong></p>
 <ul>
-<li><em>teuer → ein te<u>ur</u>es Auto</em> (випадає -e-)</li>
-<li><em>dunkel → ein dun<u>kl</u>es Zimmer</em></li>
-<li><em>hoch → ein ho<u>h</u>es Haus</em></li>
+<li><em>teuer → ein te<u>ur</u>es Auto</em> (випадає -e-) <span class="uk">дороге авто</span></li>
+<li><em>dunkel → ein dun<u>kl</u>es Zimmer</em> <span class="uk">темна кімната</span></li>
+<li><em>hoch → ein ho<u>h</u>es Haus</em> <span class="uk">високий будинок</span></li>
 </ul>`,
+      },
+      {
+        title: '5. Слова з прикладів цієї теми',
+        html: `
+<p>Прикметники в цій темі відпрацьовуються переважно на описі житла й речей — ось уся лексика,
+що трапляється в прикладах і таблицях вище.</p>
+<table>
+<thead><tr><th>Слово</th><th>Переклад</th><th>Приклад із теми</th></tr></thead>
+<tbody>
+<tr><td><em>der Tisch, -e</em></td><td>стіл</td><td><em>der neue Tisch</em><span class="uk">новий стіл</span></td></tr>
+<tr><td><em>die Lampe, -n</em></td><td>лампа</td><td><em>eine neue Lampe</em><span class="uk">нова лампа</span></td></tr>
+<tr><td><em>das Bett, -en</em></td><td>ліжко</td><td><em>ein neues Bett</em><span class="uk">нове ліжко</span></td></tr>
+<tr><td><em>die Möbel</em> (мн.)</td><td>меблі</td><td><em>die neuen Möbel</em><span class="uk">нові меблі</span></td></tr>
+<tr><td><em>der Wein</em></td><td>вино</td><td><em>guter Wein</em><span class="uk">хороше вино</span></td></tr>
+<tr><td><em>frisch</em></td><td>свіжий</td><td><em>frische Milch</em><span class="uk">свіже молоко</span></td></tr>
+<tr><td><em>die Leute</em> (мн.)</td><td>люди</td><td><em>nette Leute</em><span class="uk">приємні люди</span></td></tr>
+<tr><td><em>hell / dunkel</em></td><td>світлий / темний</td><td><em>eine helle Wohnung</em><span class="uk">світла квартира</span></td></tr>
+<tr><td><em>gemütlich</em></td><td>затишний</td><td><em>eine kleine gemütliche Wohnung</em><span class="uk">маленька затишна квартира</span></td></tr>
+<tr><td><em>günstig</em></td><td>вигідний за ціною</td><td><em>ein günstiges Hotel</em><span class="uk">недорогий готель</span></td></tr>
+<tr><td><em>der Schlüssel, -</em></td><td>ключ</td><td><em>der kleine Schlüssel</em><span class="uk">маленький ключ</span></td></tr>
+<tr><td><em>möbliert</em></td><td>мебльований</td><td>з оголошень про житло</td></tr>
+<tr><td><em>die Kaution</em></td><td>застава</td><td>з оголошень про житло</td></tr>
+</tbody></table>
+<div class="callout callout--tip"><strong>Як тренувати.</strong> Беріть будь-який предмет навколо
+й проговорюйте його у трьох формах: <em>der neue Tisch</em> (Nom.) → <em>Ich kaufe den neuen Tisch</em> (Akk.)
+→ <em>auf dem neuen Tisch</em> (Dat.). Три повтори закріплюють таблицю краще, ніж її переписування.</div>`,
       },
     ],
 

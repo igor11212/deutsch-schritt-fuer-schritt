@@ -148,9 +148,33 @@ export default {
 <tr><td><strong>Позиція «проти»</strong></td><td>контраргумент</td>
 <td><em>Andererseits …</em>, <em>Dagegen spricht, dass …</em>, <em>Allerdings darf man nicht vergessen, dass …</em></td></tr>
 <tr><td><strong>Власна думка</strong></td><td>чітко стати на бік</td>
-<td><em>Meiner Ansicht nach …</em>, <em>Ich bin der Meinung, dass …</em>, <em>Aus meiner Sicht überwiegen die Vorteile.</em></td></tr>
+<td><em>Meiner Ansicht nach …</em>, <em>Ich bin der Meinung, dass …</em>, <em>Aus meiner Sicht überwiegen die Vorteile.</em>
+<span class="uk">На мою думку … · Я вважаю, що … · На мій погляд, переваги переважають.</span></td></tr>
 <tr><td><strong>Висновок</strong></td><td>підсумок або пропозиція</td>
-<td><em>Zusammenfassend lässt sich sagen, dass …</em>, <em>Abschließend würde ich vorschlagen, …</em></td></tr>
+<td><em>Zusammenfassend lässt sich sagen, dass …</em>, <em>Abschließend würde ich vorschlagen, …</em>
+<span class="uk">Підсумовуючи, можна сказати, що … · Наостанок я запропонував би …</span></td></tr>
+</tbody></table>`,
+      },
+      {
+        title: '6. Слова з прикладів цієї теми',
+        html: `
+<p>Конектори самі по собі — службові слова, але речення навколо них у прикладах вище
+побудовані на цій лексиці.</p>
+<table>
+<thead><tr><th>Слово</th><th>Переклад</th><th>Як ужито в темі</th></tr></thead>
+<tbody>
+<tr><td><em>verdienen</em></td><td>заробляти</td><td><em>Obwohl er wenig verdient, ist er zufrieden.</em><span class="uk">Хоча він мало заробляє, він задоволений.</span></td></tr>
+<tr><td><em>zufrieden</em></td><td>задоволений</td><td>там само</td></tr>
+<tr><td><em>das Gehalt, ¨-er</em></td><td>зарплата</td><td><em>trotz des niedrigen Gehalts</em> — попри низьку зарплату</td></tr>
+<tr><td><em>das Angebot, -e</em></td><td>пропозиція (товару, послуги)</td><td><em>Das Angebot ist gut. Allerdings ist es zu teuer.</em><span class="uk">Пропозиція хороша. Утім, вона надто дорога.</span></td></tr>
+<tr><td><em>verbrauchen</em></td><td>споживати, витрачати</td><td><em>Es verbraucht weniger Benzin.</em><span class="uk">Воно споживає менше пального.</span></td></tr>
+<tr><td><em>ausfallen</em></td><td>скасовуватися, не відбутися</td><td><em>…, sodass die Züge ausfielen.</em><span class="uk">…, так що потяги скасували.</span></td></tr>
+<tr><td><em>heizen</em></td><td>опалювати</td><td><em>Man spart Energie, indem man weniger heizt.</em><span class="uk">Енергію заощаджують тим, що менше опалюють.</span></td></tr>
+<tr><td><em>sparen</em></td><td>заощаджувати</td><td>там само</td></tr>
+<tr><td><em>der Wortschatz</em></td><td>словниковий запас</td><td><em>Je mehr man liest, desto größer wird der Wortschatz.</em><span class="uk">Що більше читаєш, то більший словниковий запас.</span></td></tr>
+<tr><td><em>verpassen</em></td><td>проґавити, запізнитися на</td><td><em>Beeil dich, sonst verpassen wir den Zug.</em><span class="uk">Поспіши, інакше ми запізнимося на потяг.</span></td></tr>
+<tr><td><em>verschieben</em></td><td>переносити на інший час</td><td><em>Falls es regnet, verschieben wir den Ausflug.</em><span class="uk">Якщо буде дощ, ми перенесемо прогулянку.</span></td></tr>
+<tr><td><em>der Ausflug, ¨-e</em></td><td>прогулянка, виїзд за місто</td><td>там само</td></tr>
 </tbody></table>`,
       },
     ],
@@ -449,6 +473,27 @@ Iryna Kowal`,
 <p><strong>Типові маркери офіційного стилю:</strong> номіналізація (<em>die Abgabe, die Einreichung</em>),
 пасив, <em>sein + zu</em>, прийменники з Genitiv (<em>gemäß, aufgrund, hinsichtlich, im Rahmen</em>),
 відсутність особових займенників.</p>`,
+      },
+      {
+        title: '5. Слова з прикладів цієї теми',
+        html: `
+<p>Ці конструкції живуть у мові преси й офіційних документів — звідси лексика прикладів вище.</p>
+<table>
+<thead><tr><th>Слово</th><th>Переклад</th><th>Як ужито в темі</th></tr></thead>
+<tbody>
+<tr><td><em>brennen</em></td><td>горіти; світитися</td><td><em>Er muss zu Hause sein, das Licht brennt.</em><span class="uk">Він, певно, вдома — світло горить.</span></td></tr>
+<tr><td><em>stimmen</em></td><td>бути правдою, відповідати дійсності</td><td><em>Das dürfte stimmen.</em><span class="uk">Це, ймовірно, так.</span></td></tr>
+<tr><td><em>zurücktreten</em></td><td>іти у відставку</td><td><em>Der Minister soll zurückgetreten sein.</em><span class="uk">Кажуть, міністр пішов у відставку.</span></td></tr>
+<tr><td><em>der Unfall, ¨-e</em></td><td>аварія, нещасний випадок</td><td><em>Er will den Unfall nicht gesehen haben.</em><span class="uk">Він стверджує, що не бачив аварії.</span></td></tr>
+<tr><td><em>einreichen</em></td><td>подавати (документи)</td><td><em>Die Unterlagen sind bis Montag einzureichen.</em><span class="uk">Документи слід подати до понеділка.</span></td></tr>
+<tr><td><em>die Unterlagen</em> (мн.)</td><td>документи, матеріали</td><td>там само</td></tr>
+<tr><td><em>ausfüllen</em></td><td>заповнювати</td><td><em>Das Formular ist auszufüllen.</em><span class="uk">Формуляр слід заповнити.</span></td></tr>
+<tr><td><em>vermeiden</em></td><td>уникати</td><td><em>Dieser Fehler lässt sich leicht vermeiden.</em><span class="uk">Цієї помилки легко уникнути.</span></td></tr>
+<tr><td><em>abgeben</em></td><td>здавати, віддавати</td><td><em>Das Formular ist bis Freitag abzugeben.</em><span class="uk">Формуляр слід здати до п’ятниці.</span></td></tr>
+<tr><td><em>die Verzögerung, -en</em></td><td>затримка</td><td><em>von Verzögerungen nichts gewusst haben</em><span class="uk">нібито нічого не знати про затримки</span></td></tr>
+<tr><td><em>unglaubwürdig</em></td><td>непереконливий, сумнівний</td><td>оцінка чужої заяви</td></tr>
+<tr><td><em>trinkbar</em></td><td>придатний для пиття</td><td><em>Das Wasser ist trinkbar.</em><span class="uk">Воду можна пити.</span></td></tr>
+</tbody></table>`,
       },
     ],
 
