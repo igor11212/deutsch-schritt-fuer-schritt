@@ -77,6 +77,23 @@ Konjunktiv I у переказі чужих слів, свідомий вибі�
 <tr><td>sie/Sie</td><td>seien</td><td>haben</td><td>werden</td><td>können</td><td>gehen</td></tr>
 </tbody></table>
 <p><em>sein</em> — єдине дієслово без <em>-e</em> в 1-й і 3-й особі однини: <strong>ich sei, er sei</strong>.</p>
+<p><strong>Що означає сама форма.</strong> Konjunktiv I не має українського відповідника-слова:
+він лише позначає, що це <em>чужі слова</em>. Тому в перекладі його передають вставним
+«мовляв», «за його словами», «нібито».</p>
+<table>
+<thead><tr><th>Форма</th><th>Дослівно</th><th>Як звучить у перекладі</th></tr></thead>
+<tbody>
+<tr><td><strong>er sei</strong></td><td>він є</td><td>він, <strong>мовляв</strong>, є / за його словами, він …</td></tr>
+<tr><td><strong>er habe</strong></td><td>він має</td><td>він, <strong>нібито</strong>, має</td></tr>
+<tr><td><strong>er werde</strong></td><td>він стане / буде</td><td><strong>за його словами</strong>, він буде</td></tr>
+<tr><td><strong>er könne</strong></td><td>він може</td><td>він, <strong>мовляв</strong>, може</td></tr>
+<tr><td><strong>er gehe</strong></td><td>він іде</td><td>він, <strong>як стверджують</strong>, іде</td></tr>
+<tr><td><strong>er sei gewesen</strong></td><td>він був</td><td>він, <strong>мовляв</strong>, був</td></tr>
+<tr><td><strong>er habe gesagt</strong></td><td>він сказав</td><td><strong>нібито</strong> він сказав</td></tr>
+</tbody></table>
+<div class="callout callout--tip"><strong>Порівняйте з Konjunktiv II.</strong> <em>er wäre</em> — «він <u>був би</u>»
+(нереально, умовно). <em>er sei</em> — «він <u>мовляв</u> є» (реально, але з чужих слів).
+Одна буква різниці, а функція протилежна.</div>
 <div class="callout callout--tip"><strong>Головне правило заміни.</strong> Якщо форма Konjunktiv I
 збігається з Indikativ (а це майже вся множина: <em>sie haben</em> = <em>sie haben</em>),
 беруть <strong>Konjunktiv II</strong>: <em>Sie sagen, sie <strong>hätten</strong> keine Zeit.</em>

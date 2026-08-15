@@ -51,27 +51,40 @@ allerdings</em>), ввічливий Konjunktiv II у проханнях і чі
 <strong>для більшості дієслів вживайте <em>würde</em> + інфінітив</strong>, а для десятка найчастотніших —
 власну форму, бо «würde sein» звучить незграбно.</p>
 <table>
-<thead><tr><th>Дієслово</th><th>Konjunktiv II</th><th>Приклад і переклад</th></tr></thead>
+<thead><tr><th>Інфінітив</th><th>Konjunktiv II</th><th><strong>Що означає сама форма</strong></th><th>Приклад і переклад</th></tr></thead>
 <tbody>
 <tr><td>sein — бути</td><td><strong>wäre</strong></td>
+<td><strong>був би, була б, було б</strong></td>
 <td><em>Das wäre super!</em><span class="uk">Це було б чудово!</span></td></tr>
 <tr><td>haben — мати</td><td><strong>hätte</strong></td>
+<td><strong>мав би, мала б</strong></td>
 <td><em>Ich hätte gern einen Kaffee.</em><span class="uk">Я хотів би каву. (дослівно «мав би охоче»)</span></td></tr>
 <tr><td>werden — ставати</td><td><strong>würde</strong></td>
+<td><strong>частка «б»</strong> при іншому дієслові:<br><em>würde gehen</em> — пішов би</td>
 <td><em>Ich würde gern mitkommen.</em><span class="uk">Я б залюбки пішов з вами.</span></td></tr>
 <tr><td>können — могти</td><td><strong>könnte</strong></td>
+<td><strong>міг би, могла б</strong></td>
 <td><em>Könnten Sie mir helfen?</em><span class="uk">Чи могли б Ви мені допомогти?</span></td></tr>
 <tr><td>müssen — мусити</td><td><strong>müsste</strong></td>
+<td><strong>мав би, треба було б</strong></td>
 <td><em>Du müsstest mehr schlafen.</em><span class="uk">Тобі треба було б більше спати.</span></td></tr>
 <tr><td>dürfen — мати дозвіл</td><td><strong>dürfte</strong></td>
+<td><strong>міг би</strong> (з дозволу);<br>також <strong>«мабуть, імовірно»</strong></td>
 <td><em>Dürfte ich Sie kurz stören?</em><span class="uk">Чи можу я Вас ненадовго потурбувати?</span></td></tr>
 <tr><td>sollen — слід</td><td><strong>sollte</strong></td>
+<td><strong>варто б, слід було б</strong></td>
 <td><em>Du solltest zum Arzt gehen.</em><span class="uk">Тобі варто піти до лікаря.</span></td></tr>
 <tr><td>wissen — знати</td><td><strong>wüsste</strong></td>
+<td><strong>знав би, знала б</strong></td>
 <td><em>Ich wüsste gern mehr darüber.</em><span class="uk">Я хотів би знати про це більше.</span></td></tr>
 <tr><td>gehen / kommen — іти / приходити</td><td><em>ginge / käme</em></td>
+<td><strong>пішов би / прийшов би</strong></td>
 <td>Уживають рідше, звучить книжно.<span class="uk">У розмові краще: würde gehen / würde kommen.</span></td></tr>
 </tbody></table>
+<div class="callout callout--tip"><strong>Найкоротше правило перекладу.</strong> Українською Konjunktiv II —
+це майже завжди <strong>минулий час + частка «б»</strong>: <em>wäre</em> = «був <u>б</u>»,
+<em>hätte</em> = «мав <u>б</u>», <em>könnte</em> = «міг <u>б</u>», <em>sollte</em> = «варто <u>б</u>».
+Тому не шукайте окремого слова для <em>würde</em> — воно й <u>є</u> цим «б».</div>
 <p><strong>Закінчення</strong> у всіх однакові: <em>-e, -est, -e, -en, -et, -en</em>.
 <em>ich wäre, du wär<strong>est</strong>, er wäre, wir wären, ihr wär<strong>et</strong>, sie wären</em>
 <span class="uk">я був би, ти був би, він був би, ми були б, ви були б, вони були б</span></p>

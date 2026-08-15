@@ -53,13 +53,13 @@ export const modules = [
 <table>
 <thead><tr><th>Займенник</th><th>Українською</th><th>sein</th><th>Приклад</th></tr></thead>
 <tbody>
-<tr><td>ich</td><td>я</td><td><strong>bin</strong></td><td><em>Ich bin Anna.</em></td></tr>
-<tr><td>du</td><td>ти</td><td><strong>bist</strong></td><td><em>Du bist nett.</em></td></tr>
-<tr><td>er / sie / es</td><td>він / вона / воно</td><td><strong>ist</strong></td><td><em>Er ist Student.</em></td></tr>
-<tr><td>wir</td><td>ми</td><td><strong>sind</strong></td><td><em>Wir sind aus der Ukraine.</em></td></tr>
-<tr><td>ihr</td><td>ви (кілька «ти»)</td><td><strong>seid</strong></td><td><em>Ihr seid müde.</em></td></tr>
-<tr><td>sie</td><td>вони</td><td><strong>sind</strong></td><td><em>Sie sind hier.</em></td></tr>
-<tr><td>Sie</td><td>Ви (ввічливо)</td><td><strong>sind</strong></td><td><em>Sind Sie Herr Weber?</em></td></tr>
+<tr><td>ich</td><td>я</td><td><strong>bin</strong></td><td><em>Ich bin Anna.</em><span class="uk">Я Анна.</span></td></tr>
+<tr><td>du</td><td>ти</td><td><strong>bist</strong></td><td><em>Du bist nett.</em><span class="uk">Ти милий.</span></td></tr>
+<tr><td>er / sie / es</td><td>він / вона / воно</td><td><strong>ist</strong></td><td><em>Er ist Student.</em><span class="uk">Він студент.</span></td></tr>
+<tr><td>wir</td><td>ми</td><td><strong>sind</strong></td><td><em>Wir sind aus der Ukraine.</em><span class="uk">Ми з України.</span></td></tr>
+<tr><td>ihr</td><td>ви (кілька «ти»)</td><td><strong>seid</strong></td><td><em>Ihr seid müde.</em><span class="uk">Ви втомлені.</span></td></tr>
+<tr><td>sie</td><td>вони</td><td><strong>sind</strong></td><td><em>Sie sind hier.</em><span class="uk">Вони тут.</span></td></tr>
+<tr><td>Sie</td><td>Ви (ввічливо)</td><td><strong>sind</strong></td><td><em>Sind Sie Herr Weber?</em><span class="uk">Ви пан Вебер?</span></td></tr>
 </tbody></table>
 <div class="callout callout--tip"><strong>Три «sie».</strong> <em>sie</em> = вона (<em>sie ist</em>),
 <em>sie</em> = вони (<em>sie sind</em>), <em>Sie</em> = ввічливе «Ви» — <strong>завжди з великої літери</strong>

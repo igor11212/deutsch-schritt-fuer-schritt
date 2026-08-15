@@ -30,6 +30,14 @@ export const modules = [
 <tr><td>ihr</td><td>könnt</td><td>müsst</td><td>wollt</td><td>möchtet</td><td>dürft</td><td>sollt</td></tr>
 <tr><td>sie/Sie</td><td>können</td><td>müssen</td><td>wollen</td><td>möchten</td><td>dürfen</td><td>sollen</td></tr>
 </tbody></table>
+<p><strong>Що означає кожна форма в перекладі:</strong></p>
+<table>
+<thead><tr><th>Форма</th><th>Переклад</th><th>Форма</th><th>Переклад</th></tr></thead>
+<tbody>
+<tr><td><em>ich kann</em></td><td>я можу, я вмію</td><td><em>ich möchte</em></td><td>я хотів би</td></tr>
+<tr><td><em>ich muss</em></td><td>я мушу, мені треба</td><td><em>ich darf</em></td><td>мені можна, мені дозволено</td></tr>
+<tr><td><em>ich will</em></td><td>я хочу (твердо)</td><td><em>ich soll</em></td><td>мені слід, мені сказали</td></tr>
+</tbody></table>
 <div class="callout"><strong>Дві особливості, які треба помітити відразу.</strong><br>
 1. Форми <em>ich</em> та <em>er/sie/es</em> <strong>однакові</strong> й <strong>без закінчення -t</strong>:
 <em>er kann</em>, а не «er kannt».<br>
@@ -696,14 +704,14 @@ Olha`,
 Замість «ich bin gewesen» кажуть просто <strong>ich war</strong>, замість «ich habe gehabt» —
 <strong>ich hatte</strong>. Це форми Präteritum, і на A1 їх треба знати.</p>
 <table>
-<thead><tr><th></th><th>sein → war</th><th>haben → hatte</th></tr></thead>
+<thead><tr><th></th><th>sein → war</th><th>Переклад</th><th>haben → hatte</th><th>Переклад</th></tr></thead>
 <tbody>
-<tr><td>ich</td><td>war</td><td>hatte</td></tr>
-<tr><td>du</td><td>warst</td><td>hattest</td></tr>
-<tr><td>er/sie/es</td><td>war</td><td>hatte</td></tr>
-<tr><td>wir</td><td>waren</td><td>hatten</td></tr>
-<tr><td>ihr</td><td>wart</td><td>hattet</td></tr>
-<tr><td>sie/Sie</td><td>waren</td><td>hatten</td></tr>
+<tr><td>ich</td><td>war</td><td>я був / була</td><td>hatte</td><td>я мав / мала</td></tr>
+<tr><td>du</td><td>warst</td><td>ти був / була</td><td>hattest</td><td>ти мав / мала</td></tr>
+<tr><td>er/sie/es</td><td>war</td><td>він був / вона була</td><td>hatte</td><td>він мав / вона мала</td></tr>
+<tr><td>wir</td><td>waren</td><td>ми були</td><td>hatten</td><td>ми мали</td></tr>
+<tr><td>ihr</td><td>wart</td><td>ви були</td><td>hattet</td><td>ви мали</td></tr>
+<tr><td>sie/Sie</td><td>waren</td><td>вони були / Ви були</td><td>hatten</td><td>вони мали / Ви мали</td></tr>
 </tbody></table>
 <p><em>Gestern <strong>war</strong> ich krank und <strong>hatte</strong> keine Zeit.</em> —
 Учора я був хворий і не мав часу.</p>`,
