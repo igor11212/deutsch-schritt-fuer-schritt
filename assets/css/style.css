@@ -589,6 +589,67 @@ textarea.write:focus { border-color: var(--accent); background: var(--surface); 
 .write-meta { display: flex; justify-content: space-between; gap: 1rem; font-size: .84rem; color: var(--muted); margin-top: .5rem; flex-wrap: wrap; }
 .write-meta .count.ok { color: var(--ok); font-weight: 600; }
 .checklist { list-style: none; padding: 0; margin: 1rem 0 0; display: grid; gap: .4rem; }
+/* ---- звіт перевірки написаного тексту ---- */
+
+.report:empty { display: none; }
+.report__box {
+  margin-top: 1rem; border-radius: var(--r);
+  border: 1px solid var(--line); background: var(--surface-2);
+  padding: 1.1rem 1.2rem;
+}
+.report__box--empty { color: var(--muted); font-size: .93rem; }
+
+.report__head {
+  display: flex; flex-wrap: wrap; gap: .6rem 1.2rem;
+  align-items: center; justify-content: space-between;
+  padding-bottom: .85rem; border-bottom: 1px solid var(--line-soft);
+}
+.report__stats { display: flex; flex-wrap: wrap; gap: .9rem; font-size: .86rem; color: var(--muted); }
+.report__score { display: flex; flex-wrap: wrap; gap: .4rem; }
+
+.pill {
+  display: inline-block; padding: .2rem .7rem; border-radius: var(--pill);
+  background: var(--surface-3); color: var(--text-soft);
+  font-size: .8rem; font-weight: 650;
+}
+.pill--ok   { background: var(--ok-soft);   color: color-mix(in srgb, var(--ok) 80%, var(--text)); }
+.pill--warn { background: var(--warn-soft); color: color-mix(in srgb, var(--warn) 80%, var(--text)); }
+.pill--err  { background: var(--err-soft);  color: color-mix(in srgb, var(--err) 80%, var(--text)); }
+
+.report__list { display: grid; gap: .7rem; padding-top: .9rem; }
+
+.issue {
+  display: grid; grid-template-columns: 26px 1fr; gap: .75rem;
+  padding: .8rem .95rem; border-radius: var(--r-sm);
+  background: var(--surface); border: 1px solid var(--line-soft);
+  border-left: 3px solid var(--line);
+}
+.issue--error { border-left-color: var(--err); }
+.issue--warn  { border-left-color: var(--warn); }
+.issue--tip   { border-left-color: var(--accent); }
+.issue__icon {
+  width: 22px; height: 22px; border-radius: var(--pill);
+  display: grid; place-items: center; font-size: .78rem; font-weight: 700;
+  background: var(--surface-3); color: var(--text-soft);
+}
+.issue--error .issue__icon { background: var(--err-soft);  color: var(--err); }
+.issue--warn  .issue__icon { background: var(--warn-soft); color: var(--warn); }
+.issue--tip   .issue__icon { background: var(--accent-soft); color: var(--accent-deep); }
+.issue strong { display: block; margin-bottom: .2rem; font-size: .95rem; }
+.issue p { margin: 0; font-size: .9rem; color: var(--text-soft); }
+.issue__quote {
+  margin: .55rem 0 0; padding: .5rem .75rem; border-radius: var(--r-xs);
+  background: var(--surface-2); border: 1px solid var(--line-soft);
+  font-family: var(--font-de); font-size: .88rem; white-space: pre-wrap;
+  overflow-x: auto;
+}
+.report__note {
+  margin: .9rem 0 0; padding-top: .8rem; border-top: 1px solid var(--line-soft);
+  font-size: .84rem; color: var(--muted);
+}
+
+details.transcript--model > summary { color: var(--text); }
+
 .checklist li { display: flex; gap: .6rem; align-items: flex-start; font-size: .93rem; }
 .checklist input { accent-color: var(--accent); margin-top: .3rem; width: 16px; height: 16px; }
 .model-answer { font-family: var(--font-de); white-space: pre-wrap; line-height: 1.8; }
