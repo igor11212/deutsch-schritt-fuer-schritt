@@ -384,6 +384,16 @@ main { padding: 2.2rem 0 4rem; }
 }
 .gram em, .ex-de { font-family: var(--font-de); font-style: italic; }
 
+/* Переклад німецького прикладу — тим самим шрифтом, що й пояснення,
+   але приглушено, щоб не сперечався з оригіналом. */
+.gram .uk, table.tbl .uk {
+  font-family: var(--font); font-style: normal; font-weight: 400;
+  color: var(--muted); font-size: .93em;
+}
+.gram .uk::before { content: "— "; }
+table.tbl td .uk { display: block; margin-top: .15rem; }
+table.tbl td .uk::before { content: none; }
+
 .tbl-scroll { overflow-x: auto; border-radius: var(--r); border: 1px solid var(--line-soft); margin-bottom: 1.1rem; }
 table.tbl { width: 100%; border-collapse: collapse; font-size: .93rem; background: var(--surface); }
 table.tbl th, table.tbl td { padding: .62rem .9rem; text-align: left; border-bottom: 1px solid var(--line-soft); }
