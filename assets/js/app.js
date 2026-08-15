@@ -12,7 +12,7 @@ const THEME_KEY = 'dssf-theme';
 function applyTheme(t) {
   document.documentElement.dataset.theme = t;
   document.getElementById('themeIcon').textContent = t === 'dark' ? '☀' : '☾';
-  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', t === 'dark' ? '#1b1a18' : '#f6f4ef');
+  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', t === 'dark' ? '#191a19' : '#f8f6f1');
 }
 {
   const saved = localStorage.getItem(THEME_KEY);
