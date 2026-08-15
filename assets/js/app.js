@@ -1,8 +1,9 @@
 /* Роутер + сторінки. Хеш-навігація, щоб працювало на GitHub Pages без сервера. */
 
-import { LEVELS, loadLevel } from '../data/index.js';
-import { el, renderExercise, renderExerciseSet } from './exercises.js';
-import { speak, speakDialogue, stop as stopSpeech, ttsSupported, hasGermanVoice } from './tts.js';
+import { LEVELS, loadLevel } from '../data/index.js?v=20260815b';
+import { el, renderExercise, renderExerciseSet } from './exercises.js?v=20260815b';
+import { speak, speakDialogue, stop as stopSpeech, ttsSupported, hasGermanVoice } from './tts.js?v=20260815b';
+import { checkWriting } from './writing-check.js?v=20260815b';
 
 const main = document.getElementById('main');
 
@@ -234,6 +235,54 @@ async function viewModule(levelId, index, tabId) {
   ), `${mod.title} · ${meta.code}`);
 }
 
+/* --------------------------------------------- звіт перевірки письма ---- */
+
+const KIND = {
+  error: { label: 'Помилка',      icon: '✕' },
+  warn:  { label: 'Варте уваги',  icon: '!' },
+  tip:   { label: 'Як покращити', icon: '↑' },
+};
+
+function renderReport(res) {
+  if (res.empty) {
+    return el('div', { class: 'report__box report__box--empty' },
+      'Спочатку напишіть текст у полі вище.');
+  }
+
+  const errors = res.issues.filter(i => i.kind === 'error');
+  const warns  = res.issues.filter(i => i.kind === 'warn');
+  const tips   = res.issues.filter(i => i.kind === 'tip');
+
+  const head = el('div', { class: 'report__head' },
+    el('div', { class: 'report__stats' },
+      el('span', {}, `${res.stats.words} ${plural(res.stats.words, 'слово', 'слова', 'слів')}`),
+      el('span', {}, `${res.stats.sentences} ${plural(res.stats.sentences, 'речення', 'речення', 'речень')}`),
+      res.stats.avgLen ? el('span', {}, `у середньому ${res.stats.avgLen} слів у реченні`) : null),
+    el('div', { class: 'report__score' },
+      errors.length
+        ? el('span', { class: 'pill pill--err' }, `${errors.length} ${plural(errors.length, 'помилка', 'помилки', 'помилок')}`)
+        : el('span', { class: 'pill pill--ok' }, 'Явних помилок не знайдено'),
+      warns.length ? el('span', { class: 'pill pill--warn' }, `${warns.length} до уваги`) : null,
+      tips.length  ? el('span', { class: 'pill' }, `${tips.length} ${plural(tips.length, 'порада', 'поради', 'порад')}`) : null),
+  );
+
+  const list = el('div', { class: 'report__list' },
+    [...errors, ...warns, ...tips].map(i => el('div', { class: `issue issue--${i.kind}` },
+      el('span', { class: 'issue__icon', 'aria-hidden': 'true' }, KIND[i.kind].icon),
+      el('div', {},
+        el('strong', {}, i.title),
+        el('p', {}, i.detail),
+        i.quote ? el('pre', { class: 'issue__quote' }, i.quote) : null),
+    )),
+  );
+
+  const note = el('p', { class: 'report__note' },
+    'Перевірка автоматична: вона ловить типові помилки, але не читає зміст як викладач. ' +
+    'Якщо помилок не знайдено — це ще не гарантія бездоганного тексту. Порівняйте свій варіант із прикладом нижче.');
+
+  return el('div', { class: 'report__box' }, head, res.issues.length ? list : null, note);
+}
+
 /* ------------------------------------------------- рендер розділів ------ */
 
 const RENDERERS = {
@@ -305,8 +354,12 @@ const RENDERERS = {
     return box;
   },
 
-  listening(mod) {
+  listening(mod, meta) {
     const box = el('div', { class: 'stack' });
+    // Темп зростає з рівнем: на A1 диктор говорить повільно й чітко,
+    // на C1 — у природному темпі носія, як на справжньому іспиті.
+    const LEVEL_RATE = { a1: 0.78, a2: 0.86, b1: 0.94, b2: 1.02, c1: 1.10 };
+    const baseRate = LEVEL_RATE[meta.id] ?? 0.9;
 
     if (!ttsSupported) {
       box.append(el('div', { class: 'no-tts' },
@@ -320,7 +373,7 @@ const RENDERERS = {
         el('p', { class: 'muted' }, task.instruction),
       );
 
-      let rate = 0.85;
+      let rate = baseRate;
       let playing = false;
       const playBtn = el('button', { class: 'play-btn', type: 'button', 'aria-label': 'Відтворити' }, '▶');
       const setIdle = () => { playing = false; playBtn.textContent = '▶'; playBtn.classList.remove('is-playing'); };
@@ -331,7 +384,12 @@ const RENDERERS = {
       };
       playBtn.addEventListener('click', play);
 
-      const speeds = [['0,75×', 0.7], ['Норм.', 0.85], ['1,15×', 1.0]];
+      // Швидкості рахуються від темпу рівня, а не від сталої величини.
+      const speeds = [
+        ['Повільно', +(baseRate * 0.82).toFixed(2)],
+        [`Темп ${meta.code}`, baseRate],
+        ['Швидше', +(baseRate * 1.15).toFixed(2)],
+      ];
       const speedBox = el('div', { class: 'speed-group' },
         speeds.map(([label, val]) => {
           const b = el('button', { type: 'button', 'aria-pressed': String(val === rate) }, label);
@@ -346,8 +404,10 @@ const RENDERERS = {
       card.append(el('div', { class: 'player' },
         playBtn,
         el('div', { class: 'player__meta' },
-          el('strong', {}, task.lines.length > 1 ? `Діалог · ${task.lines.length} реплік` : 'Текст'),
-          'Слухайте двічі, як на іспиті. Швидкість:'),
+          el('strong', {}, task.lines.length > 1
+            ? `Діалог · ${task.lines.length} реплік · ${new Set(task.lines.map(l => l.speaker || '—')).size} голоси`
+            : 'Текст'),
+          `Темп мовлення відповідає рівню ${meta.code}. Слухайте двічі, як на іспиті:`),
         speedBox,
       ));
 
@@ -370,10 +430,11 @@ const RENDERERS = {
     return box;
   },
 
-  writing(mod) {
+  writing(mod, meta) {
     const box = el('div', { class: 'stack' },
       el('div', { class: 'section-note' },
-        'Спершу напишіть свій варіант, і лише потім відкривайте модельну відповідь. Текст зберігається лише у вікні браузера.'));
+        'Напишіть свій текст і натисніть «Перевірити текст» — сайт знайде типові помилки й підкаже, ' +
+        'що покращити. Приклад готового тексту є під кожним завданням. Нічого нікуди не надсилається.'));
 
     mod.writing.forEach(task => {
       const card = el('section', { class: 'writing-card' },
@@ -389,7 +450,12 @@ const RENDERERS = {
         ) : null,
       ));
 
-      const ta = el('textarea', { class: 'write', placeholder: 'Schreiben Sie hier…', spellcheck: 'false' });
+      // lang="de" + spellcheck вмикає німецький словник самого браузера —
+      // він підкреслює орфографію, чого правилами не зробиш.
+      const ta = el('textarea', {
+        class: 'write', placeholder: 'Schreiben Sie hier…',
+        spellcheck: 'true', lang: 'de', autocapitalize: 'sentences',
+      });
       const count = el('span', { class: 'count' }, '0 слів');
       ta.addEventListener('input', () => {
         const n = ta.value.trim() ? ta.value.trim().split(/\s+/).length : 0;
@@ -398,6 +464,24 @@ const RENDERERS = {
       });
       card.append(ta, el('div', { class: 'write-meta' },
         count, el('span', {}, `Орієнтир: від ${task.minWords} слів`)));
+
+      /* ── перевірка тексту ─────────────────────────────────────────── */
+      const report = el('div', { class: 'report' });
+      const checkBtn = el('button', { class: 'btn', type: 'button' }, '✓ Перевірити текст');
+      const clearBtn = el('button', { class: 'btn btn--ghost', type: 'button' }, 'Очистити');
+
+      checkBtn.addEventListener('click', () => {
+        const res = checkWriting(ta.value, task, {
+          levelId: meta.id, moduleId: mod.id, vocab: mod.vocab,
+        });
+        report.replaceChildren(renderReport(res));
+        report.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      });
+      clearBtn.addEventListener('click', () => {
+        ta.value = ''; ta.dispatchEvent(new Event('input')); report.replaceChildren();
+      });
+
+      card.append(el('div', { class: 'ex__actions' }, checkBtn, clearBtn), report);
 
       if (task.phrases?.length) {
         card.append(el('details', { class: 'transcript', style: 'margin-top:1rem' },
@@ -418,9 +502,12 @@ const RENDERERS = {
         ));
       }
 
-      card.append(el('details', { class: 'transcript', style: 'margin-top:1rem' },
-        el('summary', {}, 'Модельна відповідь'),
+      card.append(el('details', { class: 'transcript transcript--model', style: 'margin-top:1rem' },
+        el('summary', {}, '📄 Приклад тексту, який можна написати в цьому завданні'),
         el('div', { class: 'transcript__body' },
+          el('p', { class: 'muted', style: 'margin-top:0' },
+            'Це один із можливих варіантів, а не єдина правильна відповідь. ' +
+            'Порівняйте зі своїм текстом: що ви сказали інакше, а яких зворотів вам бракувало?'),
           el('div', { class: 'model-answer' }, task.model),
           task.modelUk ? el('p', { class: 'muted', style: 'margin-top:1rem' }, task.modelUk) : null),
       ));
