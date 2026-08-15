@@ -28,9 +28,26 @@ function words(text) {
   return (text.match(/[\p{L}\p{M}’'-]+/gu) || []);
 }
 
+/* Частотні іменники — щоб перевірка великої літери працювала й тоді,
+   коли слова немає у словнику конкретного модуля. */
+const COMMON_NOUNS = `Kurs Zeit Material Materialien Woche Tag Monat Jahr Stunde Minute
+Arbeit Beruf Firma Büro Chef Kollege Kollegin Termin Prüfung Aufgabe Hausaufgabe
+Schule Universität Student Studentin Lehrer Lehrerin Unterricht Sprache Deutsch
+Familie Eltern Vater Mutter Bruder Schwester Kind Kinder Freund Freundin Mann Frau
+Wohnung Haus Zimmer Küche Bad Garten Balkon Miete Stadt Land Straße Platz
+Auto Bus Zug Bahn Fahrrad Flughafen Bahnhof Reise Urlaub Hotel Ticket
+Geld Euro Preis Rechnung Konto Bank Post Geschäft Supermarkt Markt
+Essen Brot Milch Kaffee Wasser Wein Bier Fleisch Gemüse Obst Apfel
+Wetter Sonne Regen Schnee Wind Sommer Winter Frühling Herbst
+Arzt Ärztin Krankenhaus Apotheke Medikament Problem Frage Antwort Grund Idee
+Buch Zeitung Film Musik Sport Fußball Computer Handy Internet Foto
+Morgen Abend Nacht Mittag Wochenende Geburtstag Party Geschenk Einladung
+Leute Menschen Person Name Adresse Telefonnummer Information Nachricht Brief`
+  .split(/\s+/).filter(Boolean);
+
 /** Слова, які в німецькій пишуть з великої лише як іменники. */
 function nounsFromVocab(vocab) {
-  const set = new Set();
+  const set = new Set(COMMON_NOUNS);
   (vocab || []).forEach(g => (g.items || []).forEach(it => {
     const m = String(it.de).match(/^(?:der|die|das)\s+([A-ZÄÖÜ][\p{L}]+)/u);
     if (m) set.add(m[1]);
@@ -146,8 +163,8 @@ export function checkWriting(text, task, ctx = {}) {
     break;
   }
 
-  // das / dass
-  const dassRe = /\b(denke|glaube|hoffe|meine|finde|weiß|sage|sagte|erklärte)\s*,?\s+das\s+(?!\p{Lu})/giu;
+  // das / dass  (явні діапазони, а не \p{Lu} — юнікодний клас тут не спрацьовує)
+  const dassRe = /\b(denke|glaube|hoffe|meine|finde|weiß|sage|sagte|erklärte|freue mich)\s*,?\s+das\s+(?![A-ZÄÖÜ])/g;
   const dm = t.match(dassRe);
   if (dm) add('error', 'Схоже, тут потрібне «dass», а не «das»',
     '«das» — артикль або займенник (das Buch). «dass» — сполучник «що». Перевірка: якщо слово можна замінити на «dieses» — пишіть «das».',

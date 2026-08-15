@@ -1,9 +1,9 @@
 /* Роутер + сторінки. Хеш-навігація, щоб працювало на GitHub Pages без сервера. */
 
-import { LEVELS, loadLevel } from '../data/index.js?v=20260815b';
-import { el, renderExercise, renderExerciseSet } from './exercises.js?v=20260815b';
-import { speak, speakDialogue, stop as stopSpeech, ttsSupported, hasGermanVoice } from './tts.js?v=20260815b';
-import { checkWriting } from './writing-check.js?v=20260815b';
+import { LEVELS, loadLevel } from '../data/index.js?v=20260815c';
+import { el, renderExercise, renderExerciseSet } from './exercises.js?v=20260815c';
+import { speak, speakDialogue, stop as stopSpeech, ttsSupported, hasGermanVoice } from './tts.js?v=20260815c';
+import { checkWriting } from './writing-check.js?v=20260815c';
 
 const main = document.getElementById('main');
 
