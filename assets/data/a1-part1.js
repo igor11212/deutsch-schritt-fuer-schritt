@@ -989,17 +989,28 @@ Iryna`,
 <p>Присвійний артикль замінює <em>ein</em> і має ті самі закінчення. Тому набір закінчень ви вже знаєте:
 <em>ein → mein</em>, <em>eine → meine</em>, <em>einen → meinen</em>.</p>
 <table>
-<thead><tr><th>Хто володіє</th><th>Присвійний</th><th>Приклад</th></tr></thead>
+<thead><tr><th>Хто володіє</th><th>Присвійний</th><th>Перекладається як</th><th>Приклад</th></tr></thead>
 <tbody>
-<tr><td>ich</td><td><strong>mein</strong></td><td><em>mein Vater, meine Mutter</em></td></tr>
-<tr><td>du</td><td><strong>dein</strong></td><td><em>dein Bruder, deine Schwester</em></td></tr>
-<tr><td>er / es</td><td><strong>sein</strong></td><td><em>sein Auto</em> — його авто</td></tr>
-<tr><td>sie (вона)</td><td><strong>ihr</strong></td><td><em>ihr Auto</em> — її авто</td></tr>
-<tr><td>wir</td><td><strong>unser</strong></td><td><em>unsere Wohnung</em></td></tr>
-<tr><td>ihr</td><td><strong>euer</strong></td><td><em>eure Kinder</em> (увага: euer → eure)</td></tr>
-<tr><td>sie (вони)</td><td><strong>ihr</strong></td><td><em>ihre Eltern</em></td></tr>
-<tr><td>Sie (ввічливо)</td><td><strong>Ihr</strong></td><td><em>Ihr Name, bitte?</em></td></tr>
+<tr><td>ich — я</td><td><strong>mein</strong></td><td>мій, моя, моє</td>
+<td><em>mein Vater, meine Mutter</em><span class="uk">мій батько, моя мати</span></td></tr>
+<tr><td>du — ти</td><td><strong>dein</strong></td><td>твій, твоя</td>
+<td><em>dein Bruder, deine Schwester</em><span class="uk">твій брат, твоя сестра</span></td></tr>
+<tr><td>er / es — він / воно</td><td><strong>sein</strong></td><td>його</td>
+<td><em>sein Auto</em><span class="uk">його авто</span></td></tr>
+<tr><td>sie — вона</td><td><strong>ihr</strong></td><td>її</td>
+<td><em>ihr Auto</em><span class="uk">її авто</span></td></tr>
+<tr><td>wir — ми</td><td><strong>unser</strong></td><td>наш, наша</td>
+<td><em>unsere Wohnung</em><span class="uk">наша квартира</span></td></tr>
+<tr><td>ihr — ви (кілька «ти»)</td><td><strong>euer</strong></td><td>ваш, ваша</td>
+<td><em>eure Kinder</em><span class="uk">ваші діти (увага: euer → eure)</span></td></tr>
+<tr><td>sie — вони</td><td><strong>ihr</strong></td><td>їхній, їхня</td>
+<td><em>ihre Eltern</em><span class="uk">їхні батьки</span></td></tr>
+<tr><td>Sie — Ви (ввічливо)</td><td><strong>Ihr</strong></td><td>Ваш, Ваша</td>
+<td><em>Ihr Name, bitte?</em><span class="uk">Ваше ім’я, будь ласка?</span></td></tr>
 </tbody></table>
+<div class="callout"><strong>Одне слово — три значення.</strong> <em>ihr</em> може бути «її», «їхній»
+і навіть «ви» (як займенник). Що саме — видно з місця в реченні: перед іменником це присвійне
+(<em>ihr Auto</em>), а перед дієсловом — підмет (<em>ihr seid</em> — ви є).</div>
 <p><strong>Закінчення — за родом іменника, а не за власником:</strong></p>
 <table>
 <thead><tr><th></th><th>der Vater</th><th>die Mutter</th><th>das Kind</th><th>die Eltern (мн.)</th></tr></thead>

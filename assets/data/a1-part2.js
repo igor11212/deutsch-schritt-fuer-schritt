@@ -970,18 +970,21 @@ kaufen, sagen, empfehlen</em>.</p>`,
       title: '3. Особові займенники в трьох відмінках',
       html: `
 <table>
-<thead><tr><th>Nominativ (хто?)</th><th>Akkusativ (кого?)</th><th>Dativ (кому?)</th></tr></thead>
+<thead><tr><th>Nominativ — хто?</th><th>Akkusativ — кого? що?</th><th>Dativ — кому?</th></tr></thead>
 <tbody>
-<tr><td>ich</td><td><strong>mich</strong></td><td><strong>mir</strong></td></tr>
-<tr><td>du</td><td><strong>dich</strong></td><td><strong>dir</strong></td></tr>
-<tr><td>er</td><td><strong>ihn</strong></td><td><strong>ihm</strong></td></tr>
-<tr><td>sie (вона)</td><td><strong>sie</strong></td><td><strong>ihr</strong></td></tr>
-<tr><td>es</td><td><strong>es</strong></td><td><strong>ihm</strong></td></tr>
-<tr><td>wir</td><td><strong>uns</strong></td><td><strong>uns</strong></td></tr>
-<tr><td>ihr</td><td><strong>euch</strong></td><td><strong>euch</strong></td></tr>
-<tr><td>sie (вони)</td><td><strong>sie</strong></td><td><strong>ihnen</strong></td></tr>
-<tr><td>Sie (ввічливо)</td><td><strong>Sie</strong></td><td><strong>Ihnen</strong></td></tr>
+<tr><td>ich<span class="uk">я</span></td><td><strong>mich</strong><span class="uk">мене</span></td><td><strong>mir</strong><span class="uk">мені</span></td></tr>
+<tr><td>du<span class="uk">ти</span></td><td><strong>dich</strong><span class="uk">тебе</span></td><td><strong>dir</strong><span class="uk">тобі</span></td></tr>
+<tr><td>er<span class="uk">він</span></td><td><strong>ihn</strong><span class="uk">його</span></td><td><strong>ihm</strong><span class="uk">йому</span></td></tr>
+<tr><td>sie<span class="uk">вона</span></td><td><strong>sie</strong><span class="uk">її</span></td><td><strong>ihr</strong><span class="uk">їй</span></td></tr>
+<tr><td>es<span class="uk">воно</span></td><td><strong>es</strong><span class="uk">його</span></td><td><strong>ihm</strong><span class="uk">йому</span></td></tr>
+<tr><td>wir<span class="uk">ми</span></td><td><strong>uns</strong><span class="uk">нас</span></td><td><strong>uns</strong><span class="uk">нам</span></td></tr>
+<tr><td>ihr<span class="uk">ви (кілька «ти»)</span></td><td><strong>euch</strong><span class="uk">вас</span></td><td><strong>euch</strong><span class="uk">вам</span></td></tr>
+<tr><td>sie<span class="uk">вони</span></td><td><strong>sie</strong><span class="uk">їх</span></td><td><strong>ihnen</strong><span class="uk">їм</span></td></tr>
+<tr><td>Sie<span class="uk">Ви (ввічливо)</span></td><td><strong>Sie</strong><span class="uk">Вас</span></td><td><strong>Ihnen</strong><span class="uk">Вам</span></td></tr>
 </tbody></table>
+<div class="callout"><strong>Три форми, які звучать однаково.</strong> <em>sie</em> — це і «вона», і «вони»,
+і в Akkusativ обидві дають знову <em>sie</em>. Розрізняйте за дієсловом:
+<em>sie ist</em> — вона, <em>sie sind</em> — вони. А <em>Sie</em> з великої літери — завжди ввічливе «Ви».</div>
 <p><strong>Займенник замінює й неживі предмети</strong> — за родом іменника, а не за «живістю»:</p>
 <ul>
 <li><em>Wo ist <strong>der Schlüssel</strong>? — <strong>Er</strong> ist auf dem Tisch. Ich sehe <strong>ihn</strong> nicht.</em></li>
@@ -1212,7 +1215,18 @@ Taras`,
       html: `
 <p>Це найважливіша тема наприкінці A1. Дев’ять прийменників можуть вимагати <strong>і Dativ, і Akkusativ</strong> —
 залежно від того, чи є рух до нової точки.</p>
-<p class="de" style="font-size:1.05rem"><strong>in · an · auf · über · unter · vor · hinter · neben · zwischen</strong></p>
+<table>
+<thead><tr><th>Прийменник</th><th>Переклад</th><th>Прийменник</th><th>Переклад</th></tr></thead>
+<tbody>
+<tr><td><strong>in</strong></td><td>у, в (усередині)</td><td><strong>unter</strong></td><td>під</td></tr>
+<tr><td><strong>an</strong></td><td>біля, при; на (вертикальній поверхні)</td><td><strong>vor</strong></td><td>перед</td></tr>
+<tr><td><strong>auf</strong></td><td>на (горизонтальній поверхні)</td><td><strong>hinter</strong></td><td>за, позаду</td></tr>
+<tr><td><strong>über</strong></td><td>над; через</td><td><strong>neben</strong></td><td>поруч, біля</td></tr>
+<tr><td colspan="2"></td><td><strong>zwischen</strong></td><td>між</td></tr>
+</tbody></table>
+<div class="callout callout--tip"><strong>an чи auf?</strong> <em>an</em> — коли предмет торкається
+збоку або висить: <em>an der Wand</em> (на стіні), <em>am Fenster</em> (біля вікна).
+<em>auf</em> — коли лежить зверху: <em>auf dem Tisch</em> (на столі).</div>
 <table>
 <thead><tr><th></th><th>Wo? — де? (стан)</th><th>Wohin? — куди? (рух)</th></tr></thead>
 <tbody>
