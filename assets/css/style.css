@@ -715,3 +715,13 @@ details.transcript--model > summary { color: var(--text); }
   body { background: #fff; }
 }
 
+
+/* ---- переклад німецького терміна при першій появі ---- */
+
+.term { white-space: nowrap; }
+.term > i {
+  font-style: normal; color: var(--muted); font-size: .88em;
+  white-space: normal;
+}
+.term > i::before { content: " ("; }
+.term > i::after  { content: ")"; }
