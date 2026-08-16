@@ -715,22 +715,3 @@ details.transcript--model > summary { color: var(--text); }
   body { background: #fff; }
 }
 
-/* ---- вибір голосу для аудіювання ---- */
-
-.voice-bar {
-  border-radius: var(--r); padding: 1rem 1.2rem;
-  background: var(--surface); border: 1px solid var(--line-soft);
-  box-shadow: var(--shadow-sm);
-}
-.voice-bar__head { display: flex; flex-wrap: wrap; gap: .3rem .7rem; align-items: baseline; margin-bottom: .8rem; }
-.voice-bar__head .muted { font-size: .87rem; }
-.voice-bar__row { display: flex; flex-wrap: wrap; gap: .8rem; }
-.voice-bar__item { display: flex; flex-direction: column; gap: .3rem; flex: 1 1 220px; }
-.voice-bar__item span { font-size: .82rem; color: var(--text-soft); font-weight: 600; }
-.voice-bar select {
-  font: inherit; font-size: .92rem; padding: .5rem .8rem;
-  border-radius: var(--r-sm); border: 1.5px solid var(--line);
-  background: var(--surface-2); color: var(--text); cursor: pointer;
-}
-.voice-bar select:focus { border-color: var(--accent); background: var(--surface); }
-.voice-bar__hint { margin: .9rem 0 0; font-size: .85rem; }
