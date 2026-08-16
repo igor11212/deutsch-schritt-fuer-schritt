@@ -55,33 +55,69 @@ function germanVoices() {
            .map(x => x.v);
 }
 
-/* ─────────────────── вибір голосу користувачем ─────────────────── */
+/* ──────────────── стать голосу й персонажа ──────────────── */
 
-const PREF_KEY = 'dssf-voices';
-let prefs = [];
-try { prefs = JSON.parse(localStorage.getItem(PREF_KEY) || '[]'); } catch { prefs = []; }
+/* Голос жіночого персонажа мусить бути жіночим — інакше діалог одразу
+   перестає звучати як розмова двох людей. Німецькі голоси macOS і Google. */
+const FEMALE_VOICE = /^(anna|petra|helena|steffi|flo|sandy|shelley|grandma|google)/i;
+const MALE_VOICE   = /^(yannick|markus|viktor|eddy|reed|rocko|grandpa|martin)/i;
 
-/** Усі німецькі голоси системи — для списку вибору в інтерфейсі. */
-export function listGermanVoices() {
-  return germanVoices().map(v => ({ name: v.name, local: v.localService }));
+function voiceGender(v) {
+  const n = v.name || '';
+  if (FEMALE_VOICE.test(n)) return 'f';
+  if (MALE_VOICE.test(n)) return 'm';
+  return null;
 }
 
-export function getVoicePrefs() { return [...prefs]; }
+/* Персонажі діалогів. Жіночі професії в німецькій закінчуються на -in,
+   тож більшість ролей визначається автоматично, решта — за списком імен. */
+const FEMALE_ROLE = /(erin|orin|ärztin|ätin|in)$/i;
+const FEMALE_NAME = /^(anna|lena|sara|oksana|lisa|nina|katja|lea|nadia|maria|julia|iryna|olha|sofia|halyna|mia|marie|petra|frau)\b/i;
+/* Чоловічі назви професій перевіряються раніше за правило «-in»: межа слова
+   не дає «Verkäufer» збігтися з «Verkäuferin», тож обидві форми розпізнаються. */
+const MALE_NAME   = /^(petro|tom|dmytro|jonas|ben|martin|tim|felix|max|andrij|taras|stefan|lukas|markus|kellner|tourist|kunde|arzt|vermieter|mann|herr|journalist|gast|verkäufer|lehrer|sprecher|moderator|fahrer|schaffner)\b/i;
 
-export function setVoicePrefs(names) {
-  prefs = (names || []).filter(Boolean);
-  try { localStorage.setItem(PREF_KEY, JSON.stringify(prefs)); } catch { /* приватний режим */ }
-}
-
-/** Обрані користувачем ідуть першими, решта — за рейтингом якості. */
-function voicePool() {
-  const all = germanVoices();
-  const chosen = prefs.map(n => all.find(v => v.name === n)).filter(Boolean);
-  return [...chosen, ...all.filter(v => !chosen.includes(v))];
+function speakerGender(name) {
+  const n = String(name || '').trim();
+  if (!n || n === '—') return null;
+  if (/^frau\b/i.test(n)) return 'f';
+  if (/^herr\b/i.test(n)) return 'm';
+  if (MALE_NAME.test(n)) return 'm';          // перевіряємо раніше за -in: «Martin» не жінка
+  if (FEMALE_NAME.test(n)) return 'f';
+  if (FEMALE_ROLE.test(n)) return 'f';        // Sekretärin, Verkäuferin, Moderatorin…
+  return null;
 }
 
 function bestVoice() {
-  return voicePool()[0] || null;
+  return germanVoices()[0] || null;
+}
+
+/**
+ * Розподіляє голоси між персонажами: за статтю, без повторів,
+ * найякісніші — головним ролям.
+ */
+function assignVoices(speakers) {
+  const pool = germanVoices();
+  const byGender = { f: pool.filter(v => voiceGender(v) === 'f'),
+                     m: pool.filter(v => voiceGender(v) === 'm') };
+  const rest = pool.filter(v => !voiceGender(v));
+  const used = new Set();
+  const take = list => {
+    const free = list.find(v => !used.has(v.name));
+    const pick = free || list[0] || rest.find(v => !used.has(v.name)) || pool[0] || null;
+    if (pick) used.add(pick.name);
+    return pick;
+  };
+
+  const map = new Map();
+  // Спершу ті, чию стать визначено — щоб їм дісталися відповідні голоси.
+  speakers.filter(s => speakerGender(s)).forEach(s => map.set(s, take(byGender[speakerGender(s)])));
+  // Решта отримує будь-який вільний голос, чергуючи стать для контрасту.
+  let flip = 0;
+  speakers.filter(s => !map.has(s)).forEach(s => {
+    map.set(s, take(byGender[flip++ % 2 ? 'm' : 'f'].concat(rest)));
+  });
+  return map;
 }
 
 export function hasGermanVoice() {
@@ -199,22 +235,24 @@ export function speakDialogue(lines, opts = {}) {
   if (!ttsSupported || !lines?.length) return;
   stop();
 
-  const pool = voicePool();
+  const pool = germanVoices();
   const base = opts.rate ?? 1.0;
   // Для новачків розтягуємо не звуки, а паузи — саме так робить викладач.
   const scale = opts.pauseScale ?? 1;
 
-  // Стабільне закріплення голосу за мовцем у межах діалогу.
+  // Кожному персонажеві — свій голос відповідної статі, стабільно на весь діалог.
   const speakers = [...new Set(lines.map(l => l.speaker || '—'))];
+  const voices = assignVoices(speakers);
   const bySpeaker = new Map();
   speakers.forEach((name, idx) => {
-    const voice = pool.length > 1 ? pool[idx % pool.length] : pool[0] || null;
+    const voice = voices.get(name) || pool[0] || null;
     bySpeaker.set(name, {
       voice,
-      // якщо голос лише один, розводимо мовців висотою й темпом
-      pitch: pool.length > 1 ? 1 + jitter(idx + 3, 0.04)
-                             : (idx % 2 === 0 ? 1.09 : 0.93),
-      rate:  base + (pool.length > 1 ? jitter(idx + 11, 0.03) : (idx % 2 === 0 ? 0.02 : -0.02)),
+      // Якщо різних голосів не вистачило, розводимо персонажів висотою й темпом.
+      pitch: voice && new Set([...voices.values()]).size > 1
+        ? 1 + jitter(idx + 3, 0.035)
+        : (idx % 2 === 0 ? 1.08 : 0.94),
+      rate: base + jitter(idx + 11, 0.03),
     });
   });
 
