@@ -38,8 +38,11 @@ function germanVoices() {
     const n = (v.name || '');
     let s = 0;
     if (/premium|enhanced|neural|natural/i.test(n)) s += 60;   // сучасні синтезатори
+    if (/siri/i.test(n)) s += 40;
+    // Голоси Apple нового покоління підписані як «Ім’я (Мова (Країна))» —
+    // вони живіші за старі хмарні, тож ідуть попереду Google.
+    if (/\(.+\(.+\)\)/.test(n)) s += 34;
     if (/google/i.test(n)) s += 30;                            // якісні хмарні
-    if (/siri/i.test(n)) s += 25;
     if (/^de-DE/i.test(v.lang)) s += 6;                        // стандартна вимова
     if (v.localService) s += 3;
     if (NOVELTY.test(n)) s -= 25;                              // характерні, не для навчання
