@@ -44,6 +44,14 @@ export default {
       {
         title: '1. Головне правило: дієслово в кінець',
         html: `
+<p>Ця тема — про три слова, які з’єднують два речення в одне. Ось що вони означають:</p>
+<table>
+<thead><tr><th>Слово</th><th>Переклад</th><th>Коли вживають</th></tr></thead>
+<tbody>
+<tr><td><strong>weil</strong></td><td>бо, тому що</td><td>називаєте причину: <em>Ich bleibe zu Hause, weil ich krank bin.</em><span class="uk">Я лишаюся вдома, бо я хворий.</span></td></tr>
+<tr><td><strong>dass</strong></td><td>що</td><td>передаєте зміст думки чи слів: <em>Ich weiß, dass er kommt.</em><span class="uk">Я знаю, що він прийде.</span></td></tr>
+<tr><td><strong>wenn</strong></td><td>якщо; коли</td><td>умова або повторювана дія: <em>Wenn es regnet, bleibe ich zu Hause.</em><span class="uk">Якщо йде дощ, я лишаюся вдома.</span></td></tr>
+</tbody></table>
 <p>Німецьке речення має два типи: <strong>головне</strong> (Hauptsatz), де дієслово на другому місці,
 і <strong>підрядне</strong> (Nebensatz), де змінене дієслово стоїть <strong>в самому кінці</strong>.</p>
 <table>
@@ -66,15 +74,25 @@ export default {
         html: `
 <p>Усі три перекладаються схоже, але керують порядком слів по-різному. Це улюблена тема іспиту A2.</p>
 <table>
-<thead><tr><th>Слово</th><th>Тип</th><th>Порядок слів</th><th>Приклад</th></tr></thead>
+<thead><tr><th>Слово</th><th>Перекладається як</th><th>Що робить із порядком слів</th><th>Приклад</th></tr></thead>
 <tbody>
-<tr><td><strong>weil</strong></td><td>підрядний сполучник</td><td>дієслово в кінець</td>
-<td><em>Ich komme nicht, <strong>weil</strong> ich krank <strong>bin</strong>.</em></td></tr>
-<tr><td><strong>denn</strong></td><td>сурядний сполучник</td><td>нічого не змінює</td>
-<td><em>Ich komme nicht, <strong>denn</strong> ich <strong>bin</strong> krank.</em></td></tr>
-<tr><td><strong>deshalb</strong><br><small>(також deswegen, darum)</small></td><td>прислівник = наслідок</td><td>займає 1 місце → дієслово другим</td>
-<td><em>Ich bin krank, <strong>deshalb komme</strong> ich nicht.</em></td></tr>
+<tr><td><strong>weil</strong></td><td><strong>бо, тому що</strong><br><small>вводить причину</small></td>
+<td>дієслово йде <strong>в кінець</strong></td>
+<td><em>Ich komme nicht, <strong>weil</strong> ich krank <strong>bin</strong>.</em>
+<span class="uk">Я не прийду, бо я хворий.</span></td></tr>
+<tr><td><strong>denn</strong></td><td><strong>бо</strong><br><small>те саме значення, що й weil</small></td>
+<td>нічого не змінює</td>
+<td><em>Ich komme nicht, <strong>denn</strong> ich <strong>bin</strong> krank.</em>
+<span class="uk">Я не прийду, бо я хворий.</span></td></tr>
+<tr><td><strong>deshalb</strong><br><small>= deswegen, darum</small></td><td><strong>тому, через це</strong><br><small>вводить наслідок, а не причину</small></td>
+<td>займає перше місце → дієслово другим</td>
+<td><em>Ich bin krank, <strong>deshalb komme</strong> ich nicht.</em>
+<span class="uk">Я хворий, тому не прийду.</span></td></tr>
 </tbody></table>
+<div class="callout callout--tip"><strong>Як обрати між ними.</strong> <em>weil</em> і <em>denn</em>
+означають те саме — «бо»; різниця лише в порядку слів, тож беріть <em>denn</em>, коли не хочете
+переставляти дієслово. А <em>deshalb</em> — це вже «тому»: після нього йде <u>наслідок</u>,
+а не причина, тому речення перевертається.</div>
 <div class="callout callout--tip"><strong>Зверніть увагу на логіку.</strong> <em>weil</em> і <em>denn</em>
 вводять <u>причину</u>, а <em>deshalb</em> — <u>наслідок</u>. Тому речення перевертається:
 «Я хворий, <em>тому</em> не прийду».</div>
