@@ -105,8 +105,12 @@ export function glossTerms(root) {
     const before = text.slice(0, hit.index);
     const after = text.slice(hit.index + hit.term.length);
 
+    // Якщо термін уже стоїть у дужках — «(Hauptsatz)» — другу пару не додаємо,
+    // а відокремлюємо переклад тире, інакше вийде «((…))».
+    const inBrackets = /\($/.test(before) && /^\s*\)/.test(after);
+
     const span = document.createElement('span');
-    span.className = 'term';
+    span.className = 'term' + (inBrackets ? ' term--bare' : '');
     span.append(hit.term);
     const gloss = document.createElement('i');
     gloss.textContent = hit.uk;
