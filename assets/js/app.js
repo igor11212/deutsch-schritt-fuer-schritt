@@ -1,9 +1,10 @@
 /* Роутер + сторінки. Хеш-навігація, щоб працювало на GitHub Pages без сервера. */
 
-import { LEVELS, loadLevel } from '../data/index.js?v=20260815c';
-import { el, renderExercise, renderExerciseSet } from './exercises.js?v=20260815c';
-import { speak, speakDialogue, stop as stopSpeech, ttsSupported, hasGermanVoice } from './tts.js?v=20260815c';
-import { checkWriting } from './writing-check.js?v=20260815c';
+import { LEVELS, loadLevel } from '../data/index.js?v=20260816a';
+import { el, renderExercise, renderExerciseSet } from './exercises.js?v=20260816a';
+import { speak, speakDialogue, stop as stopSpeech, ttsSupported, hasGermanVoice,
+         listGermanVoices, getVoicePrefs, setVoicePrefs } from './tts.js?v=20260816a';
+import { checkWriting } from './writing-check.js?v=20260816a';
 
 const main = document.getElementById('main');
 
@@ -235,6 +236,60 @@ async function viewModule(levelId, index, tabId) {
   ), `${mod.title} · ${meta.code}`);
 }
 
+/* ------------------------------------------------ вибір голосу ---------- */
+
+/** Панель вибору голосів: перший читає одного мовця, другий — іншого. */
+function voicePicker() {
+  const all = listGermanVoices();
+  const box = el('section', { class: 'voice-bar' });
+
+  if (!all.length) {
+    box.append(el('div', { class: 'no-tts' },
+      'У системі немає жодного німецького голосу — озвучення не працюватиме. ' +
+      'macOS: Системні налаштування → Спеціальні можливості → Вимовлений вміст → Голоси системи → Німецька. ' +
+      'Windows: Параметри → Час і мова → Мова → додати німецьку з пакетом мовлення.'));
+    return box;
+  }
+
+  const prefs = getVoicePrefs();
+  const mkSelect = (slot, label) => {
+    const sel = el('select', { 'aria-label': label },
+      el('option', { value: '' }, 'авто'),
+      all.map(v => el('option', { value: v.name }, v.name.replace(/\s*\(Deutsch \(Deutschland\)\)/, ''))));
+    sel.value = prefs[slot] || '';
+    sel.addEventListener('change', () => {
+      const next = getVoicePrefs();
+      next[slot] = sel.value;
+      setVoicePrefs(next);
+      stopSpeech();
+      speak(slot === 0 ? 'Guten Tag! Ich lese Ihnen die Texte vor.'
+                       : 'Und ich spreche die zweite Rolle im Dialog.',
+        { rate: 0.9 });
+    });
+    return el('label', { class: 'voice-bar__item' }, el('span', {}, label), sel);
+  };
+
+  box.append(
+    el('div', { class: 'voice-bar__head' },
+      el('strong', {}, '🎙 Голоси'),
+      el('span', { class: 'muted' },
+        `Доступно ${all.length} ${plural(all.length, 'голос', 'голоси', 'голосів')}. ` +
+        'Оберіть ті, що звучать найприємніше — вибір запам’ятається.')),
+    el('div', { class: 'voice-bar__row' },
+      mkSelect(0, 'Перший мовець'),
+      mkSelect(1, 'Другий мовець')),
+  );
+
+  const legacy = all.length && /^(anna|petra)\b/i.test(all[all.length - 1].name);
+  if (legacy || all.length < 3) {
+    box.append(el('p', { class: 'voice-bar__hint muted' },
+      'Якщо всі голоси звучать механічно, у системі не встановлено якісних. ' +
+      'macOS: Системні налаштування → Спеціальні можливості → Вимовлений вміст → Голоси системи → ' +
+      'Німецька → завантажте варіант із позначкою Premium або Enhanced. Сайт підхопить його автоматично.'));
+  }
+  return box;
+}
+
 /* --------------------------------------------- звіт перевірки письма ---- */
 
 const KIND = {
@@ -364,6 +419,8 @@ const RENDERERS = {
     if (!ttsSupported) {
       box.append(el('div', { class: 'no-tts' },
         'Ваш браузер не підтримує синтез мовлення. Спробуйте Chrome, Safari або Edge — тексти нижче можна читати вголос самостійно.'));
+    } else {
+      box.append(voicePicker());
     }
 
     mod.listening.forEach((task, ti) => {

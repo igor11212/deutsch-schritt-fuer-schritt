@@ -25,6 +25,11 @@ if (ttsSupported) {
 
 /* ─────────────────────────────── голоси ─────────────────────────────── */
 
+/* Голоси, які краще не ставити першими: застарілі рушії або надто
+   стилізовані «характерні» голоси — для мовного курсу потрібна нейтральна вимова. */
+const LEGACY   = /^(anna|petra|yannick|helena|steffi)\b/i;      // старі compact-голоси macOS
+const NOVELTY  = /grandma|grandpa|rocko|bubbles|jester|organ|trinoids|wobble|whisper/i;
+
 /** Німецькі голоси, відсортовані за очікуваною якістю. */
 function germanVoices() {
   if (!voices.length) loadVoices();
@@ -32,19 +37,48 @@ function germanVoices() {
   const score = v => {
     const n = (v.name || '');
     let s = 0;
-    if (/premium|enhanced|neural|natural/i.test(n)) s += 40;   // сучасні синтезатори
-    if (/google/i.test(n)) s += 25;                            // якісні хмарні
-    if (/siri/i.test(n)) s += 20;
+    if (/premium|enhanced|neural|natural/i.test(n)) s += 60;   // сучасні синтезатори
+    if (/google/i.test(n)) s += 30;                            // якісні хмарні
+    if (/siri/i.test(n)) s += 25;
     if (/^de-DE/i.test(v.lang)) s += 6;                        // стандартна вимова
-    if (v.localService) s += 4;
-    if (/compact|eloquence/i.test(n)) s -= 30;                 // старі, дуже механічні
+    if (v.localService) s += 3;
+    if (NOVELTY.test(n)) s -= 25;                              // характерні, не для навчання
+    if (LEGACY.test(n) && !/premium|enhanced/i.test(n)) s -= 35;
+    if (/compact|eloquence/i.test(n)) s -= 40;
     return s;
   };
-  return de.sort((a, b) => score(b) - score(a));
+  return de.map((v, i) => ({ v, i, s: score(v) }))
+           .sort((a, b) => b.s - a.s || a.i - b.i)
+           .map(x => x.v);
+}
+
+/* ─────────────────── вибір голосу користувачем ─────────────────── */
+
+const PREF_KEY = 'dssf-voices';
+let prefs = [];
+try { prefs = JSON.parse(localStorage.getItem(PREF_KEY) || '[]'); } catch { prefs = []; }
+
+/** Усі німецькі голоси системи — для списку вибору в інтерфейсі. */
+export function listGermanVoices() {
+  return germanVoices().map(v => ({ name: v.name, local: v.localService }));
+}
+
+export function getVoicePrefs() { return [...prefs]; }
+
+export function setVoicePrefs(names) {
+  prefs = (names || []).filter(Boolean);
+  try { localStorage.setItem(PREF_KEY, JSON.stringify(prefs)); } catch { /* приватний режим */ }
+}
+
+/** Обрані користувачем ідуть першими, решта — за рейтингом якості. */
+function voicePool() {
+  const all = germanVoices();
+  const chosen = prefs.map(n => all.find(v => v.name === n)).filter(Boolean);
+  return [...chosen, ...all.filter(v => !chosen.includes(v))];
 }
 
 function bestVoice() {
-  return germanVoices()[0] || null;
+  return voicePool()[0] || null;
 }
 
 export function hasGermanVoice() {
@@ -143,7 +177,7 @@ export function speakDialogue(lines, opts = {}) {
   if (!ttsSupported || !lines?.length) return;
   stop();
 
-  const pool = germanVoices();
+  const pool = voicePool();
   const base = opts.rate ?? 0.92;
 
   // Стабільне закріплення голосу за мовцем у межах діалогу.
