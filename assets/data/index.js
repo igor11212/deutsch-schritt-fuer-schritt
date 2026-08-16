@@ -38,7 +38,7 @@ const CACHE = new Map();
 
 export async function loadLevel(id) {
   if (CACHE.has(id)) return CACHE.get(id);
-  const mod = await import(`./${id}.js?v=20260815b`);
+  const mod = await import(`./${id}.js?v=20260816h`);
   CACHE.set(id, mod.default);
   return mod.default;
 }
