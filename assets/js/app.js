@@ -1,10 +1,10 @@
 /* Роутер + сторінки. Хеш-навігація, щоб працювало на GitHub Pages без сервера. */
 
-import { LEVELS, loadLevel } from '../data/index.js?v=20260816b';
-import { el, renderExercise, renderExerciseSet } from './exercises.js?v=20260816b';
+import { LEVELS, loadLevel } from '../data/index.js?v=20260816c';
+import { el, renderExercise, renderExerciseSet } from './exercises.js?v=20260816c';
 import { speak, speakDialogue, stop as stopSpeech, ttsSupported, hasGermanVoice,
-         listGermanVoices, getVoicePrefs, setVoicePrefs } from './tts.js?v=20260816b';
-import { checkWriting } from './writing-check.js?v=20260816b';
+         listGermanVoices, getVoicePrefs, setVoicePrefs } from './tts.js?v=20260816c';
+import { checkWriting } from './writing-check.js?v=20260816c';
 
 const main = document.getElementById('main');
 
@@ -467,7 +467,9 @@ const RENDERERS = {
           el('strong', {}, task.lines.length > 1
             ? `Діалог · ${task.lines.length} реплік · ${new Set(task.lines.map(l => l.speaker || '—')).size} голоси`
             : 'Текст'),
-          `Живий темп; на ${meta.code} довші паузи між фразами. Слухайте двічі, як на іспиті:`),
+          pauseScale >= 1.5
+            ? `Живий темп, але подовжені паузи між фразами — щоб на ${meta.code} встигати за думкою. Слухайте двічі, як на іспиті:`
+            : `Темп і паузи як у природній розмові носіїв. Слухайте двічі, як на іспиті:`),
         speedBox,
       ));
 
