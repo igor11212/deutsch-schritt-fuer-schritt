@@ -725,3 +725,6 @@ details.transcript--model > summary { color: var(--text); }
 }
 .term > i::before { content: " ("; }
 .term > i::after  { content: ")"; }
+/* термін уже в дужках — розділяємо тире, без другої пари */
+.term--bare > i::before { content: " — "; }
+.term--bare > i::after  { content: ""; }
