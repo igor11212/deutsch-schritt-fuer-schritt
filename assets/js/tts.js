@@ -92,7 +92,9 @@ export function germanVoiceCount() {
 
 /* ─────────────────────────── розбиття на синтагми ────────────────────── */
 
-/** Ділить фразу за розділовими знаками; кожен шматок отримує паузу після себе. */
+/** Ділить фразу за розділовими знаками; кожен шматок отримує паузу й інтонацію.
+ *  Інтонація важлива: у німецькій крапка = падіння тону, кома = утримання,
+ *  знак питання = підйом. Рівний тон усюди — головна ознака машинної мови. */
 function chunks(text) {
   const out = [];
   const re = /[^,;:.!?…]+[,;:.!?…]*/g;
@@ -100,13 +102,23 @@ function chunks(text) {
     const piece = m.trim();
     if (!piece) continue;
     const last = piece.slice(-1);
-    const pause = /[.!?…]/.test(last) ? 380
-                : /[;:]/.test(last)   ? 260
-                : /,/.test(last)      ? 190
+    const isQuestion = /\?/.test(piece);
+    const pause = /[.!?…]/.test(last) ? 400
+                : /[;:]/.test(last)   ? 280
+                : /,/.test(last)      ? 200
                 : 0;
-    out.push({ text: piece, pause });
+    // Перед протиставленням людина мимоволі робить коротку паузу.
+    const beforeContrast = /^(aber|sondern|denn|doch|allerdings|trotzdem)\b/i.test(piece) ? 120 : 0;
+    out.push({
+      text: piece,
+      pause,
+      lead: beforeContrast,
+      tone: isQuestion ? 0.07                       // питання — вгору
+          : /[.!…]/.test(last) ? -0.05              // завершення — вниз
+          : 0.02,                                   // продовження — трохи вище
+    });
   }
-  return out.length ? out : [{ text: String(text), pause: 0 }];
+  return out.length ? out : [{ text: String(text), pause: 0, lead: 0, tone: 0 }];
 }
 
 /** Невелике детерміноване відхилення, щоб репліки не звучали під копірку. */
@@ -142,10 +154,14 @@ function speakChunks(list, opts) {
     u.rate = Math.max(0.5, Math.min(1.6, item.rate));
     u.pitch = Math.max(0.6, Math.min(1.5, item.pitch));
 
-    const go = () => setTimeout(next, item.pause);
+    // Пауза з невеликим розкидом — рівні інтервали звучать механічно.
+    const wait = Math.round(item.pause * (0.85 + Math.random() * 0.3));
+    const go = () => setTimeout(next, wait);
     u.addEventListener('end', go);
     u.addEventListener('error', () => setTimeout(next, 60));
-    synth.speak(u);
+
+    if (item.lead) setTimeout(() => synth.speak(u), item.lead);
+    else synth.speak(u);
   };
   next();
 }
@@ -159,11 +175,14 @@ export function speak(text, opts = {}) {
   if (!ttsSupported || !text) return;
   stop();
   const voice = bestVoice();
-  const rate = opts.rate ?? 0.92;
+  const rate = opts.rate ?? 1.0;
+  const scale = opts.pauseScale ?? 1;
   const list = chunks(text).map((c, i) => ({
-    ...c, voice,
+    ...c,
+    voice,
+    pause: Math.round(c.pause * scale),
     rate: rate + jitter(i + 1, 0.02),
-    pitch: 1 + jitter(i + 7, 0.03),
+    pitch: 1 + c.tone + jitter(i + 7, 0.025),
   }));
   speakChunks(list, opts);
 }
@@ -178,7 +197,9 @@ export function speakDialogue(lines, opts = {}) {
   stop();
 
   const pool = voicePool();
-  const base = opts.rate ?? 0.92;
+  const base = opts.rate ?? 1.0;
+  // Для новачків розтягуємо не звуки, а паузи — саме так робить викладач.
+  const scale = opts.pauseScale ?? 1;
 
   // Стабільне закріплення голосу за мовцем у межах діалогу.
   const speakers = [...new Set(lines.map(l => l.speaker || '—'))];
@@ -203,10 +224,12 @@ export function speakDialogue(lines, opts = {}) {
       list.push({
         text: c.text,
         voice: v.voice,
+        lead: c.lead,
         rate: v.rate + jitter(li * 31 + ci, 0.015),
-        pitch: v.pitch + jitter(li * 17 + ci, 0.025),
-        // пауза між репліками помітно довша, ніж усередині фрази
-        pause: isLast ? (li === lines.length - 1 ? 0 : 560) : c.pause,
+        pitch: v.pitch + c.tone + jitter(li * 17 + ci, 0.02),
+        // Пауза між репліками довша за внутрішньофразову; на низьких рівнях
+        // саме вона дає час зрозуміти почуте, а темп лишається живим.
+        pause: Math.round((isLast ? (li === lines.length - 1 ? 0 : 520) : c.pause) * scale),
       });
     });
   });

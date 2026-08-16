@@ -1,10 +1,10 @@
 /* Роутер + сторінки. Хеш-навігація, щоб працювало на GitHub Pages без сервера. */
 
-import { LEVELS, loadLevel } from '../data/index.js?v=20260816a';
-import { el, renderExercise, renderExerciseSet } from './exercises.js?v=20260816a';
+import { LEVELS, loadLevel } from '../data/index.js?v=20260816b';
+import { el, renderExercise, renderExerciseSet } from './exercises.js?v=20260816b';
 import { speak, speakDialogue, stop as stopSpeech, ttsSupported, hasGermanVoice,
-         listGermanVoices, getVoicePrefs, setVoicePrefs } from './tts.js?v=20260816a';
-import { checkWriting } from './writing-check.js?v=20260816a';
+         listGermanVoices, getVoicePrefs, setVoicePrefs } from './tts.js?v=20260816b';
+import { checkWriting } from './writing-check.js?v=20260816b';
 
 const main = document.getElementById('main');
 
@@ -361,7 +361,7 @@ const RENDERERS = {
       if (playing) { stopSpeech(); return; }
       const lines = mod.vocab.flatMap(g => g.items.map(i => ({ de: i.de })));
       speakDialogue(lines, {
-        rate: 0.85,
+        rate: 0.98, pauseScale: 1.4,
         onStart: () => { playing = true; allBtn.textContent = '⏹ Зупинити'; },
         onEnd:   () => { playing = false; allBtn.textContent = '🔊 Прослухати всі слова'; },
       });
@@ -411,10 +411,13 @@ const RENDERERS = {
 
   listening(mod, meta) {
     const box = el('div', { class: 'stack' });
-    // Темп зростає з рівнем: на A1 диктор говорить повільно й чітко,
-    // на C1 — у природному темпі носія, як на справжньому іспиті.
-    const LEVEL_RATE = { a1: 0.78, a2: 0.86, b1: 0.94, b2: 1.02, c1: 1.10 };
-    const baseRate = LEVEL_RATE[meta.id] ?? 0.9;
+    // Темп скрізь близький до людського — розтягнуті звуки якраз і звучать
+    // машинно. Різницю між рівнями дають ПАУЗИ: на A1 вони майже вдвічі
+    // довші, тож новачок встигає зрозуміти, а мовлення лишається живим.
+    const LEVEL_RATE  = { a1: 0.95, a2: 1.00, b1: 1.05, b2: 1.10, c1: 1.16 };
+    const LEVEL_PAUSE = { a1: 1.9,  a2: 1.6,  b1: 1.3,  b2: 1.1,  c1: 1.0 };
+    const baseRate  = LEVEL_RATE[meta.id] ?? 1.0;
+    const pauseScale = LEVEL_PAUSE[meta.id] ?? 1.2;
 
     if (!ttsSupported) {
       box.append(el('div', { class: 'no-tts' },
@@ -437,15 +440,15 @@ const RENDERERS = {
       const play = () => {
         if (playing) { stopSpeech(); setIdle(); return; }
         playing = true; playBtn.textContent = '⏹'; playBtn.classList.add('is-playing');
-        speakDialogue(task.lines, { rate, onEnd: setIdle });
+        speakDialogue(task.lines, { rate, pauseScale, onEnd: setIdle });
       };
       playBtn.addEventListener('click', play);
 
       // Швидкості рахуються від темпу рівня, а не від сталої величини.
       const speeds = [
-        ['Повільно', +(baseRate * 0.82).toFixed(2)],
-        [`Темп ${meta.code}`, baseRate],
-        ['Швидше', +(baseRate * 1.15).toFixed(2)],
+        ['Повільніше', +(baseRate * 0.88).toFixed(2)],
+        ['Природно', baseRate],
+        ['Швидко', +(baseRate * 1.12).toFixed(2)],
       ];
       const speedBox = el('div', { class: 'speed-group' },
         speeds.map(([label, val]) => {
@@ -464,7 +467,7 @@ const RENDERERS = {
           el('strong', {}, task.lines.length > 1
             ? `Діалог · ${task.lines.length} реплік · ${new Set(task.lines.map(l => l.speaker || '—')).size} голоси`
             : 'Текст'),
-          `Темп мовлення відповідає рівню ${meta.code}. Слухайте двічі, як на іспиті:`),
+          `Живий темп; на ${meta.code} довші паузи між фразами. Слухайте двічі, як на іспиті:`),
         speedBox,
       ));
 
