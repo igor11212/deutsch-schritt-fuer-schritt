@@ -1,9 +1,10 @@
 /* Роутер + сторінки. Хеш-навігація, щоб працювало на GitHub Pages без сервера. */
 
-import { LEVELS, loadLevel } from '../data/index.js?v=20260816e';
-import { el, renderExercise, renderExerciseSet } from './exercises.js?v=20260816e';
-import { speak, speakDialogue, stop as stopSpeech, ttsSupported, hasGermanVoice } from './tts.js?v=20260816e';
-import { checkWriting } from './writing-check.js?v=20260816e';
+import { LEVELS, loadLevel } from '../data/index.js?v=20260816f';
+import { el, renderExercise, renderExerciseSet } from './exercises.js?v=20260816f';
+import { speak, speakDialogue, stop as stopSpeech, ttsSupported, hasGermanVoice } from './tts.js?v=20260816f';
+import { checkWriting } from './writing-check.js?v=20260816f';
+import { glossTerms } from './glossary.js?v=20260816f';
 
 const main = document.getElementById('main');
 
@@ -289,10 +290,11 @@ const RENDERERS = {
 
   grammar(mod) {
     return el('div', { class: 'stack' },
-      mod.grammar.map(g => el('section', { class: 'gram' },
-        el('h3', {}, g.title),
-        el('div', { html: g.html }),
-      )),
+      mod.grammar.map(g => {
+        const body = el('div', { html: g.html });
+        glossTerms(body);           // німецькі терміни отримують переклад при першій появі
+        return el('section', { class: 'gram' }, el('h3', {}, g.title), body);
+      }),
     );
   },
 
