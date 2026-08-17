@@ -34,7 +34,7 @@ export const LEVELS = [
   },
 ];
 
-import { READING } from './reading.js?v=20260817c';
+import { READING } from './reading.js?v=20260817d';
 
 const CACHE = new Map();
 
@@ -42,8 +42,8 @@ export async function loadLevel(id) {
   if (CACHE.has(id)) return CACHE.get(id);
   // Граматика й словник рівня лежать окремо й довантажуються разом.
   const [mod, voc] = await Promise.all([
-    import(`./${id}.js?v=20260817c`),
-    import(`./vocab-${id}.js?v=20260817c`),
+    import(`./${id}.js?v=20260817d`),
+    import(`./vocab-${id}.js?v=20260817d`),
   ]);
   const level = { ...mod.default, reading: READING[id] || [], vocab: voc.groups || [] };
   CACHE.set(id, level);

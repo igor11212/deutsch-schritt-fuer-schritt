@@ -1,5 +1,5 @@
-import { modules as part1 } from './a1-part1.js?v=20260817c';
-import { modules as part2 } from './a1-part2.js?v=20260817c';
+import { modules as part1 } from './a1-part1.js?v=20260817d';
+import { modules as part2 } from './a1-part2.js?v=20260817d';
 
 export default {
   intro:
