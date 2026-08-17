@@ -13,7 +13,17 @@ const FINITE = ['bin','bist','ist','sind','seid','war','warst','waren','wart',
   'werde','wirst','wird','werden','werdet','wurde','wurden'];
 
 const GREETING = /\b(hallo|liebe[rn]?|sehr geehrte[rn]?|guten (tag|morgen|abend)|servus|grüß gott)\b/i;
-const CLOSING  = /\b(viele grüße|liebe grüße|mit freundlichen grüßen|bis bald|bis dann|tschüss|herzliche grüße|beste grüße)\b/i;
+/* Прощання буває й коротким: «Bis Samstag!», «Alles Liebe», «Deine Olha». */
+const CLOSING  = /\b(viele grüße|liebe grüße|herzliche grüße|beste grüße|freundliche grüße|mit freundlichen grüßen|tschüss|ciao|alles (liebe|gute)|bis (bald|dann|später|morgen|montag|dienstag|mittwoch|donnerstag|freitag|samstag|sonntag)|dein[e]? [A-ZÄÖÜ])/i;
+
+/* Службові слова, які повторюються в будь-якому тексті — не привід шукати синонім. */
+const STOPWORDS = new Set(`einen einem einer eines eine nicht auch schon noch aber oder denn
+sehr sein seine seinen seinem ihre ihren ihrem meine meinen meinem deine deinen deinem
+haben habe hast hatte hatten sind ist bist waren dass wenn weil dieser diese dieses
+schon immer wieder etwas mehr viele viel alle alles etwa dann damit dabei
+werden wurde wird kann können muss müssen möchte möchten sollte sollten würde würden
+über unter durch gegen ohne nach beim zum zur vom bei mit von für auf aus
+ihnen mich mir dich dir uns euch`.split(/\s+/).filter(Boolean));
 
 /** Розбиття на речення з урахуванням крапки в скороченнях і числах. */
 function sentences(text) {
@@ -87,13 +97,14 @@ const UPGRADE = [
   [/\bgut\b/gi,        'gelungen, überzeugend, angenehm'],
   [/\bschön\b/gi,      'wunderbar, angenehm, ansprechend'],
   [/\bschlecht\b/gi,   'unbefriedigend, mangelhaft'],
-  [/\bsagen\b/gi,      'erklären, betonen, erwähnen'],
+  // не «lässt sich sagen» чи «sagen, dass» — це стійкі звороти самого C1
+  [/\b(ich sage|er sagt|sie sagt)\b/gi, 'erklären, betonen, erwähnen'],
   [/\bmachen\b/gi,     'erledigen, unternehmen, durchführen'],
   [/\bbekommen\b/gi,   'erhalten'],
   [/\bkaufen\b/gi,     'erwerben, anschaffen'],
   [/\bdenken\b/gi,     'der Ansicht sein, davon ausgehen'],
   [/\bwichtig\b/gi,    'entscheidend, wesentlich, zentral'],
-  [/\bProblem\b/g,     'Schwierigkeit, Herausforderung'],
+  [/\b(großes|viele) Problem/g, 'Schwierigkeit, Herausforderung'],
   [/\bviele? Leute\b/gi, 'zahlreiche Menschen'],
   [/\bsehr viel\b/gi,  'erheblich, beträchtlich'],
   [/\bIch finde\b/gi,  'Meiner Ansicht nach, Aus meiner Sicht'],
@@ -132,8 +143,11 @@ export function checkWriting(text, task, ctx = {}) {
       'Довгий текст — більше шансів на помилку, а балів за нього не додають. Орієнтир — приблизно вдвічі менше.');
   }
 
-  const isLetter = /Schreiben|E-Mail|Brief|Nachricht|SMS|Einladung|Postkarte|Mitteilung|Leserbrief/i
-    .test((task.exam || '') + ' ' + (task.title || ''));
+  // Звертання й прощання потрібні лише в листі. Форумний пост, коментар,
+  // резюме тексту чи стилістичне переписування їх не мають — і не повинні.
+  const genre = (task.exam || '') + ' ' + (task.title || '');
+  const isLetter = /E-Mail|Brief|Nachricht|SMS|Einladung|Postkarte|Mitteilung/i.test(genre)
+    && !/Forumsbeitrag|Forum|Kommentar|Zusammenfassung|Stellungnahme|Umformung|Bericht|Aufsatz/i.test(genre);
   if (isLetter) {
     if (!GREETING.test(t)) add('warn', 'Немає звертання',
       'Лист чи повідомлення починають зі звертання: «Hallo Max,», «Liebe Anna,», «Sehr geehrte Frau …,». Без нього знімають бали за формат.');
@@ -154,8 +168,10 @@ export function checkWriting(text, task, ctx = {}) {
     }
   }
 
-  // weil / dass / obwohl + дієслово не в кінці
-  const v2Re = new RegExp(`\\b(weil|dass|obwohl|damit|wenn)\\s+(\\p{L}+)\\s+(${FINITE.join('|')})\\b`, 'giu');
+  // weil / dass / obwohl + дієслово не в кінці.
+  // «wenn du willst,» — правильно: дієслово вже останнє. Помилка лише тоді,
+  // коли після дієслова в тому самому підрядному ще щось є.
+  const v2Re = new RegExp(`\\b(weil|dass|obwohl|damit|wenn)\\s+(\\p{L}+)\\s+(${FINITE.join('|')})\\s+(\\p{L}+)`, 'giu');
   for (const m of t.matchAll(v2Re)) {
     add('error', `Після «${m[1]}» дієслово має стояти в кінці`,
       'У підрядному реченні змінене дієслово йде останнім. Це найчастіша помилка на A2–B1.',
@@ -204,7 +220,9 @@ export function checkWriting(text, task, ctx = {}) {
 
   /* ── 3. Регістр звертання ──────────────────────────────────────────── */
   const hasDu  = /\b(du|dich|dir|dein[emrs]?)\b/i.test(t);
-  const hasSie = /\bSie\b|\bIhnen\b|\bIhre[nmrs]?\b/.test(t.replace(/^Sie\b/gm, ''));
+  // «Sie» — це ще й «вона/вони»: «Sie ist meine Mutter». Тому ознакою офіційного
+  // звертання вважаємо лише Ihnen / Ihr- або «Sehr geehrte», а не саме «Sie».
+  const hasSie = /\bIhnen\b|\bIhre[nmrs]?\b|\bsehr geehrte/i.test(t);
   if (hasDu && hasSie)
     add('error', 'Змішані «du» і «Sie»',
       'В одному листі звертання має бути однакове від початку до кінця. Оберіть du (друг) або Sie (офіційно) і витримайте всюди.');
@@ -233,9 +251,12 @@ export function checkWriting(text, task, ctx = {}) {
   const freq = {};
   ws.forEach(w => {
     const k = w.toLowerCase();
-    if (k.length > 4) freq[k] = (freq[k] || 0) + 1;
+    if (k.length > 4 && !STOPWORDS.has(k)) freq[k] = (freq[k] || 0) + 1;
   });
-  const repeated = Object.entries(freq).filter(([, n]) => n >= 4).map(([w]) => w);
+  // Порогом керує довжина: у тексті на 200 слів ключове слово теми законно
+  // трапляється частіше, ніж у записці на 50 слів.
+  const repLimit = Math.max(4, Math.round(ws.length / 40));
+  const repeated = Object.entries(freq).filter(([, n]) => n >= repLimit).map(([w]) => w);
   if (repeated.length)
     add('tip', 'Слово повторюється забагато разів',
       'Пошукайте синонім — оцінювачі окремо дивляться на різноманітність лексики.',
