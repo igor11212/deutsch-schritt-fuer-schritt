@@ -1,5 +1,5 @@
-import { modules as part2 } from './b2-part2.js?v=20260817a';
-import { modules as part3 } from './b2-part3.js?v=20260817a';
+import { modules as part2 } from './b2-part2.js?v=20260817b';
+import { modules as part3 } from './b2-part3.js?v=20260817b';
 
 export default {
   intro:
@@ -173,65 +173,6 @@ export default {
 </tbody></table>`,
       },
     ],
-
-    vocab: [
-      {
-        group: 'Конектори',
-        items: [
-          { de: 'obwohl', uk: 'хоча (підрядне)' },
-          { de: 'trotzdem / dennoch', uk: 'попри це, все ж (прислівник)' },
-          { de: 'allerdings / jedoch', uk: 'утім, однак' },
-          { de: 'zwar …, aber …', uk: 'хоч і …, але …' },
-          { de: 'damit', uk: 'щоб (різні підмети)' },
-          { de: 'um … zu', uk: 'щоб (той самий підмет)' },
-          { de: 'sodass', uk: 'так що (наслідок)' },
-          { de: 'folglich / infolgedessen', uk: 'отже, внаслідок цього' },
-          { de: 'indem', uk: 'тим, що; шляхом' },
-          { de: 'falls / sofern', uk: 'якщо, у разі' },
-          { de: 'sonst / andernfalls', uk: 'інакше' },
-          { de: 'je … desto / umso', uk: 'чим … тим' },
-          { de: 'außerdem / zudem', uk: 'крім того' },
-          { de: 'einerseits … andererseits', uk: 'з одного боку … з іншого' },
-        ],
-      },
-      {
-        group: 'Мова аргументації',
-        items: [
-          { de: 'das Argument, -e', uk: 'аргумент' },
-          { de: 'der Vorteil / der Nachteil', uk: 'перевага / недолік' },
-          { de: 'überwiegen', uk: 'переважати' },
-          { de: 'behaupten', uk: 'стверджувати' },
-          { de: 'bezweifeln', uk: 'сумніватися в' },
-          { de: 'einräumen', uk: 'визнавати (частково)' },
-          { de: 'widersprechen + Dat.', uk: 'заперечувати комусь' },
-          { de: 'zustimmen + Dat.', uk: 'погоджуватися з' },
-          { de: 'berücksichtigen', uk: 'враховувати' },
-          { de: 'die Voraussetzung, -en', uk: 'передумова' },
-          { de: 'die Auswirkung, -en', uk: 'наслідок, вплив' },
-          { de: 'in Betracht ziehen', uk: 'брати до уваги' },
-          { de: 'auf der einen / anderen Seite', uk: 'з одного / з іншого боку' },
-          { de: 'aus meiner Sicht', uk: 'на мій погляд' },
-        ],
-      },
-      {
-        group: 'Актуальні теми іспиту',
-        items: [
-          { de: 'die Digitalisierung', uk: 'цифровізація' },
-          { de: 'das Homeoffice', uk: 'робота з дому' },
-          { de: 'die Work-Life-Balance', uk: 'баланс роботи й життя' },
-          { de: 'der Klimawandel', uk: 'зміна клімату' },
-          { de: 'die soziale Medien (Pl.)', uk: 'соціальні мережі' },
-          { de: 'die Gleichberechtigung', uk: 'рівноправність' },
-          { de: 'der Fachkräftemangel', uk: 'брак кваліфікованих кадрів' },
-          { de: 'die Integration', uk: 'інтеграція' },
-          { de: 'lebenslanges Lernen', uk: 'навчання впродовж життя' },
-          { de: 'die Verantwortung übernehmen', uk: 'брати відповідальність' },
-          { de: 'die Lebensqualität', uk: 'якість життя' },
-          { de: 'der Druck / unter Druck stehen', uk: 'тиск / бути під тиском' },
-        ],
-      },
-    ],
-
     exercises: [
       { type: 'choice', q: '___ es stark regnete, sind wir spazieren gegangen.',
         options: ['Trotzdem', 'Obwohl', 'Deshalb', 'Dennoch'], answer: 1 },
@@ -495,59 +436,6 @@ Iryna Kowal`,
 </tbody></table>`,
       },
     ],
-
-    vocab: [
-      {
-        group: 'Ступінь упевненості',
-        items: [
-          { de: 'offenbar / anscheinend', uk: 'вочевидь / як видається' },
-          { de: 'vermutlich / wahrscheinlich', uk: 'імовірно' },
-          { de: 'möglicherweise', uk: 'можливо' },
-          { de: 'zweifellos', uk: 'безсумнівно' },
-          { de: 'angeblich', uk: 'нібито' },
-          { de: 'kaum', uk: 'навряд' },
-          { de: 'die Vermutung, -en', uk: 'припущення' },
-          { de: 'der Zweifel, -', uk: 'сумнів' },
-          { de: 'behaupten', uk: 'стверджувати' },
-          { de: 'bestreiten', uk: 'заперечувати, спростовувати' },
-          { de: 'nachweisen', uk: 'доводити' },
-          { de: 'davon ausgehen, dass …', uk: 'виходити з того, що …' },
-        ],
-      },
-      {
-        group: 'Офіційна лексика',
-        items: [
-          { de: 'gemäß + Dat.', uk: 'згідно з' },
-          { de: 'aufgrund + Gen.', uk: 'на підставі' },
-          { de: 'hinsichtlich + Gen.', uk: 'щодо' },
-          { de: 'im Rahmen + Gen.', uk: 'у рамках' },
-          { de: 'die Einreichung', uk: 'подання' },
-          { de: 'die Bearbeitung', uk: 'опрацювання' },
-          { de: 'die Bescheinigung', uk: 'довідка' },
-          { de: 'der Nachweis, -e', uk: 'підтвердження, доказ' },
-          { de: 'die Voraussetzung erfüllen', uk: 'відповідати умові' },
-          { de: 'zuständig sein für + Akk.', uk: 'відповідати за' },
-          { de: 'die Zuständigkeit', uk: 'компетенція, відповідальність' },
-          { de: 'in Kraft treten', uk: 'набувати чинності' },
-        ],
-      },
-      {
-        group: 'Дієслова оцінки та зміни',
-        items: [
-          { de: 'zunehmen / abnehmen', uk: 'зростати / зменшуватися' },
-          { de: 'sich verringern', uk: 'скорочуватися' },
-          { de: 'ansteigen', uk: 'підвищуватися' },
-          { de: 'sich auswirken auf + Akk.', uk: 'впливати на' },
-          { de: 'zurückführen auf + Akk.', uk: 'пояснювати чимось' },
-          { de: 'hervorrufen', uk: 'спричиняти' },
-          { de: 'ermöglichen', uk: 'уможливлювати' },
-          { de: 'erfordern', uk: 'вимагати' },
-          { de: 'gewährleisten', uk: 'забезпечувати' },
-          { de: 'sich abzeichnen', uk: 'вимальовуватися (про тенденцію)' },
-        ],
-      },
-    ],
-
     exercises: [
       { type: 'choice', q: 'Das Licht brennt — er ___ zu Hause sein. (майже певно)',
         options: ['kann', 'darf', 'muss', 'will'], answer: 2 },

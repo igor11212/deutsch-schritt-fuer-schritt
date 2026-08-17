@@ -1,5 +1,5 @@
-import { modules as part2 } from './b1-part2.js?v=20260817a';
-import { modules as part3 } from './b1-part3.js?v=20260817a';
+import { modules as part2 } from './b1-part2.js?v=20260817b';
+import { modules as part3 } from './b1-part3.js?v=20260817b';
 
 export default {
   intro:
@@ -172,53 +172,6 @@ würde ich dir helfen.</em></p>`,
 <em>einen Termin vereinbaren</em>, <em>kurz stören</em>, <em>eine Bitte haben</em>.</div>`,
       },
     ],
-
-    vocab: [
-      {
-        group: 'Ввічливі формули',
-        items: [
-          { de: 'Könnten Sie mir bitte helfen?', uk: 'Чи могли б Ви мені допомогти?' },
-          { de: 'Würden Sie so freundlich sein und …?', uk: 'Чи були б Ви такі люб’язні …?' },
-          { de: 'Ich hätte eine Frage.', uk: 'У мене було б запитання.' },
-          { de: 'Wäre es möglich, den Termin zu verschieben?', uk: 'Чи можливо перенести зустріч?' },
-          { de: 'Dürfte ich Sie kurz stören?', uk: 'Чи можу я Вас ненадовго відволікти?' },
-          { de: 'Das wäre sehr nett von Ihnen.', uk: 'Це було б дуже мило з Вашого боку.' },
-          { de: 'Ich würde mich sehr freuen.', uk: 'Я був би дуже радий.' },
-          { de: 'Vielen Dank im Voraus.', uk: 'Заздалегідь дякую.' },
-        ],
-      },
-      {
-        group: 'Поради й пропозиції',
-        items: [
-          { de: 'An deiner Stelle würde ich …', uk: 'На твоєму місці я б …' },
-          { de: 'Du solltest unbedingt …', uk: 'Тобі обов’язково варто …' },
-          { de: 'Es wäre besser, wenn …', uk: 'Було б краще, якби …' },
-          { de: 'Ich würde vorschlagen, …', uk: 'Я б запропонував …' },
-          { de: 'Wie wäre es mit …?', uk: 'Як щодо …?' },
-          { de: 'der Vorschlag, ¨-e', uk: 'пропозиція' },
-          { de: 'der Rat / der Ratschlag', uk: 'порада' },
-          { de: 'empfehlen', uk: 'рекомендувати' },
-          { de: 'überlegen', uk: 'обмірковувати' },
-          { de: 'sich entscheiden', uk: 'вирішувати' },
-        ],
-      },
-      {
-        group: 'Скарги та рекламації',
-        items: [
-          { de: 'sich beschweren über + Akk.', uk: 'скаржитися на' },
-          { de: 'die Beschwerde, -n', uk: 'скарга' },
-          { de: 'reklamieren', uk: 'подавати рекламацію' },
-          { de: 'funktionieren / kaputt sein', uk: 'працювати / бути зламаним' },
-          { de: 'umtauschen', uk: 'обміняти (товар)' },
-          { de: 'das Geld zurückbekommen', uk: 'отримати гроші назад' },
-          { de: 'die Garantie', uk: 'гарантія' },
-          { de: 'die Rechnung, -en', uk: 'рахунок' },
-          { de: 'der Mangel, ¨-', uk: 'дефект, недолік' },
-          { de: 'sich verspäten / die Verspätung', uk: 'запізнюватися / запізнення' },
-        ],
-      },
-    ],
-
     exercises: [
       { type: 'gap', q: '___ Sie mir bitte helfen? (können, Konj. II)', answers: ['Könnten|Koennten'] },
       { type: 'gap', q: 'Ich ___ gern einen Termin vereinbaren. (würde)', answers: ['würde|wuerde'] },
@@ -465,59 +418,6 @@ Iryna Kowal`,
 чи стоїть після <em>werden</em> Partizip II.</div>`,
       },
     ],
-
-    vocab: [
-      {
-        group: 'Процеси й виробництво',
-        items: [
-          { de: 'herstellen / produzieren', uk: 'виготовляти / виробляти' },
-          { de: 'bauen', uk: 'будувати' },
-          { de: 'reparieren', uk: 'ремонтувати' },
-          { de: 'renovieren', uk: 'робити ремонт' },
-          { de: 'liefern', uk: 'доставляти' },
-          { de: 'verkaufen / kaufen', uk: 'продавати / купувати' },
-          { de: 'entwickeln', uk: 'розробляти' },
-          { de: 'erfinden', uk: 'винаходити' },
-          { de: 'zerstören', uk: 'руйнувати' },
-          { de: 'gründen', uk: 'засновувати' },
-          { de: 'das Material, -ien', uk: 'матеріал' },
-          { de: 'die Herstellung', uk: 'виготовлення' },
-        ],
-      },
-      {
-        group: 'Правила та інструкції',
-        items: [
-          { de: 'erlaubt / verboten', uk: 'дозволено / заборонено' },
-          { de: 'die Vorschrift, -en', uk: 'припис, правило' },
-          { de: 'die Regel, -n', uk: 'правило' },
-          { de: 'beachten', uk: 'зважати, дотримуватися' },
-          { de: 'das Formular ausfüllen', uk: 'заповнити формуляр' },
-          { de: 'unterschreiben', uk: 'підписувати' },
-          { de: 'die Unterschrift', uk: 'підпис' },
-          { de: 'einreichen', uk: 'подавати (документи)' },
-          { de: 'die Frist, -en', uk: 'термін' },
-          { de: 'die Anmeldung', uk: 'реєстрація' },
-          { de: 'der Antrag, ¨-e', uk: 'заява, клопотання' },
-          { de: 'genehmigen', uk: 'схвалювати, затверджувати' },
-        ],
-      },
-      {
-        group: 'Новини і суспільство',
-        items: [
-          { de: 'die Nachricht, -en', uk: 'новина' },
-          { de: 'die Umwelt', uk: 'довкілля' },
-          { de: 'die Umfrage, -n', uk: 'опитування' },
-          { de: 'veröffentlichen', uk: 'публікувати' },
-          { de: 'diskutieren über + Akk.', uk: 'обговорювати' },
-          { de: 'kritisieren', uk: 'критикувати' },
-          { de: 'die Entscheidung, -en', uk: 'рішення' },
-          { de: 'die Untersuchung, -en', uk: 'дослідження' },
-          { de: 'feststellen', uk: 'встановлювати (факт)' },
-          { de: 'verbessern', uk: 'покращувати' },
-        ],
-      },
-    ],
-
     exercises: [
       { type: 'gap', q: 'Das Auto ___ gerade ___. (reparieren, Passiv Präsens)', answers: ['wird', 'repariert'] },
       { type: 'gap', q: 'Die Brücke ___ 1990 ___. (bauen, Passiv Präteritum)', answers: ['wurde', 'gebaut'] },
