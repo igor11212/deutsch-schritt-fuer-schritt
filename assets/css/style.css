@@ -728,3 +728,15 @@ details.transcript--model > summary { color: var(--text); }
 /* термін уже в дужках — розділяємо тире, без другої пари */
 .term--bare > i::before { content: " — "; }
 .term--bare > i::after  { content: ""; }
+
+/* ---- текст для читання ---- */
+
+.reading-text {
+  margin: 1.1rem 0; padding: 1.2rem 1.4rem;
+  border-radius: var(--r); background: var(--surface-2);
+  border: 1px solid var(--line-soft);
+  font-family: var(--font-de); font-size: 1.02rem; line-height: 1.85;
+}
+.reading-text p { margin: 0 0 1em; }
+.reading-text p:last-child { margin-bottom: 0; }
+.reading-text strong { font-family: var(--font); font-size: .95em; }
