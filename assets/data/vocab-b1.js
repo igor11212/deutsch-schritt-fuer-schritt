@@ -4,7 +4,7 @@
 export const groups = [
   {
     group: 'Думка й позиція',
-    note: 'Від обережного припущення до твердої незгоди.',
+    note: 'Від обережного припущення до твердої незгоди. Meiner Meinung nach не потребує dass і не ламає речення — одразу після нього йде дієслово: Meiner Meinung nach ist das falsch.',
     items: [
       { de: 'Meiner Meinung nach …', uk: 'На мою думку …' },
       { de: 'Ich finde / Ich denke, dass …', uk: 'Я вважаю / думаю, що …' },
@@ -24,6 +24,7 @@ export const groups = [
   },
   {
     group: 'Переваги й недоліки',
+    note: 'Спершу самі поняття, потім оцінні прикметники. Vorteil і Nachteil будують пару з Genitiv або bei: der Vorteil dieser Lösung, ein Nachteil beim Fahrrad.',
     items: [
       { de: 'der Vorteil, -e', uk: 'перевага' },
       { de: 'der Nachteil, -e', uk: 'недолік' },
@@ -43,7 +44,7 @@ export const groups = [
   },
   {
     group: 'Життєвий шлях',
-    note: 'У хронологічному порядку.',
+    note: 'У хронологічному порядку, від дитинства до пенсії. Studium стосується лише вишу, Ausbildung — фахового навчання з практикою; у Німеччині це два різні шляхи, і в резюме їх не змішують.',
     items: [
       { de: 'die Kindheit', uk: 'дитинство' },
       { de: 'die Jugend', uk: 'юність' },
@@ -63,6 +64,7 @@ export const groups = [
   },
   {
     group: 'Робота: умови й стосунки',
+    note: 'Від структури фірми до домовленостей і конфліктів. Chef — розмовне слово; у документах пишуть Vorgesetzte(r). Abteilung — це відділ, Bereich — ширша сфера.',
     items: [
       { de: 'der Arbeitgeber / der Arbeitnehmer', uk: 'роботодавець / працівник' },
       { de: 'die Abteilung, -en', uk: 'відділ' },
@@ -82,6 +84,7 @@ export const groups = [
   },
   {
     group: 'Гроші й побутова економіка',
+    note: 'Від доходу до витрат і зобов’язань. Rechnung — рахунок до сплати, Konto — рахунок у банку; українське «рахунок» покриває обидва, тому їх плутають найчастіше.',
     items: [
       { de: 'das Einkommen', uk: 'дохід' },
       { de: 'die Ausgaben (Pl.)', uk: 'витрати' },
@@ -101,6 +104,7 @@ export const groups = [
   },
   {
     group: 'Довкілля й сталість',
+    note: 'Від проблеми до дії. Müll trennen — саме «сортувати», а не «розділяти». Nachhaltig означає не «тривалий», а «такий, що не вичерпує ресурс».',
     items: [
       { de: 'die Umwelt', uk: 'довкілля' },
       { de: 'der Klimawandel', uk: 'зміна клімату' },
@@ -120,6 +124,7 @@ export const groups = [
   },
   {
     group: 'Здоров’я і спосіб життя',
+    note: 'Від харчування й руху до звичок. sich ernähren вживають лише зі способом — sich gesund ernähren; просто «харчуватися» німецькою не кажуть.',
     items: [
       { de: 'die Ernährung', uk: 'харчування' },
       { de: 'sich gesund ernähren', uk: 'харчуватися здорово' },
@@ -139,6 +144,7 @@ export const groups = [
   },
   {
     group: 'Медіа й інформація',
+    note: 'Від носія до дії з інформацією. sich informieren über — дізнаватися самому, berichten über — повідомляти іншим; обидва вимагають über + Akkusativ.',
     items: [
       { de: 'die Nachrichten (Pl.)', uk: 'новини' },
       { de: 'die Zeitung, -en', uk: 'газета' },
@@ -158,6 +164,7 @@ export const groups = [
   },
   {
     group: 'Люди й суспільство',
+    note: 'Від спільноти до цінностей і участі. Beziehung означає стосунки будь-якого типу — і романтичні, і робочі; на конкретність вказує означення: eine berufliche Beziehung.',
     items: [
       { de: 'die Gesellschaft, -en', uk: 'суспільство' },
       { de: 'die Gemeinschaft, -en', uk: 'спільнота' },
@@ -177,7 +184,7 @@ export const groups = [
   },
   {
     group: 'Дієслова з фіксованим прийменником',
-    note: 'Вивчати тільки разом із прийменником — інакше не працює.',
+    note: 'Вивчати тільки разом із прийменником і відмінком — окремо дієслово не працює. Українська логіка тут не рятує: «думати про» це denken an, а не über.',
     items: [
       { de: 'warten auf + Akk.', uk: 'чекати на' },
       { de: 'denken an + Akk.', uk: 'думати про' },
@@ -197,7 +204,7 @@ export const groups = [
   },
   {
     group: 'Слова оцінки й міри',
-    note: 'За зростанням інтенсивності.',
+    note: 'За зростанням інтенсивності, від kaum до völlig. Ці слова стоять у середині речення, безпосередньо перед тим, що підсилюють, і ніколи не на першому місці.',
     items: [
       { de: 'kaum', uk: 'ледве, майже не' },
       { de: 'ein bisschen', uk: 'трохи' },

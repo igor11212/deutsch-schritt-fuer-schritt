@@ -5,7 +5,7 @@
 export const groups = [
   {
     group: 'Вступ і теза',
-    note: 'Формули, з яких починають текст.',
+    note: 'Формули, з яких починається аргументативний текст. Meiner Ansicht nach і Aus meiner Sicht звучать стриманіше за Ich finde — на B2 екзаменатор очікує саме такої дистанції.',
     items: [
       { de: 'In letzter Zeit wird viel über … diskutiert.', uk: 'Останнім часом багато дискутують про …' },
       { de: 'Die Frage, ob …, beschäftigt viele.', uk: 'Питання, чи …, хвилює багатьох.' },
@@ -21,7 +21,7 @@ export const groups = [
   },
   {
     group: 'Розвиток аргументу',
-    note: 'Від першого доводу до прикладу й доказу.',
+    note: 'Від першого доводу до прикладу й доказу. Zudem і außerdem займають перше місце й тягнуть дієслово на друге: Zudem sinken die Kosten.',
     items: [
       { de: 'zunächst', uk: 'спершу' },
       { de: 'ein weiterer Aspekt ist …', uk: 'ще один аспект — …' },
@@ -41,7 +41,7 @@ export const groups = [
   },
   {
     group: 'Заперечення й поступка',
-    note: 'Спершу визнати, тоді заперечити — так будують сильний абзац.',
+    note: 'Спершу визнати чуже, тоді заперечити — так будують сильний абзац. Zwar завжди має пару aber: без другої частини конструкція обривається.',
     items: [
       { de: 'zwar … aber', uk: 'хоч і … але' },
       { de: 'zugegeben', uk: 'визнаю' },
@@ -61,6 +61,7 @@ export const groups = [
   },
   {
     group: 'Наслідок і висновок',
+    note: 'Від причинно-наслідкового зв’язку до підсумку. Folglich, somit і daher ставлять дієслово на друге місце, а sodass вводить підрядне з дієсловом у кінці.',
     items: [
       { de: 'folglich / infolgedessen', uk: 'отже / унаслідок цього' },
       { de: 'daher / deswegen', uk: 'тому' },
@@ -80,7 +81,7 @@ export const groups = [
   },
   {
     group: 'Стійкі іменниково-дієслівні звороти',
-    note: 'Дієслово в парі фіксоване — вивчати цілим блоком.',
+    note: 'Дієслово в парі фіксоване й окремо не перекладається. Рішення trifft man, а не «macht»; критику übt man, а не «macht» — помилка в цьому дієслові чути одразу.',
     items: [
       { de: 'eine Entscheidung treffen', uk: 'ухвалити рішення' },
       { de: 'eine Frage stellen', uk: 'поставити питання' },
@@ -98,6 +99,7 @@ export const groups = [
   },
   {
     group: 'Офіційна мова установ',
+    note: 'Від заяви до рішення. Erfolgen і vorliegen — сигнали канцелярського стилю: замість «щось відбувається» пишуть die Zahlung erfolgt, замість «документи є» — die Unterlagen liegen vor.',
     items: [
       { de: 'der Antrag, ¨-e', uk: 'заява, клопотання' },
       { de: 'beantragen', uk: 'подавати заяву на' },
@@ -117,6 +119,7 @@ export const groups = [
   },
   {
     group: 'Економіка й ринок праці',
+    note: 'Від загальних понять до динаміки. Wirtschaft — це економіка як сфера життя, Ökonomie — радше наука про неї; у газетних текстах майже завжди перше.',
     items: [
       { de: 'die Wirtschaft', uk: 'економіка' },
       { de: 'das Unternehmen, -', uk: 'підприємство' },
@@ -136,6 +139,7 @@ export const groups = [
   },
   {
     group: 'Освіта й наука',
+    note: 'Від системи освіти до методів дослідження. Bildung — освіта як цінність і процес, Ausbildung — конкретне фахове навчання; у дискусіях про школу вживають Bildung.',
     items: [
       { de: 'die Bildung', uk: 'освіта' },
       { de: 'das Bildungssystem', uk: 'освітня система' },
@@ -154,6 +158,7 @@ export const groups = [
   },
   {
     group: 'Суспільні теми',
+    note: 'Від цінностей до конкретних груп і проблем. Betroffen sein von означає «бути зачепленим наслідками», а не «бути стурбованим» — це хибний друг.',
     items: [
       { de: 'die Gerechtigkeit', uk: 'справедливість' },
       { de: 'die Gleichberechtigung', uk: 'рівноправність' },
@@ -173,7 +178,7 @@ export const groups = [
   },
   {
     group: 'Точніші синоніми',
-    note: 'Ліворуч — просте слово, праворуч — те, що очікують на B2.',
+    note: 'Ліворуч просте слово, праворуч те, що очікують на B2. Не замінюйте механічно: erheblich доречне з числами й обсягами, entscheidend — там, де щось справді вирішує результат.',
     items: [
       { de: 'gut → gelungen, überzeugend', uk: 'вдалий, переконливий' },
       { de: 'schlecht → mangelhaft, unzureichend', uk: 'недостатній' },

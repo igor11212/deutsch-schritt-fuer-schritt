@@ -4,7 +4,7 @@
 export const groups = [
   {
     group: 'Характер і зовнішність',
-    note: 'Спершу зовнішність, потім вдача — і знову парами.',
+    note: 'Спершу зовнішність, потім вдача, і знову парами протилежностей. Описуючи людину, беруть aussehen для вигляду й sein для характеру: Sie sieht müde aus, aber sie ist fröhlich.',
     items: [
       { de: 'aussehen', uk: 'виглядати', ex: 'Sie sieht müde aus.' },
       { de: 'schlank / dick', uk: 'струнка / повний' },
@@ -25,7 +25,7 @@ export const groups = [
   },
   {
     group: 'Почуття й самопочуття',
-    note: 'Від доброго до поганого.',
+    note: 'Від доброго до поганого. Більшість почуттів вимагають фіксованого прийменника — sich freuen über, sich ärgern über, Angst haben vor; без нього фраза розсипається, тому вчіть їх цілим блоком.',
     items: [
       { de: 'sich freuen über + Akk.', uk: 'радіти чомусь' },
       { de: 'glücklich / zufrieden', uk: 'щасливий / задоволений' },
@@ -45,7 +45,7 @@ export const groups = [
   },
   {
     group: 'Побут і хатні справи',
-    note: 'У порядку звичайного дня.',
+    note: 'У порядку звичайного дня, від підйому до сну. Придивіться до зворотних дієслів із sich: українського відповідника-частки в них часто немає, sich duschen — це просто «приймати душ».',
     items: [
       { de: 'aufstehen', uk: 'вставати' },
       { de: 'sich duschen', uk: 'приймати душ' },
@@ -67,6 +67,7 @@ export const groups = [
   },
   {
     group: 'Житло докладніше',
+    note: 'Від людей і договору до самого помешкання. Nebenkosten — окрема стаття поверх орендної плати; в оголошеннях пишуть Kaltmiete (без них) і Warmmiete (з ними), і різниця буває у сотні євро.',
     items: [
       { de: 'der Vermieter / die Vermieterin', uk: 'орендодавець / орендодавиця' },
       { de: 'der Mieter / die Mieterin', uk: 'орендар / орендарка' },
@@ -87,7 +88,7 @@ export const groups = [
   },
   {
     group: 'Робота й пошук роботи',
-    note: 'Від оголошення до першого дня.',
+    note: 'Від оголошення до першого дня. Bewerbung — це весь пакет документів, а не лист: сам лист називають Anschreiben, а біографію — Lebenslauf.',
     items: [
       { de: 'die Stellenanzeige, -n', uk: 'оголошення про вакансію' },
       { de: 'sich bewerben um + Akk.', uk: 'подавати заявку на' },
@@ -108,6 +109,7 @@ export const groups = [
   },
   {
     group: 'Навчання й курси',
+    note: 'Від заняття до результату. Іспит «складають» через bestehen, а «завалюють» через durchfallen; дослівне «пройти іспит» німецькою не працює.',
     items: [
       { de: 'der Unterricht', uk: 'заняття, урок' },
       { de: 'die Hausaufgabe, -n', uk: 'домашнє завдання' },
@@ -128,14 +130,14 @@ export const groups = [
   },
   {
     group: 'Подорожі й відпустка',
-    note: 'За порядком самої поїздки.',
+    note: 'За порядком поїздки: план, збори, дорога, житло, враження. Reise — подорож як подія, Fahrt — сам переїзд; buchen означає бронювати заздалегідь, reservieren — притримати місце.',
     items: [
       { de: 'die Reise, -n', uk: 'подорож' },
       { de: 'planen', uk: 'планувати' },
       { de: 'buchen / reservieren', uk: 'бронювати' },
       { de: 'packen', uk: 'пакувати' },
       { de: 'der Koffer, -', uk: 'валіза' },
-      { de: 'abfahren / ankommen', uk: 'відʼїжджати / прибувати' },
+      { de: 'abfahren / ankommen', uk: 'від’їжджати / прибувати' },
       { de: 'umsteigen', uk: 'робити пересадку' },
       { de: 'der Flug, ¨-e', uk: 'авіарейс' },
       { de: 'die Unterkunft, ¨-e', uk: 'житло на час поїздки' },
@@ -149,6 +151,7 @@ export const groups = [
   },
   {
     group: 'Здоров’я й лікар',
+    note: 'У порядку візиту до лікаря. Praxis — приватний кабінет, Krankenhaus — лікарня; ідуть zum Arzt, але ins Krankenhaus.',
     items: [
       { de: 'die Praxis (Pl. Praxen)', uk: 'кабінет лікаря' },
       { de: 'einen Termin vereinbaren', uk: 'домовитися про візит' },
@@ -168,6 +171,7 @@ export const groups = [
   },
   {
     group: 'Місто, установи, послуги',
+    note: 'Від установи до документів і довідок. З Amt працює прийменник auf, а не in: auf dem Amt, auf die Post, auf der Bank.',
     items: [
       { de: 'das Amt, ¨-er', uk: 'відомство, установа' },
       { de: 'das Bürgerbüro', uk: 'центр надання послуг' },
@@ -187,6 +191,7 @@ export const groups = [
   },
   {
     group: 'Вільний час і захоплення',
+    note: 'Від самого поняття вільного часу до занять і зустрічей. Спорт вимагає різних дієслів: Sport treiben загалом, але Fußball spielen, Rad fahren, schwimmen gehen.',
     items: [
       { de: 'die Freizeit', uk: 'вільний час' },
       { de: 'das Hobby, -s', uk: 'захоплення' },
@@ -207,6 +212,7 @@ export const groups = [
   },
   {
     group: 'Медіа й техніка',
+    note: 'Від пристроїв до дій із ними. Handy — це «мобільний телефон» і хибний друг: англійське handy тут ні до чого. Nachricht означає і «повідомлення», і «новина».',
     items: [
       { de: 'das Handy, -s', uk: 'мобільний телефон' },
       { de: 'der Computer, -', uk: 'комп’ютер' },
@@ -226,7 +232,7 @@ export const groups = [
   },
   {
     group: 'Родини дієслів: один корінь, різні приставки',
-    note: 'Ліворуч базове дієслово, праворуч — уся його родина. Так помітно, що приставка робить зі значенням.',
+    note: 'Ліворуч базове дієслово, праворуч уся його родина. Так видно, що робить приставка: be- часто прибирає рух і додає об’єкт — kommen це «приходити», а bekommen уже «отримувати».',
     items: [
       { de: 'kommen → ankommen, mitkommen, zurückkommen, bekommen',
         uk: 'приходити → прибувати, іти разом, повертатися, отримувати',
@@ -236,7 +242,7 @@ export const groups = [
       { de: 'ziehen → umziehen, anziehen, ausziehen, erziehen',
         uk: 'тягнути → переїжджати, одягати, знімати, виховувати' },
       { de: 'fahren → abfahren, mitfahren, erfahren',
-        uk: 'їхати → відʼїжджати, їхати разом, дізнаватися' },
+        uk: 'їхати → від’їжджати, їхати разом, дізнаватися' },
       { de: 'geben → abgeben, ausgeben, aufgeben',
         uk: 'давати → здавати, витрачати, здаватися' },
       { de: 'suchen → besuchen, versuchen, untersuchen',
@@ -249,7 +255,7 @@ export const groups = [
   },
   {
     group: 'Слова для зв’язного тексту',
-    note: 'Від найпростіших до тих, що керують порядком слів.',
+    note: 'Від найпростіших до тих, що керують порядком слів. Три різні поведінки: weil і dass женуть дієслово в кінець, deshalb і trotzdem ставлять його на друге місце, und і aber не змінюють нічого.',
     items: [
       { de: 'zuerst', uk: 'спершу' },
       { de: 'dann / danach', uk: 'потім / після того' },
