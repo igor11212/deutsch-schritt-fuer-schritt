@@ -1,5 +1,5 @@
-import { modules as part2 } from './a2-part2.js?v=20260817a';
-import { modules as part3 } from './a2-part3.js?v=20260817a';
+import { modules as part2 } from './a2-part2.js?v=20260817b';
+import { modules as part3 } from './a2-part3.js?v=20260817b';
 
 export default {
   intro:
@@ -148,57 +148,6 @@ hoffen, finden, sich freuen</em>, а також вирази <em>Es ist schön /
 </tbody></table>`,
       },
     ],
-
-    vocab: [
-      {
-        group: 'Сполучники та зв’язки',
-        items: [
-          { de: 'weil', uk: 'тому що (дієслово в кінець)' },
-          { de: 'denn', uk: 'бо (порядок слів не змінюється)' },
-          { de: 'deshalb / deswegen / darum', uk: 'тому, через це (наслідок)' },
-          { de: 'dass', uk: 'що' },
-          { de: 'wenn', uk: 'якщо; коли (повторювано)' },
-          { de: 'als', uk: 'коли (одноразово, в минулому)' },
-          { de: 'obwohl', uk: 'хоча' },
-          { de: 'trotzdem', uk: 'попри це, все одно' },
-          { de: 'damit', uk: 'щоб (мета)' },
-          { de: 'bevor / nachdem', uk: 'перш ніж / після того як' },
-        ],
-      },
-      {
-        group: 'Думки й почуття',
-        items: [
-          { de: 'glauben', uk: 'вважати, гадати', ex: 'Ich glaube, dass er kommt.' },
-          { de: 'meinen', uk: 'мати думку' },
-          { de: 'denken', uk: 'думати' },
-          { de: 'hoffen', uk: 'сподіватися' },
-          { de: 'sich freuen', uk: 'радіти', ex: 'Ich freue mich, dass du da bist.' },
-          { de: 'sich ärgern', uk: 'сердитися' },
-          { de: 'Angst haben', uk: 'боятися' },
-          { de: 'wichtig / unwichtig', uk: 'важливий / неважливий' },
-          { de: 'schade', uk: 'шкода', ex: 'Es ist schade, dass du nicht kommst.' },
-          { de: 'der Grund, ¨-e', uk: 'причина' },
-          { de: 'die Meinung, -en', uk: 'думка' },
-          { de: 'einverstanden sein', uk: 'бути згодним' },
-        ],
-      },
-      {
-        group: 'Побут і причини',
-        items: [
-          { de: 'die Erkältung / krank sein', uk: 'застуда / хворіти' },
-          { de: 'der Termin, -e', uk: 'зустріч, прийом' },
-          { de: 'die Prüfung, -en', uk: 'іспит' },
-          { de: 'der Stress', uk: 'стрес' },
-          { de: 'umziehen', uk: 'переїжджати' },
-          { de: 'sich verspäten', uk: 'запізнюватися' },
-          { de: 'absagen', uk: 'скасовувати' },
-          { de: 'verschieben', uk: 'переносити (на інший час)' },
-          { de: 'sich entschuldigen', uk: 'вибачатися' },
-          { de: 'der Stau', uk: 'затор' },
-        ],
-      },
-    ],
-
     exercises: [
       { type: 'gap', q: 'Ich komme heute nicht, weil ich krank ___.', answers: ['bin'],
         explain: 'У підрядному змінене дієслово стоїть у кінці.' },
@@ -434,55 +383,6 @@ Oksana`,
 → <em>auf dem neuen Tisch</em> (Dat.). Три повтори закріплюють таблицю краще, ніж її переписування.</div>`,
       },
     ],
-
-    vocab: [
-      {
-        group: 'Прикметники для опису',
-        items: [
-          { de: 'modern / altmodisch', uk: 'сучасний / старомодний' },
-          { de: 'hell / dunkel', uk: 'світлий / темний' },
-          { de: 'ruhig / laut', uk: 'тихий / гучний' },
-          { de: 'bequem / unbequem', uk: 'зручний / незручний' },
-          { de: 'praktisch', uk: 'практичний' },
-          { de: 'gemütlich', uk: 'затишний' },
-          { de: 'sauber / schmutzig', uk: 'чистий / брудний' },
-          { de: 'schwer / leicht', uk: 'важкий / легкий' },
-          { de: 'interessant / langweilig', uk: 'цікавий / нудний' },
-          { de: 'frisch', uk: 'свіжий' },
-          { de: 'lecker', uk: 'смачний' },
-          { de: 'günstig', uk: 'вигідний за ціною' },
-        ],
-      },
-      {
-        group: 'Кольори',
-        items: [
-          { de: 'rot / blau / grün', uk: 'червоний / синій / зелений' },
-          { de: 'gelb / orange', uk: 'жовтий / помаранчевий' },
-          { de: 'schwarz / weiß / grau', uk: 'чорний / білий / сірий' },
-          { de: 'braun / rosa / lila', uk: 'коричневий / рожевий / фіолетовий' },
-          { de: 'hellblau / dunkelgrün', uk: 'світло-синій / темно-зелений' },
-          { de: 'die Farbe, -n', uk: 'колір' },
-        ],
-      },
-      {
-        group: 'Оголошення про житло та речі',
-        items: [
-          { de: 'die Anzeige, -n', uk: 'оголошення' },
-          { de: 'möbliert', uk: 'мебльований' },
-          { de: 'die Wohnfläche', uk: 'житлова площа' },
-          { de: 'die Nebenkosten (Pl.)', uk: 'комунальні витрати' },
-          { de: 'die Kaution', uk: 'застава' },
-          { de: 'der Vermieter / die Vermieterin', uk: 'орендодавець' },
-          { de: 'der Mieter / die Mieterin', uk: 'орендар' },
-          { de: 'die Lage', uk: 'розташування' },
-          { de: 'zentral gelegen', uk: 'розташований у центрі' },
-          { de: 'der Aufzug / der Lift', uk: 'ліфт' },
-          { de: 'renoviert', uk: 'відремонтований' },
-          { de: 'ab sofort frei', uk: 'вільний одразу' },
-        ],
-      },
-    ],
-
     exercises: [
       { type: 'gap', q: 'Das ist der neu___ Tisch.', answers: ['e'] },
       { type: 'gap', q: 'Ich kaufe den neu___ Tisch.', answers: ['en'] },
