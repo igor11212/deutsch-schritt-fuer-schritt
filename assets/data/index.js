@@ -34,14 +34,18 @@ export const LEVELS = [
   },
 ];
 
-import { READING } from './reading.js?v=20260817a';
+import { READING } from './reading.js?v=20260817b';
 
 const CACHE = new Map();
 
 export async function loadLevel(id) {
   if (CACHE.has(id)) return CACHE.get(id);
-  const mod = await import(`./${id}.js?v=20260817a`);
-  const level = { ...mod.default, reading: READING[id] || [] };
+  // Граматика й словник рівня лежать окремо й довантажуються разом.
+  const [mod, voc] = await Promise.all([
+    import(`./${id}.js?v=20260817b`),
+    import(`./vocab-${id}.js?v=20260817b`),
+  ]);
+  const level = { ...mod.default, reading: READING[id] || [], vocab: voc.groups || [] };
   CACHE.set(id, level);
   return level;
 }
