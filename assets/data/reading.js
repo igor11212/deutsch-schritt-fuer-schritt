@@ -70,6 +70,85 @@ Ruf mich bitte an oder schreib mir eine Nachricht!</p>
       { type: 'choice', q: 'Was möchte Oksana nach dem Kurs machen?',
         options: ['Nach Graz ziehen', 'Als Köchin arbeiten', 'Studieren', 'Zurückfahren'], answer: 1 },
       { type: 'gap', q: 'Die Zugfahrt von Graz kostet ___ Euro.', answers: ['25|fünfundzwanzig|fuenfundzwanzig'] },
+      { type: 'choice', q: 'Was soll Marta machen?',
+        options: ['Nach Graz fahren', 'Oksana anrufen oder schreiben', 'Einen Kurs suchen', 'Nichts'], answer: 1 },
+      { type: 'multi', q: 'Was steht im Brief?',
+        options: ['Oksana wohnt bei ihrer Tante.', 'Sie hat schon Arbeit.', 'Der Kurs beginnt am Montag.', 'Am Wochenende hat sie frei.', 'Sie fährt nach Graz.'],
+        answers: [0, 2, 3],
+        explain: 'Роботу вона ще тільки хоче шукати, і в Ґрац не їде — це Марта могла б приїхати.' },
+    ],
+  },
+  {
+    exam: 'Goethe A1 · Lesen Teil 3',
+    title: 'Schilder und Hinweise',
+    instruction: 'Табличок буде п’ять. Для кожної ситуації вирішіть, чи твердження правильне.',
+    text: `
+<p><strong>A — an der Ladentür</strong><br>
+Öffnungszeiten: Mo–Fr 8–19 Uhr, Sa 8–14 Uhr. Sonntag geschlossen.</p>
+
+<p><strong>B — im Bus</strong><br>
+Bitte hinten einsteigen. Fahrkarten beim Fahrer nur mit Kleingeld.</p>
+
+<p><strong>C — im Park</strong><br>
+Hunde bitte an der Leine führen. Radfahren verboten.</p>
+
+<p><strong>D — im Hausflur</strong><br>
+Aufzug außer Betrieb. Bitte benutzen Sie die Treppe.</p>
+
+<p><strong>E — in der Bibliothek</strong><br>
+Bitte leise sprechen. Essen und Trinken nicht erlaubt.</p>`,
+    glossary: [
+      ['die Öffnungszeiten', 'години роботи'], ['geschlossen', 'зачинено'],
+      ['einsteigen', 'заходити (в транспорт)'], ['das Kleingeld', 'дрібні гроші'],
+      ['die Leine', 'повідець'], ['verboten', 'заборонено'],
+      ['außer Betrieb', 'не працює'], ['die Treppe', 'сходи'],
+      ['leise', 'тихо'], ['erlaubt', 'дозволено'],
+    ],
+    tasks: [
+      { type: 'truefalse', q: 'Schild A: Am Sonntag kann man einkaufen.', answer: false,
+        explain: '«Sonntag geschlossen» — у неділю зачинено.' },
+      { type: 'choice', q: 'Schild A: Wann schließt der Laden am Samstag?',
+        options: ['Um 8 Uhr', 'Um 14 Uhr', 'Um 19 Uhr', 'Er ist zu'], answer: 1 },
+      { type: 'choice', q: 'Schild B: Sie haben nur eine Bankkarte. Können Sie beim Fahrer zahlen?',
+        options: ['Ja', 'Nein, nur mit Kleingeld', 'Nur morgens', 'Nur mit Ausweis'], answer: 1 },
+      { type: 'truefalse', q: 'Schild C: Im Park darf man Rad fahren.', answer: false },
+      { type: 'gap', q: 'Schild C: Hunde muss man an der ___ führen.', answers: ['Leine'] },
+      { type: 'choice', q: 'Schild D: Was sollen Sie tun?',
+        options: ['Den Aufzug rufen', 'Die Treppe nehmen', 'Warten', 'Den Hausmeister anrufen'], answer: 1 },
+      { type: 'multi', q: 'Schild E: Was ist in der Bibliothek nicht erlaubt?',
+        options: ['laut sprechen', 'lesen', 'essen', 'trinken', 'schreiben'], answers: [0, 2, 3] },
+    ],
+  },
+  {
+    exam: 'ÖSD A1 · Lesen',
+    title: 'Vier kurze Nachrichten',
+    instruction: 'Прочитайте повідомлення й доберіть, хто про що пише.',
+    text: `
+<p><strong>1. Papa:</strong> Ich hole dich um 17 Uhr von der Schule ab. Warte bitte am Tor.</p>
+<p><strong>2. Lisa:</strong> Kommst du morgen mit ins Schwimmbad? Es kostet nur 4 Euro.</p>
+<p><strong>3. Dr. Klein:</strong> Ihr Termin am Mittwoch um 9 Uhr fällt leider aus. Bitte rufen Sie uns an.</p>
+<p><strong>4. Oma:</strong> Der Kuchen steht im Kühlschrank. Guten Appetit, mein Schatz!</p>`,
+    glossary: [
+      ['abholen', 'забирати (когось)'], ['das Tor', 'ворота'],
+      ['das Schwimmbad', 'басейн'], ['ausfallen', 'скасовуватися'],
+      ['der Kühlschrank', 'холодильник'], ['der Schatz', 'скарб; лагідне звертання'],
+    ],
+    tasks: [
+      { type: 'match', q: 'Хто про що пише?',
+        pairs: [
+          ['Papa', 'holt um 17 Uhr ab'],
+          ['Lisa', 'lädt ins Schwimmbad ein'],
+          ['Dr. Klein', 'sagt den Termin ab'],
+          ['Oma', 'hat Kuchen gemacht'],
+        ], speak: false },
+      { type: 'gap', q: 'Papa kommt um ___ Uhr.', answers: ['17|siebzehn'] },
+      { type: 'gap', q: 'Das Schwimmbad kostet ___ Euro.', answers: ['4|vier'] },
+      { type: 'choice', q: 'Was müssen Sie bei Nachricht 3 tun?',
+        options: ['Am Mittwoch kommen', 'Die Praxis anrufen', 'Nichts', 'Eine E-Mail schreiben'], answer: 1 },
+      { type: 'truefalse', q: 'Der Kuchen steht auf dem Tisch.', answer: false,
+        explain: '«im Kühlschrank» — у холодильнику.' },
+      { type: 'choice', q: 'Wo sollen Sie auf Papa warten?',
+        options: ['Vor der Schule am Tor', 'Zu Hause', 'Am Schwimmbad', 'Bei Oma'], answer: 0 },
     ],
   },
 ],

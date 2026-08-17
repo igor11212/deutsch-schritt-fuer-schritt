@@ -10,9 +10,9 @@ export const LEVELS = [
   },
   {
     id: 'a2', code: 'A2', title: 'Grundstufe',
-    desc: 'Минулий час, підрядні речення з weil і dass, відмінювання прикметників. Ви даєте раду в типових побутових ситуаціях.',
+    desc: 'Підрядні речення, прикметники, Präteritum, зворотні дієслова, Genitiv, Relativsätze й порівняння. Ви даєте раду в типових побутових ситуаціях.',
     exam: 'Goethe-Zertifikat A2 · ÖSD Zertifikat A2',
-    words: '≈ 1300 слів', hours: '≈ 200 годин', status: 'partial',
+    words: '≈ 1300 слів', hours: '≈ 200 годин', status: 'full',
   },
   {
     id: 'b1', code: 'B1', title: 'Mittelstufe',
@@ -34,13 +34,13 @@ export const LEVELS = [
   },
 ];
 
-import { READING } from './reading.js?v=20260816i';
+import { READING } from './reading.js?v=20260816j';
 
 const CACHE = new Map();
 
 export async function loadLevel(id) {
   if (CACHE.has(id)) return CACHE.get(id);
-  const mod = await import(`./${id}.js?v=20260816i`);
+  const mod = await import(`./${id}.js?v=20260816j`);
   const level = { ...mod.default, reading: READING[id] || [] };
   CACHE.set(id, level);
   return level;
