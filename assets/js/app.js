@@ -1,10 +1,10 @@
 /* Роутер + сторінки. Хеш-навігація, щоб працювало на GitHub Pages без сервера. */
 
-import { LEVELS, loadLevel } from '../data/index.js?v=20260817c';
-import { el, renderExercise, renderExerciseSet } from './exercises.js?v=20260817c';
-import { speak, speakDialogue, stop as stopSpeech, ttsSupported, hasGermanVoice } from './tts.js?v=20260817c';
-import { checkWriting } from './writing-check.js?v=20260817c';
-import { glossTerms } from './glossary.js?v=20260817c';
+import { LEVELS, loadLevel } from '../data/index.js?v=20260817d';
+import { el, renderExercise, renderExerciseSet } from './exercises.js?v=20260817d';
+import { speak, speakDialogue, stop as stopSpeech, ttsSupported, hasGermanVoice } from './tts.js?v=20260817d';
+import { checkWriting } from './writing-check.js?v=20260817d';
+import { glossTerms } from './glossary.js?v=20260817d';
 
 const main = document.getElementById('main');
 
@@ -163,10 +163,15 @@ async function viewLevel(levelId) {
   const skillCards = el('div', { class: 'levels' },
     SKILLS.map(sk => {
       const list = skills[sk.id];
-      const words = list.reduce((n, g) => n + (g.items?.length || 0), 0);
-      const badge = sk.id === 'wortschatz'
-        ? `${words} ${plural(words, 'слово', 'слова', 'слів')} · ${list.length} ${plural(list.length, 'тема', 'теми', 'тем')}`
-        : `${list.length} ${plural(list.length, 'завдання', 'завдання', 'завдань')}`;
+      let badge;
+      if (sk.id === 'wortschatz') {
+        const p = vocabProgress(levelId, list);
+        badge = p.known
+          ? `Вивчено ${p.known} з ${p.total}`
+          : `${p.total} ${plural(p.total, 'слово', 'слова', 'слів')} · ${list.length} ${plural(list.length, 'тема', 'теми', 'тем')}`;
+      } else {
+        badge = `${list.length} ${plural(list.length, 'завдання', 'завдання', 'завдань')}`;
+      }
       return el('a', {
         class: 'level-card', href: `#/${levelId}/${sk.id}`, style: `--c: var(--${levelId})`,
       },
@@ -360,7 +365,7 @@ async function viewSkill(levelId, skillId) {
     body.append(el('div', { class: 'card center muted' },
       'Матеріали цієї навички для рівня ще готуються.'));
   } else if (skillId === 'wortschatz') {
-    body.append(renderVocabulary(items));
+    body.append(renderVocabulary(items, levelId));
   } else if (skillId === 'lesen') {
     body.append(renderReading(items));
   } else if (skillId === 'hoeren') {
@@ -383,18 +388,84 @@ async function viewSkill(levelId, skillId) {
 
 /* ------------------------------------------------------ словник рівня --- */
 
-/** Словник рівня: таблиці за темами плюс режим флеш-карток. */
-function renderVocabulary(groups) {
-  const all = groups.flatMap(g => g.items.map(it => ({ ...it, group: g.group })));
+/* Прогрес вивчення слів. Зберігаємо локально в браузері: жодних акаунтів
+   і жодних запитів у мережу. Ключ — рівень, значення — множина вивчених слів. */
+const VOCAB_KEY = 'dssf-vocab';
 
+function loadProgress(levelId) {
+  try {
+    const all = JSON.parse(localStorage.getItem(VOCAB_KEY) || '{}');
+    return new Set(all[levelId] || []);
+  } catch { return new Set(); }
+}
+
+function saveProgress(levelId, known) {
+  try {
+    const all = JSON.parse(localStorage.getItem(VOCAB_KEY) || '{}');
+    all[levelId] = [...known];
+    localStorage.setItem(VOCAB_KEY, JSON.stringify(all));
+  } catch { /* приватний режим — просто не зберігаємо */ }
+}
+
+/** Скільки слів рівня вже позначено як вивчені (для картки рівня). */
+function vocabProgress(levelId, groups) {
+  const known = loadProgress(levelId);
+  const total = groups.reduce((n, g) => n + g.items.length, 0);
+  return { known: groups.reduce((n, g) => n + g.items.filter(i => known.has(i.de)).length, 0), total };
+}
+
+/** Словник рівня: таблиці за темами плюс режим флеш-карток. */
+function renderVocabulary(groups, levelId) {
+  const known = loadProgress(levelId);
+  const total = groups.reduce((n, g) => n + g.items.length, 0);
   const box = el('div', { class: 'stack' });
 
-  /* — шапка: скільки слів і як учити — */
+  /* — смуга прогресу — */
+  const bar = el('i');
+  const barLabel = el('strong');
+  const progressBox = el('div', { class: 'vocab-progress' },
+    el('div', { class: 'vocab-progress__head' },
+      barLabel,
+      el('span', { class: 'grow' }),
+      el('button', { class: 'btn btn--ghost btn--sm', type: 'button', id: 'vocabReset' }, 'Скинути прогрес')),
+    el('div', { class: 'progress-line' }, bar),
+    el('p', { class: 'muted', style: 'margin:.6rem 0 0;font-size:.85rem' },
+      'Прогрес зберігається у вашому браузері — без реєстрації й без передавання даних. ' +
+      'Слово стає вивченим, коли ви позначаєте його «Знаю» на картці.'),
+  );
+
+  const groupCounters = new Map();
+
+  function refreshProgress() {
+    const n = groups.reduce((a, g) => a + g.items.filter(i => known.has(i.de)).length, 0);
+    const pct = total ? Math.round(n / total * 100) : 0;
+    barLabel.textContent = `Вивчено ${n} з ${total} (${pct} %)`;
+    bar.style.width = pct + '%';
+    groups.forEach(g => {
+      const c = groupCounters.get(g.group);
+      if (!c) return;
+      const k = g.items.filter(i => known.has(i.de)).length;
+      c.el.textContent = `${k} / ${g.items.length}`;
+      c.el.classList.toggle('pill--ok', k === g.items.length);
+      c.rows.forEach(({ tr, de }) => tr.classList.toggle('is-known', known.has(de)));
+    });
+  }
+
+  progressBox.querySelector('#vocabReset').addEventListener('click', () => {
+    if (!known.size) return;
+    known.clear();
+    saveProgress(levelId, known);
+    refreshProgress();
+  });
+
+  /* — шапка — */
   const cardsBtn = el('button', { class: 'btn', type: 'button' }, '🃏 Учити картками');
   box.append(el('div', { class: 'section-note' },
-    `Словник рівня: ${all.length} ${plural(all.length, 'слово', 'слова', 'слів')} у ${groups.length} ${plural(groups.length, 'темі', 'темах', 'темах')}. `,
+    `Словник рівня: ${total} ${plural(total, 'слово', 'слова', 'слів')} у ${groups.length} ${plural(groups.length, 'темі', 'темах', 'темах')}. `,
     'Слова в кожній темі стоять не за абеткою, а в логічному порядку — так їх легше запам’ятати. ',
     cardsBtn));
+
+  box.append(progressBox);
 
   if (ttsSupported && !hasGermanVoice()) {
     box.append(el('div', { class: 'no-tts' },
@@ -406,13 +477,18 @@ function renderVocabulary(groups) {
   box.append(cardsBox);
   let deckBuilt = false;
   cardsBtn.addEventListener('click', () => {
-    const open = !cardsBox.hasAttribute('hidden');
-    if (open) {
+    if (!cardsBox.hasAttribute('hidden')) {
       cardsBox.setAttribute('hidden', 'hidden');
       cardsBtn.textContent = '🃏 Учити картками';
       return;
     }
-    if (!deckBuilt) { cardsBox.append(buildFlashcards(groups)); deckBuilt = true; }
+    if (!deckBuilt) {
+      cardsBox.append(buildFlashcards(groups, known, () => {
+        saveProgress(levelId, known);
+        refreshProgress();
+      }));
+      deckBuilt = true;
+    }
     cardsBox.removeAttribute('hidden');
     cardsBtn.textContent = '✕ Сховати картки';
     cardsBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -420,7 +496,8 @@ function renderVocabulary(groups) {
 
   /* — таблиці за темами — */
   groups.forEach((group, gi) => {
-    const rows = group.items.map((it, i) => {
+    const rows = [];
+    const trs = group.items.map((it, i) => {
       const btn = ttsSupported
         ? el('button', { class: 'speak-btn', type: 'button', 'aria-label': `Прослухати: ${it.de}` }, '🔊')
         : null;
@@ -428,13 +505,18 @@ function renderVocabulary(groups) {
         onStart: () => btn.classList.add('is-playing'),
         onEnd:   () => btn.classList.remove('is-playing'),
       }));
-      return el('tr', {},
+      const tr = el('tr', {},
         el('td', { class: 'vt__no' }, String(i + 1)),
         el('td', { class: 'vt__de' }, el('span', { class: 'de' }, it.de), btn),
         el('td', { class: 'vt__uk' }, it.uk),
         el('td', { class: 'vt__ex' }, it.ex || ''),
       );
+      rows.push({ tr, de: it.de });
+      return tr;
     });
+
+    const counter = el('span', { class: 'pill' });
+    groupCounters.set(group.group, { el: counter, rows });
 
     const playBtn = ttsSupported
       ? el('button', { class: 'btn btn--soft btn--sm', type: 'button' }, '🔊 Прослухати тему')
@@ -452,89 +534,98 @@ function renderVocabulary(groups) {
     box.append(el('section', { class: 'vocab-group' },
       el('div', { class: 'vocab-group__head' },
         el('h3', {}, `${gi + 1}. ${group.group}`),
-        el('span', { class: 'tag' }, `${group.items.length} ${plural(group.items.length, 'слово', 'слова', 'слів')}`),
+        counter,
         playBtn,
       ),
-      group.note ? el('p', { class: 'muted', style: 'margin:.2rem 0 .8rem' }, group.note) : null,
+      group.note ? el('p', { class: 'vocab-group__note' }, group.note) : null,
       el('div', { class: 'tbl-scroll' },
         el('table', { class: 'tbl vt' },
           el('thead', {}, el('tr', {},
             el('th', {}, '#'), el('th', {}, 'Deutsch'),
             el('th', {}, 'Українською'), el('th', {}, 'Примітка'))),
-          el('tbody', {}, rows))),
+          el('tbody', {}, trs))),
     ));
   });
 
+  refreshProgress();
   return box;
 }
 
-/** Режим флеш-карток: вибір теми, напрямку, перемішування; прогрес у межах сесії. */
-function buildFlashcards(groups) {
+/** Флеш-картки: фіксована колода, вільна навігація, прогрес зберігається. */
+function buildFlashcards(groups, known, onChange) {
   const wrap = el('div', { class: 'card stack' });
+  const allWords = groups.flatMap(g => g.items);
 
   const themeSel = el('select', { class: 'flash__select', 'aria-label': 'Тема' },
-    el('option', { value: 'all' }, `Усі теми (${groups.reduce((n, g) => n + g.items.length, 0)})`),
+    el('option', { value: 'all' }, `Усі теми (${allWords.length})`),
     groups.map((g, i) => el('option', { value: String(i) }, `${i + 1}. ${g.group} (${g.items.length})`)));
 
   const dirSel = el('select', { class: 'flash__select', 'aria-label': 'Напрямок' },
     el('option', { value: 'de' }, 'Німецька → українська'),
     el('option', { value: 'uk' }, 'Українська → німецька'));
 
-  const shuffleBox = el('input', { type: 'checkbox', id: 'flashShuffle', checked: 'checked' });
+  const onlyNew = el('input', { type: 'checkbox' });
+  const shuffleBox = el('input', { type: 'checkbox', checked: 'checked' });
 
   const counter = el('span', { class: 'flash__counter' });
-  const known = el('span', { class: 'pill pill--ok' }, 'Знаю: 0');
-  const again = el('span', { class: 'pill pill--warn' }, 'Повторити: 0');
+  const statKnown = el('span', { class: 'pill pill--ok' });
+  const statLeft  = el('span', { class: 'pill' });
 
   const face = el('div', { class: 'flash__face' });
-  const hint = el('div', { class: 'flash__hint' }, 'Натисніть картку або пробіл, щоб перевернути');
-  const card = el('div', { class: 'flash__card', tabindex: '0', role: 'button' }, face, hint);
+  const hint = el('div', { class: 'flash__hint' });
+  const mark = el('span', { class: 'flash__mark' });
+  const card = el('div', { class: 'flash__card', tabindex: '0', role: 'button' }, mark, face, hint);
 
-  const speakBtn = el('button', { class: 'btn btn--ghost btn--sm', type: 'button' }, '🔊 Вимова');
+  const prevBtn  = el('button', { class: 'btn btn--ghost', type: 'button', title: 'Стрілка ліворуч' }, '←');
+  const nextBtn  = el('button', { class: 'btn btn--ghost', type: 'button', title: 'Стрілка праворуч' }, '→');
   const knowBtn  = el('button', { class: 'btn btn--soft', type: 'button' }, '✓ Знаю');
-  const againBtn = el('button', { class: 'btn btn--ghost', type: 'button' }, '↻ Повторити');
-  const restart  = el('button', { class: 'btn btn--ghost btn--sm', type: 'button' }, 'Почати спочатку');
+  const againBtn = el('button', { class: 'btn btn--ghost', type: 'button' }, '↻ Ще вчу');
+  const speakBtn = el('button', { class: 'btn btn--ghost btn--sm', type: 'button' }, '🔊 Вимова');
 
-  let deck = [], pos = 0, flipped = false, stats = { known: 0, again: 0 };
+  let deck = [], pos = 0, flipped = false;
 
-  function build() {
-    const pick = themeSel.value === 'all'
-      ? groups.flatMap(g => g.items)
-      : groups[Number(themeSel.value)].items;
-    deck = pick.slice();
+  function build(keepPos) {
+    const pick = themeSel.value === 'all' ? allWords : groups[Number(themeSel.value)].items;
+    deck = onlyNew.checked ? pick.filter(w => !known.has(w.de)) : pick.slice();
     if (shuffleBox.checked) {
       for (let i = deck.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [deck[i], deck[j]] = [deck[j], deck[i]];
       }
     }
-    pos = 0; stats = { known: 0, again: 0 };
+    pos = keepPos ? Math.min(pos, Math.max(0, deck.length - 1)) : 0;
     render();
   }
 
   function render() {
-    known.textContent = `Знаю: ${stats.known}`;
-    again.textContent = `Повторити: ${stats.again}`;
+    const kn = deck.filter(w => known.has(w.de)).length;
+    statKnown.textContent = `Знаю: ${kn}`;
+    statLeft.textContent = `Лишилось: ${deck.length - kn}`;
 
-    if (pos >= deck.length) {
-      counter.textContent = `${deck.length} / ${deck.length}`;
+    if (!deck.length) {
+      counter.textContent = '0 / 0';
+      mark.textContent = '';
       face.replaceChildren(el('div', { class: 'flash__done' },
-        el('strong', {}, 'Колоду пройдено 🎉'),
-        el('p', { class: 'muted' },
-          `Знаю: ${stats.known} · Повторити: ${stats.again}. ` +
-          (stats.again ? 'Пройдіть ще раз — слова перемішаються.' : 'Спробуйте зворотний напрямок.')),
-      ));
+        el('strong', {}, 'У цій колоді слів немає'),
+        el('p', { class: 'muted' }, onlyNew.checked
+          ? 'Усі слова теми вже позначено як вивчені. Зніміть галочку «тільки невивчені», щоб повторити.'
+          : 'Оберіть іншу тему.')));
       hint.textContent = '';
-      card.classList.remove('is-flipped');
-      [knowBtn, againBtn, speakBtn].forEach(b => b.disabled = true);
+      [knowBtn, againBtn, speakBtn, prevBtn, nextBtn].forEach(b => b.disabled = true);
       return;
     }
 
     [knowBtn, againBtn, speakBtn].forEach(b => b.disabled = false);
+    prevBtn.disabled = pos === 0;
+    nextBtn.disabled = pos === deck.length - 1;
+
     const it = deck[pos];
+    const isKnown = known.has(it.de);
     flipped = false;
     card.classList.remove('is-flipped');
+    card.classList.toggle('is-known', isKnown);
     counter.textContent = `${pos + 1} / ${deck.length}`;
+    mark.textContent = isKnown ? '✓ вивчено' : '';
     hint.textContent = 'Натисніть картку або пробіл, щоб перевернути';
     face.replaceChildren(
       el('span', { class: 'flash__front' + (dirSel.value === 'de' ? ' de' : '') },
@@ -542,7 +633,7 @@ function buildFlashcards(groups) {
   }
 
   function flip() {
-    if (pos >= deck.length || flipped) return;
+    if (!deck.length || flipped) return;
     const it = deck[pos];
     flipped = true;
     card.classList.add('is-flipped');
@@ -558,39 +649,61 @@ function buildFlashcards(groups) {
     if (dirSel.value === 'uk' && ttsSupported) speak(it.de);
   }
 
-  function next(isKnown) {
-    if (pos >= deck.length) return;
-    stats[isKnown ? 'known' : 'again']++;
-    if (!isKnown) deck.push(deck[pos]);        // повернеться в кінці колоди
-    pos++;
+  /** Позначає слово й переходить далі. Останню картку не перегортаємо. */
+  function setKnown(value) {
+    if (!deck.length) return;
+    const it = deck[pos];
+    if (value) known.add(it.de); else known.delete(it.de);
+    onChange();
+    if (pos < deck.length - 1) { pos++; render(); }
+    else render();
+  }
+
+  function move(step) {
+    if (!deck.length) return;
+    const next = pos + step;
+    if (next < 0 || next >= deck.length) return;
+    pos = next;
     render();
   }
 
   card.addEventListener('click', flip);
   card.addEventListener('keydown', e => {
-    if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); flipped ? next(true) : flip(); }
-    if (e.key === 'ArrowRight') { e.preventDefault(); next(true); }
-    if (e.key === 'ArrowLeft')  { e.preventDefault(); next(false); }
+    const keys = { ' ': 'flip', Enter: 'know', ArrowRight: 'next', ArrowLeft: 'prev' };
+    const act = keys[e.key];
+    if (!act) return;
+    e.preventDefault();
+    if (act === 'flip') flipped ? move(1) : flip();
+    if (act === 'know') setKnown(true);
+    if (act === 'next') move(1);
+    if (act === 'prev') move(-1);
   });
-  knowBtn.addEventListener('click', () => { if (!flipped) flip(); else next(true); });
-  againBtn.addEventListener('click', () => next(false));
-  speakBtn.addEventListener('click', () => { if (pos < deck.length) speak(deck[pos].de); });
-  [themeSel, dirSel, shuffleBox].forEach(c => c.addEventListener('change', build));
-  restart.addEventListener('click', build);
+  prevBtn.addEventListener('click', () => move(-1));
+  nextBtn.addEventListener('click', () => move(1));
+  knowBtn.addEventListener('click', () => { if (!flipped) flip(); else setKnown(true); });
+  againBtn.addEventListener('click', () => setKnown(false));
+  speakBtn.addEventListener('click', () => { if (deck.length) speak(deck[pos].de); });
+  [themeSel, dirSel].forEach(c => c.addEventListener('change', () => build(false)));
+  [onlyNew, shuffleBox].forEach(c => c.addEventListener('change', () => build(false)));
 
   wrap.append(
     el('div', { class: 'flash__bar' },
       themeSel, dirSel,
       el('label', { class: 'flash__check' }, shuffleBox, ' перемішати'),
+      el('label', { class: 'flash__check' }, onlyNew, ' тільки невивчені'),
       el('span', { class: 'grow' }),
       counter),
     card,
     el('div', { class: 'flash__actions' },
-      againBtn, knowBtn, ttsSupported ? speakBtn : null),
-    el('div', { class: 'flash__stats' }, known, again, el('span', { class: 'grow' }), restart),
+      prevBtn, againBtn, knowBtn, nextBtn),
+    el('div', { class: 'flash__stats' },
+      statKnown, statLeft, el('span', { class: 'grow' }),
+      ttsSupported ? speakBtn : null),
+    el('p', { class: 'muted', style: 'margin:0;font-size:.82rem' },
+      'Клавіші: пробіл — перевернути, Enter — «знаю», ← та → — гортати між словами.'),
   );
 
-  build();
+  build(false);
   return wrap;
 }
 
