@@ -1,10 +1,10 @@
 /* Роутер + сторінки. Хеш-навігація, щоб працювало на GitHub Pages без сервера. */
 
-import { LEVELS, loadLevel } from '../data/index.js?v=20260816h';
-import { el, renderExercise, renderExerciseSet } from './exercises.js?v=20260816h';
-import { speak, speakDialogue, stop as stopSpeech, ttsSupported, hasGermanVoice } from './tts.js?v=20260816h';
-import { checkWriting } from './writing-check.js?v=20260816h';
-import { glossTerms } from './glossary.js?v=20260816h';
+import { LEVELS, loadLevel } from '../data/index.js?v=20260816i';
+import { el, renderExercise, renderExerciseSet } from './exercises.js?v=20260816i';
+import { speak, speakDialogue, stop as stopSpeech, ttsSupported, hasGermanVoice } from './tts.js?v=20260816i';
+import { checkWriting } from './writing-check.js?v=20260816i';
+import { glossTerms } from './glossary.js?v=20260816i';
 
 const main = document.getElementById('main');
 
@@ -80,11 +80,12 @@ function viewHome() {
     el('span', { class: 'tag tag--accent' }, 'Безкоштовно · без реєстрації'),
     el('h1', {}, 'Німецька від A1 до C1 — самостійно'),
     el('p', { class: 'lead' },
-      'П’ять рівнів, розбитих на модулі. У кожному модулі: пояснення граматики українською, ' +
-      'словниковий запас із озвученням, вправи, аудіювання, завдання на письмо і підсумковий тест. ' +
+      'На кожному рівні — модулі граматики (пояснення українською, лексика, вправи, тест) ' +
+      'і три окремі модулі навичок: читання, аудіювання та письмо. ' +
       'Формати завдань узяті зі структури іспитів Goethe-Zertifikat та ÖSD.'),
     el('div', { class: 'hero__facts' },
       el('span', { class: 'tag' }, '📘 Граматика українською'),
+      el('span', { class: 'tag' }, '📖 Читання з текстами'),
       el('span', { class: 'tag' }, '🔊 Аудіювання в браузері'),
       el('span', { class: 'tag' }, '✍ Письмо з модельними відповідями'),
       el('span', { class: 'tag' }, '🎯 Тест після кожного модуля'),
@@ -109,13 +110,14 @@ function viewHome() {
   const how = el('section', { class: 'card stack' },
     el('h2', {}, 'Як користуватися'),
     el('ol', { style: 'padding-left:1.2rem;color:var(--text-soft)' },
-      el('li', {}, 'Оберіть рівень і відкрийте перший модуль.'),
+      el('li', {}, 'Оберіть рівень. Угорі — навички, нижче — граматика за модулями.'),
       el('li', {}, el('strong', {}, 'Граматика'), ' — прочитайте пояснення й розберіть таблиці.'),
       el('li', {}, el('strong', {}, 'Лексика'), ' — вивчіть слова, натискайте 🔊, щоб почути вимову.'),
       el('li', {}, el('strong', {}, 'Вправи'), ' — відпрацюйте граматику й лексику з миттєвою перевіркою.'),
-      el('li', {}, el('strong', {}, 'Аудіювання'), ' — спершу слухайте без тексту, транскрипт відкривайте лише після відповідей.'),
-      el('li', {}, el('strong', {}, 'Письмо'), ' — напишіть свій текст, потім порівняйте з модельним.'),
       el('li', {}, el('strong', {}, 'Тест'), ' — перевірте себе. 60 % — прохідний бал, як на реальному іспиті.'),
+      el('li', {}, el('strong', {}, 'Читання'), ' — окремий модуль: тексти зі словничком і завданнями.'),
+      el('li', {}, el('strong', {}, 'Аудіювання'), ' — окремий модуль: слухайте без тексту, транскрипт відкривайте після відповідей.'),
+      el('li', {}, el('strong', {}, 'Письмо'), ' — окремий модуль: пишіть, перевіряйте текст, порівнюйте з прикладом.'),
     ),
   );
 
@@ -156,10 +158,34 @@ async function viewLevel(levelId) {
     )),
   );
 
+  const skills = buildSkills(level);
+  const skillCards = el('div', { class: 'levels' },
+    SKILLS.map(sk => {
+      const n = skills[sk.id].length;
+      return el('a', {
+        class: 'level-card', href: `#/${levelId}/${sk.id}`, style: `--c: var(--${levelId})`,
+      },
+        el('span', { class: 'level-card__code' }, sk.icon),
+        el('h3', {}, `${sk.de} — ${sk.label}`),
+        el('p', {}, sk.desc),
+        el('div', { class: 'level-card__meta' },
+          el('span', { class: 'tag tag--accent' },
+            `${n} ${plural(n, 'завдання', 'завдання', 'завдань')}`)),
+      );
+    }),
+  );
+
   const view = el('div', {},
     crumbs({ label: 'Головна', href: '#/' }, { label: meta.code }),
     head,
-    el('h2', {}, 'Модулі'),
+    el('h2', {}, 'Навички'),
+    el('p', { class: 'muted', style: 'margin-top:-.5rem' },
+      'Читання, аудіювання й письмо зібрані окремо — так, як їх перевіряють на іспиті.'),
+    skillCards,
+    el('div', { style: 'height:2rem' }),
+    el('h2', {}, 'Граматика за модулями'),
+    el('p', { class: 'muted', style: 'margin-top:-.5rem' },
+      'Кожен модуль розкриває одну тему: пояснення, лексика, вправи й тест.'),
     list,
   );
 
@@ -181,14 +207,35 @@ async function viewLevel(levelId) {
 
 /* ------------------------------------------------------- модуль --------- */
 
+/* Модуль розкриває одну граматичну тему. Читання, аудіювання й письмо
+   винесені в окремі модулі навичок на рівні цілого рівня. */
 const TABS = [
-  { id: 'grammar',   label: 'Граматика',  key: 'grammar' },
-  { id: 'vocab',     label: 'Лексика',    key: 'vocab' },
-  { id: 'exercises', label: 'Вправи',     key: 'exercises' },
-  { id: 'listening', label: 'Аудіювання', key: 'listening' },
-  { id: 'writing',   label: 'Письмо',     key: 'writing' },
-  { id: 'test',      label: 'Тест',       key: 'test' },
+  { id: 'grammar',   label: 'Граматика', key: 'grammar' },
+  { id: 'vocab',     label: 'Лексика',   key: 'vocab' },
+  { id: 'exercises', label: 'Вправи',    key: 'exercises' },
+  { id: 'test',      label: 'Тест',      key: 'test' },
 ];
+
+/* Навички — окремі модулі рівня. */
+const SKILLS = [
+  { id: 'lesen',     de: 'Lesen',     label: 'Читання',   icon: '📖',
+    desc: 'Тексти у форматі іспиту: оголошення, листи, статті — зі словником і завданнями.' },
+  { id: 'hoeren',    de: 'Hören',     label: 'Аудіювання', icon: '🎧',
+    desc: 'Усі діалоги й монологи рівня зібрані разом, із транскриптом і завданнями.' },
+  { id: 'schreiben', de: 'Schreiben', label: 'Письмо',     icon: '✍',
+    desc: 'Завдання на письмо з перевіркою тексту, корисними фразами й прикладом.' },
+];
+
+/** Збирає матеріали навичок з усіх модулів рівня. */
+function buildSkills(level) {
+  const hoeren = [], schreiben = [];
+  level.modules.forEach((m, i) => {
+    const from = `Модуль ${i + 1} · ${m.title}`;
+    (m.listening || []).forEach(t => hoeren.push({ ...t, from, mod: m }));
+    (m.writing   || []).forEach(t => schreiben.push({ ...t, from, mod: m }));
+  });
+  return { lesen: level.reading || [], hoeren, schreiben };
+}
 
 async function viewModule(levelId, index, tabId) {
   const meta = LEVELS.find(l => l.id === levelId);
@@ -284,6 +331,82 @@ function renderReport(res) {
   return el('div', { class: 'report__box' }, head, res.issues.length ? list : null, note);
 }
 
+/* ------------------------------------------------- модуль навички ------- */
+
+async function viewSkill(levelId, skillId) {
+  const meta = LEVELS.find(l => l.id === levelId);
+  const sk = SKILLS.find(x => x.id === skillId);
+  if (!meta || !sk) return viewNotFound();
+  markNav(levelId);
+  loading();
+
+  const level = await loadLevel(levelId);
+  const items = buildSkills(level)[skillId];
+
+  const head = el('header', { class: 'level-head', style: `--c: var(--${levelId})` },
+    el('span', { class: 'tag' }, `${meta.code} · ${sk.de}`),
+    el('h1', {}, `${sk.icon} ${sk.label}`),
+    el('p', { class: 'lead' }, sk.desc),
+  );
+
+  const body = el('div', { class: 'stack' });
+
+  if (!items.length) {
+    body.append(el('div', { class: 'card center muted' },
+      'Матеріали цієї навички для рівня ще готуються.'));
+  } else if (skillId === 'lesen') {
+    body.append(renderReading(items));
+  } else if (skillId === 'hoeren') {
+    body.append(RENDERERS.listening({ listening: items }, meta));
+  } else {
+    body.append(RENDERERS.writing({ writing: items, vocab: [], id: 'skill' }, meta));
+  }
+
+  const nav = el('div', { class: 'ex__actions', style: 'margin-top:2.4rem;justify-content:space-between' },
+    el('a', { class: 'btn btn--ghost', href: `#/${levelId}` }, '← До рівня ' + meta.code),
+    el('a', { class: 'btn btn--soft', href: `#/${levelId}/${SKILLS[(SKILLS.findIndex(x => x.id === skillId) + 1) % SKILLS.length].id}` },
+      'Наступна навичка →'),
+  );
+
+  setView(el('div', {},
+    crumbs({ label: 'Головна', href: '#/' }, { label: meta.code, href: `#/${levelId}` }, { label: sk.label }),
+    head, body, nav,
+  ), `${sk.label} · ${meta.code}`);
+}
+
+/** Тексти для читання: сам текст, словничок і завдання. */
+function renderReading(items) {
+  const box = el('div', { class: 'stack' },
+    el('div', { class: 'section-note' },
+      'Спершу прочитайте текст цілком, не зупиняючись на кожному слові, — і лише потім ' +
+      'беріться до завдань. Незнайомі слова зібрані під текстом.'));
+
+  items.forEach(t => {
+    const card = el('section', { class: 'audio-card' },
+      el('span', { class: 'tag tag--accent' }, t.exam),
+      el('h3', { style: 'margin-top:.6rem' }, t.title),
+      el('p', { class: 'muted' }, t.instruction),
+      el('div', { class: 'reading-text', html: t.text }),
+    );
+
+    if (t.glossary?.length) {
+      card.append(el('details', { class: 'transcript' },
+        el('summary', {}, `Словничок до тексту (${t.glossary.length})`),
+        el('div', { class: 'transcript__body' },
+          el('div', { class: 'vocab-list' },
+            t.glossary.map(([de, uk]) => el('div', { class: 'vocab-item' },
+              el('span', { class: 'vocab-item__de' }, de),
+              el('span', {}),
+              el('span', { class: 'vocab-item__uk' }, uk))))),
+      ));
+    }
+
+    card.append(renderExerciseSet(t.tasks, { instant: true }).el);
+    box.append(card);
+  });
+  return box;
+}
+
 /* ------------------------------------------------- рендер розділів ------ */
 
 const RENDERERS = {
@@ -374,6 +497,7 @@ const RENDERERS = {
     mod.listening.forEach((task, ti) => {
       const card = el('section', { class: 'audio-card' },
         el('span', { class: 'tag tag--accent' }, task.exam || 'Hörverstehen'),
+        task.from ? el('span', { class: 'tag', style: 'margin-left:.4rem' }, task.from) : null,
         el('h3', { style: 'margin-top:.6rem' }, task.title),
         el('p', { class: 'muted' }, task.instruction),
       );
@@ -446,6 +570,7 @@ const RENDERERS = {
     mod.writing.forEach(task => {
       const card = el('section', { class: 'writing-card' },
         el('span', { class: 'tag tag--accent' }, task.exam),
+        task.from ? el('span', { class: 'tag', style: 'margin-left:.4rem' }, task.from) : null,
         el('h3', { style: 'margin-top:.6rem' }, task.title),
       );
 
@@ -479,7 +604,9 @@ const RENDERERS = {
 
       checkBtn.addEventListener('click', () => {
         const res = checkWriting(ta.value, task, {
-          levelId: meta.id, moduleId: mod.id, vocab: mod.vocab,
+          levelId: meta.id,
+          moduleId: task.mod?.id || mod.id,
+          vocab: task.mod?.vocab || mod.vocab,
         });
         report.replaceChildren(renderReport(res));
         report.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -609,6 +736,7 @@ async function route() {
     if (!path.length) return viewHome();
     const [levelId, modNo, tab] = path;
     if (!modNo) return await viewLevel(levelId);
+    if (SKILLS.some(sk => sk.id === modNo)) return await viewSkill(levelId, modNo);
     const index = parseInt(modNo, 10);
     if (!Number.isInteger(index)) return viewNotFound();
     return await viewModule(levelId, index, tab);
