@@ -1,10 +1,10 @@
 /* Роутер + сторінки. Хеш-навігація, щоб працювало на GitHub Pages без сервера. */
 
-import { LEVELS, loadLevel } from '../data/index.js?v=20260817a';
-import { el, renderExercise, renderExerciseSet } from './exercises.js?v=20260817a';
-import { speak, speakDialogue, stop as stopSpeech, ttsSupported, hasGermanVoice } from './tts.js?v=20260817a';
-import { checkWriting } from './writing-check.js?v=20260817a';
-import { glossTerms } from './glossary.js?v=20260817a';
+import { LEVELS, loadLevel } from '../data/index.js?v=20260817b';
+import { el, renderExercise, renderExerciseSet } from './exercises.js?v=20260817b';
+import { speak, speakDialogue, stop as stopSpeech, ttsSupported, hasGermanVoice } from './tts.js?v=20260817b';
+import { checkWriting } from './writing-check.js?v=20260817b';
+import { glossTerms } from './glossary.js?v=20260817b';
 
 const main = document.getElementById('main');
 
@@ -80,11 +80,12 @@ function viewHome() {
     el('span', { class: 'tag tag--accent' }, 'Безкоштовно · без реєстрації'),
     el('h1', {}, 'Німецька від A1 до C1 — самостійно'),
     el('p', { class: 'lead' },
-      'На кожному рівні — модулі граматики (пояснення українською, лексика, вправи, тест) ' +
-      'і три окремі модулі навичок: читання, аудіювання та письмо. ' +
+      'На кожному рівні — модулі граматики (пояснення українською, вправи, тест) ' +
+      'і чотири окремі модулі навичок: лексика, читання, аудіювання та письмо. ' +
       'Формати завдань узяті зі структури іспитів Goethe-Zertifikat та ÖSD.'),
     el('div', { class: 'hero__facts' },
       el('span', { class: 'tag' }, '📘 Граматика українською'),
+      el('span', { class: 'tag' }, '🗂 Словник із флеш-картками'),
       el('span', { class: 'tag' }, '📖 Читання з текстами'),
       el('span', { class: 'tag' }, '🔊 Аудіювання в браузері'),
       el('span', { class: 'tag' }, '✍ Письмо з модельними відповідями'),
@@ -112,9 +113,9 @@ function viewHome() {
     el('ol', { style: 'padding-left:1.2rem;color:var(--text-soft)' },
       el('li', {}, 'Оберіть рівень. Угорі — навички, нижче — граматика за модулями.'),
       el('li', {}, el('strong', {}, 'Граматика'), ' — прочитайте пояснення й розберіть таблиці.'),
-      el('li', {}, el('strong', {}, 'Лексика'), ' — вивчіть слова, натискайте 🔊, щоб почути вимову.'),
-      el('li', {}, el('strong', {}, 'Вправи'), ' — відпрацюйте граматику й лексику з миттєвою перевіркою.'),
+      el('li', {}, el('strong', {}, 'Вправи'), ' — відпрацюйте граматику з миттєвою перевіркою.'),
       el('li', {}, el('strong', {}, 'Тест'), ' — перевірте себе. 60 % — прохідний бал, як на реальному іспиті.'),
+      el('li', {}, el('strong', {}, 'Лексика'), ' — окремий модуль: увесь словник рівня за темами, з озвученням і флеш-картками.'),
       el('li', {}, el('strong', {}, 'Читання'), ' — окремий модуль: тексти зі словничком і завданнями.'),
       el('li', {}, el('strong', {}, 'Аудіювання'), ' — окремий модуль: слухайте без тексту, транскрипт відкривайте після відповідей.'),
       el('li', {}, el('strong', {}, 'Письмо'), ' — окремий модуль: пишіть, перевіряйте текст, порівнюйте з прикладом.'),
@@ -161,7 +162,10 @@ async function viewLevel(levelId) {
   const skills = buildSkills(level);
   const skillCards = el('div', { class: 'levels' },
     SKILLS.map(sk => {
-      const n = skills[sk.id].length;
+      const list = skills[sk.id];
+      const badge = sk.id === 'wortschatz'
+        ? `${list.reduce((n, g) => n + g.items.length, 0)} слів · ${list.length} ${plural(list.length, 'тема', 'теми', 'тем')}`
+        : `${list.length} ${plural(list.length, 'завдання', 'завдання', 'завдань')}`;
       return el('a', {
         class: 'level-card', href: `#/${levelId}/${sk.id}`, style: `--c: var(--${levelId})`,
       },
@@ -169,8 +173,7 @@ async function viewLevel(levelId) {
         el('h3', {}, `${sk.de} — ${sk.label}`),
         el('p', {}, sk.desc),
         el('div', { class: 'level-card__meta' },
-          el('span', { class: 'tag tag--accent' },
-            `${n} ${plural(n, 'завдання', 'завдання', 'завдань')}`)),
+          el('span', { class: 'tag tag--accent' }, badge)),
       );
     }),
   );
@@ -180,7 +183,7 @@ async function viewLevel(levelId) {
     head,
     el('h2', {}, 'Навички'),
     el('p', { class: 'muted', style: 'margin-top:-.5rem' },
-      'Читання, аудіювання й письмо зібрані окремо — так, як їх перевіряють на іспиті.'),
+      'Лексика, читання, аудіювання й письмо зібрані окремо — так, як їх перевіряють на іспиті.'),
     skillCards,
     el('div', { style: 'height:2rem' }),
     el('h2', {}, 'Граматика за модулями'),
@@ -211,13 +214,14 @@ async function viewLevel(levelId) {
    винесені в окремі модулі навичок на рівні цілого рівня. */
 const TABS = [
   { id: 'grammar',   label: 'Граматика', key: 'grammar' },
-  { id: 'vocab',     label: 'Лексика',   key: 'vocab' },
   { id: 'exercises', label: 'Вправи',    key: 'exercises' },
   { id: 'test',      label: 'Тест',      key: 'test' },
 ];
 
-/* Навички — окремі модулі рівня. */
+/* Навички — окремі модулі рівня. Словник іде першим: він живить решту. */
 const SKILLS = [
+  { id: 'wortschatz', de: 'Wortschatz', label: 'Лексика',   icon: '🗂',
+    desc: 'Увесь словник рівня, згрупований за темами й у логічному порядку — з таблицями та флеш-картками.' },
   { id: 'lesen',     de: 'Lesen',     label: 'Читання',   icon: '📖',
     desc: 'Тексти у форматі іспиту: оголошення, листи, статті — зі словником і завданнями.' },
   { id: 'hoeren',    de: 'Hören',     label: 'Аудіювання', icon: '🎧',
@@ -234,7 +238,7 @@ function buildSkills(level) {
     (m.listening || []).forEach(t => hoeren.push({ ...t, from, mod: m }));
     (m.writing   || []).forEach(t => schreiben.push({ ...t, from, mod: m }));
   });
-  return { lesen: level.reading || [], hoeren, schreiben };
+  return { wortschatz: level.vocab || [], lesen: level.reading || [], hoeren, schreiben };
 }
 
 async function viewModule(levelId, index, tabId) {
@@ -354,12 +358,14 @@ async function viewSkill(levelId, skillId) {
   if (!items.length) {
     body.append(el('div', { class: 'card center muted' },
       'Матеріали цієї навички для рівня ще готуються.'));
+  } else if (skillId === 'wortschatz') {
+    body.append(renderVocabulary(items));
   } else if (skillId === 'lesen') {
     body.append(renderReading(items));
   } else if (skillId === 'hoeren') {
     body.append(RENDERERS.listening({ listening: items }, meta));
   } else {
-    body.append(RENDERERS.writing({ writing: items, vocab: [], id: 'skill' }, meta));
+    body.append(RENDERERS.writing({ writing: items, vocab: level.vocab || [], id: 'skill' }, meta));
   }
 
   const nav = el('div', { class: 'ex__actions', style: 'margin-top:2.4rem;justify-content:space-between' },
@@ -372,6 +378,218 @@ async function viewSkill(levelId, skillId) {
     crumbs({ label: 'Головна', href: '#/' }, { label: meta.code, href: `#/${levelId}` }, { label: sk.label }),
     head, body, nav,
   ), `${sk.label} · ${meta.code}`);
+}
+
+/* ------------------------------------------------------ словник рівня --- */
+
+/** Словник рівня: таблиці за темами плюс режим флеш-карток. */
+function renderVocabulary(groups) {
+  const all = groups.flatMap(g => g.items.map(it => ({ ...it, group: g.group })));
+
+  const box = el('div', { class: 'stack' });
+
+  /* — шапка: скільки слів і як учити — */
+  const cardsBtn = el('button', { class: 'btn', type: 'button' }, '🃏 Учити картками');
+  box.append(el('div', { class: 'section-note' },
+    `Словник рівня: ${all.length} ${plural(all.length, 'слово', 'слова', 'слів')} у ${groups.length} ${plural(groups.length, 'темі', 'темах', 'темах')}. `,
+    'Слова в кожній темі стоять не за абеткою, а в логічному порядку — так їх легше запам’ятати. ',
+    cardsBtn));
+
+  if (ttsSupported && !hasGermanVoice()) {
+    box.append(el('div', { class: 'no-tts' },
+      'У системі не знайдено німецького голосу. Додайте його: macOS — Системні налаштування → Спеціальні можливості → Вимовлений вміст → Голоси системи; Windows — Параметри → Час і мова → Мова → Додати німецьку.'));
+  }
+
+  /* — картки — */
+  const cardsBox = el('div', { class: 'flash', hidden: 'hidden' });
+  box.append(cardsBox);
+  let deckBuilt = false;
+  cardsBtn.addEventListener('click', () => {
+    const open = !cardsBox.hasAttribute('hidden');
+    if (open) {
+      cardsBox.setAttribute('hidden', 'hidden');
+      cardsBtn.textContent = '🃏 Учити картками';
+      return;
+    }
+    if (!deckBuilt) { cardsBox.append(buildFlashcards(groups)); deckBuilt = true; }
+    cardsBox.removeAttribute('hidden');
+    cardsBtn.textContent = '✕ Сховати картки';
+    cardsBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  /* — таблиці за темами — */
+  groups.forEach((group, gi) => {
+    const rows = group.items.map((it, i) => {
+      const btn = ttsSupported
+        ? el('button', { class: 'speak-btn', type: 'button', 'aria-label': `Прослухати: ${it.de}` }, '🔊')
+        : null;
+      btn?.addEventListener('click', () => speak(it.de, {
+        onStart: () => btn.classList.add('is-playing'),
+        onEnd:   () => btn.classList.remove('is-playing'),
+      }));
+      return el('tr', {},
+        el('td', { class: 'vt__no' }, String(i + 1)),
+        el('td', { class: 'vt__de' }, el('span', { class: 'de' }, it.de), btn),
+        el('td', { class: 'vt__uk' }, it.uk),
+        el('td', { class: 'vt__ex' }, it.ex || ''),
+      );
+    });
+
+    const playBtn = ttsSupported
+      ? el('button', { class: 'btn btn--soft btn--sm', type: 'button' }, '🔊 Прослухати тему')
+      : null;
+    let playing = false;
+    playBtn?.addEventListener('click', () => {
+      if (playing) { stopSpeech(); return; }
+      speakDialogue(group.items.map(i => ({ de: i.de })), {
+        rate: 0.98, pauseScale: 1.4,
+        onStart: () => { playing = true; playBtn.textContent = '⏹ Зупинити'; },
+        onEnd:   () => { playing = false; playBtn.textContent = '🔊 Прослухати тему'; },
+      });
+    });
+
+    box.append(el('section', { class: 'vocab-group' },
+      el('div', { class: 'vocab-group__head' },
+        el('h3', {}, `${gi + 1}. ${group.group}`),
+        el('span', { class: 'tag' }, `${group.items.length} ${plural(group.items.length, 'слово', 'слова', 'слів')}`),
+        playBtn,
+      ),
+      group.note ? el('p', { class: 'muted', style: 'margin:.2rem 0 .8rem' }, group.note) : null,
+      el('div', { class: 'tbl-scroll' },
+        el('table', { class: 'tbl vt' },
+          el('thead', {}, el('tr', {},
+            el('th', {}, '#'), el('th', {}, 'Deutsch'),
+            el('th', {}, 'Українською'), el('th', {}, 'Примітка'))),
+          el('tbody', {}, rows))),
+    ));
+  });
+
+  return box;
+}
+
+/** Режим флеш-карток: вибір теми, напрямку, перемішування; прогрес у межах сесії. */
+function buildFlashcards(groups) {
+  const wrap = el('div', { class: 'card stack' });
+
+  const themeSel = el('select', { class: 'flash__select', 'aria-label': 'Тема' },
+    el('option', { value: 'all' }, `Усі теми (${groups.reduce((n, g) => n + g.items.length, 0)})`),
+    groups.map((g, i) => el('option', { value: String(i) }, `${i + 1}. ${g.group} (${g.items.length})`)));
+
+  const dirSel = el('select', { class: 'flash__select', 'aria-label': 'Напрямок' },
+    el('option', { value: 'de' }, 'Німецька → українська'),
+    el('option', { value: 'uk' }, 'Українська → німецька'));
+
+  const shuffleBox = el('input', { type: 'checkbox', id: 'flashShuffle', checked: 'checked' });
+
+  const counter = el('span', { class: 'flash__counter' });
+  const known = el('span', { class: 'pill pill--ok' }, 'Знаю: 0');
+  const again = el('span', { class: 'pill pill--warn' }, 'Повторити: 0');
+
+  const face = el('div', { class: 'flash__face' });
+  const hint = el('div', { class: 'flash__hint' }, 'Натисніть картку або пробіл, щоб перевернути');
+  const card = el('div', { class: 'flash__card', tabindex: '0', role: 'button' }, face, hint);
+
+  const speakBtn = el('button', { class: 'btn btn--ghost btn--sm', type: 'button' }, '🔊 Вимова');
+  const knowBtn  = el('button', { class: 'btn btn--soft', type: 'button' }, '✓ Знаю');
+  const againBtn = el('button', { class: 'btn btn--ghost', type: 'button' }, '↻ Повторити');
+  const restart  = el('button', { class: 'btn btn--ghost btn--sm', type: 'button' }, 'Почати спочатку');
+
+  let deck = [], pos = 0, flipped = false, stats = { known: 0, again: 0 };
+
+  function build() {
+    const pick = themeSel.value === 'all'
+      ? groups.flatMap(g => g.items)
+      : groups[Number(themeSel.value)].items;
+    deck = pick.slice();
+    if (shuffleBox.checked) {
+      for (let i = deck.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [deck[i], deck[j]] = [deck[j], deck[i]];
+      }
+    }
+    pos = 0; stats = { known: 0, again: 0 };
+    render();
+  }
+
+  function render() {
+    known.textContent = `Знаю: ${stats.known}`;
+    again.textContent = `Повторити: ${stats.again}`;
+
+    if (pos >= deck.length) {
+      counter.textContent = `${deck.length} / ${deck.length}`;
+      face.replaceChildren(el('div', { class: 'flash__done' },
+        el('strong', {}, 'Колоду пройдено 🎉'),
+        el('p', { class: 'muted' },
+          `Знаю: ${stats.known} · Повторити: ${stats.again}. ` +
+          (stats.again ? 'Пройдіть ще раз — слова перемішаються.' : 'Спробуйте зворотний напрямок.')),
+      ));
+      hint.textContent = '';
+      card.classList.remove('is-flipped');
+      [knowBtn, againBtn, speakBtn].forEach(b => b.disabled = true);
+      return;
+    }
+
+    [knowBtn, againBtn, speakBtn].forEach(b => b.disabled = false);
+    const it = deck[pos];
+    flipped = false;
+    card.classList.remove('is-flipped');
+    counter.textContent = `${pos + 1} / ${deck.length}`;
+    hint.textContent = 'Натисніть картку або пробіл, щоб перевернути';
+    face.replaceChildren(
+      el('span', { class: 'flash__front' + (dirSel.value === 'de' ? ' de' : '') },
+        dirSel.value === 'de' ? it.de : it.uk));
+  }
+
+  function flip() {
+    if (pos >= deck.length || flipped) return;
+    const it = deck[pos];
+    flipped = true;
+    card.classList.add('is-flipped');
+    hint.textContent = 'Знаєте це слово?';
+    face.replaceChildren(
+      el('span', { class: 'flash__front' + (dirSel.value === 'de' ? ' de' : '') },
+        dirSel.value === 'de' ? it.de : it.uk),
+      el('span', { class: 'flash__back' + (dirSel.value === 'uk' ? ' de' : '') },
+        dirSel.value === 'de' ? it.uk : it.de),
+      it.ex ? el('span', { class: 'flash__ex' }, it.ex) : null,
+    );
+    if (dirSel.value === 'uk' && ttsSupported) speak(it.de);
+  }
+
+  function next(isKnown) {
+    if (pos >= deck.length) return;
+    stats[isKnown ? 'known' : 'again']++;
+    if (!isKnown) deck.push(deck[pos]);        // повернеться в кінці колоди
+    pos++;
+    render();
+  }
+
+  card.addEventListener('click', flip);
+  card.addEventListener('keydown', e => {
+    if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); flipped ? next(true) : flip(); }
+    if (e.key === 'ArrowRight') { e.preventDefault(); next(true); }
+    if (e.key === 'ArrowLeft')  { e.preventDefault(); next(false); }
+  });
+  knowBtn.addEventListener('click', () => { if (!flipped) flip(); else next(true); });
+  againBtn.addEventListener('click', () => next(false));
+  speakBtn.addEventListener('click', () => { if (pos < deck.length) speak(deck[pos].de); });
+  [themeSel, dirSel, shuffleBox].forEach(c => c.addEventListener('change', build));
+  restart.addEventListener('click', build);
+
+  wrap.append(
+    el('div', { class: 'flash__bar' },
+      themeSel, dirSel,
+      el('label', { class: 'flash__check' }, shuffleBox, ' перемішати'),
+      el('span', { class: 'grow' }),
+      counter),
+    card,
+    el('div', { class: 'flash__actions' },
+      againBtn, knowBtn, ttsSupported ? speakBtn : null),
+    el('div', { class: 'flash__stats' }, known, again, el('span', { class: 'grow' }), restart),
+  );
+
+  build();
+  return wrap;
 }
 
 /** Тексти для читання: сам текст, словничок і завдання. */
@@ -419,55 +637,6 @@ const RENDERERS = {
         return el('section', { class: 'gram' }, el('h3', {}, g.title), body);
       }),
     );
-  },
-
-  vocab(mod) {
-    const box = el('div', { class: 'stack' });
-    const total = mod.vocab.reduce((n, g) => n + g.items.length, 0);
-
-    const allBtn = el('button', { class: 'btn btn--soft btn--sm', type: 'button' }, '🔊 Прослухати всі слова');
-    let playing = false;
-    allBtn.addEventListener('click', () => {
-      if (playing) { stopSpeech(); return; }
-      const lines = mod.vocab.flatMap(g => g.items.map(i => ({ de: i.de })));
-      speakDialogue(lines, {
-        rate: 0.98, pauseScale: 1.4,
-        onStart: () => { playing = true; allBtn.textContent = '⏹ Зупинити'; },
-        onEnd:   () => { playing = false; allBtn.textContent = '🔊 Прослухати всі слова'; },
-      });
-    });
-
-    box.append(el('div', { class: 'section-note' },
-      `У модулі ${total} ${plural(total, 'слово', 'слова', 'слів')}. Натисніть 🔊 біля слова, щоб почути вимову. `,
-      ttsSupported ? allBtn : 'Ваш браузер не підтримує синтез мовлення.'));
-
-    if (ttsSupported && !hasGermanVoice()) {
-      box.append(el('div', { class: 'no-tts' },
-        'У системі не знайдено німецького голосу. Додайте його: macOS — Системні налаштування → Спеціальні можливості → Вимовлений вміст → Голоси системи; Windows — Параметри → Час і мова → Мова → Додати німецьку.'));
-    }
-
-    mod.vocab.forEach(group => {
-      box.append(el('section', { class: 'vocab-group' },
-        el('h3', {}, group.group),
-        el('div', { class: 'vocab-list' },
-          group.items.map(it => {
-            const btn = ttsSupported ? el('button', { class: 'speak-btn', type: 'button', 'aria-label': `Прослухати: ${it.de}` }, '🔊') : null;
-            btn?.addEventListener('click', () => speak(it.de, {
-              onStart: () => btn.classList.add('is-playing'),
-              onEnd:   () => btn.classList.remove('is-playing'),
-            }));
-            return el('div', { class: 'vocab-item' },
-              el('span', { class: 'vocab-item__de' }, it.de),
-              btn || el('span', {}),
-              el('span', { class: 'vocab-item__uk' }, it.uk),
-              it.ex ? el('span', { class: 'vocab-item__ex' }, it.ex, it.exUk ? el('span', { class: 'tr' }, it.exUk) : null) : null,
-            );
-          }),
-        ),
-      ));
-    });
-
-    return box;
   },
 
   exercises(mod) {
@@ -606,7 +775,7 @@ const RENDERERS = {
         const res = checkWriting(ta.value, task, {
           levelId: meta.id,
           moduleId: task.mod?.id || mod.id,
-          vocab: task.mod?.vocab || mod.vocab,
+          vocab: mod.vocab || [],          // словник рівня: з нього беруться іменники
         });
         report.replaceChildren(renderReport(res));
         report.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
