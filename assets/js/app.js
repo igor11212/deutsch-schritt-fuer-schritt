@@ -1,10 +1,10 @@
 /* Роутер + сторінки. Хеш-навігація, щоб працювало на GitHub Pages без сервера. */
 
-import { LEVELS, loadLevel } from '../data/index.js?v=20260817b';
-import { el, renderExercise, renderExerciseSet } from './exercises.js?v=20260817b';
-import { speak, speakDialogue, stop as stopSpeech, ttsSupported, hasGermanVoice } from './tts.js?v=20260817b';
-import { checkWriting } from './writing-check.js?v=20260817b';
-import { glossTerms } from './glossary.js?v=20260817b';
+import { LEVELS, loadLevel } from '../data/index.js?v=20260817c';
+import { el, renderExercise, renderExerciseSet } from './exercises.js?v=20260817c';
+import { speak, speakDialogue, stop as stopSpeech, ttsSupported, hasGermanVoice } from './tts.js?v=20260817c';
+import { checkWriting } from './writing-check.js?v=20260817c';
+import { glossTerms } from './glossary.js?v=20260817c';
 
 const main = document.getElementById('main');
 
@@ -163,8 +163,9 @@ async function viewLevel(levelId) {
   const skillCards = el('div', { class: 'levels' },
     SKILLS.map(sk => {
       const list = skills[sk.id];
+      const words = list.reduce((n, g) => n + (g.items?.length || 0), 0);
       const badge = sk.id === 'wortschatz'
-        ? `${list.reduce((n, g) => n + g.items.length, 0)} слів · ${list.length} ${plural(list.length, 'тема', 'теми', 'тем')}`
+        ? `${words} ${plural(words, 'слово', 'слова', 'слів')} · ${list.length} ${plural(list.length, 'тема', 'теми', 'тем')}`
         : `${list.length} ${plural(list.length, 'завдання', 'завдання', 'завдань')}`;
       return el('a', {
         class: 'level-card', href: `#/${levelId}/${sk.id}`, style: `--c: var(--${levelId})`,
@@ -546,13 +547,14 @@ function buildFlashcards(groups) {
     flipped = true;
     card.classList.add('is-flipped');
     hint.textContent = 'Знаєте це слово?';
-    face.replaceChildren(
+    // replaceChildren не відсіює null, як це робить el() — тому фільтруємо самі
+    face.replaceChildren(...[
       el('span', { class: 'flash__front' + (dirSel.value === 'de' ? ' de' : '') },
         dirSel.value === 'de' ? it.de : it.uk),
       el('span', { class: 'flash__back' + (dirSel.value === 'uk' ? ' de' : '') },
         dirSel.value === 'de' ? it.uk : it.de),
       it.ex ? el('span', { class: 'flash__ex' }, it.ex) : null,
-    );
+    ].filter(Boolean));
     if (dirSel.value === 'uk' && ttsSupported) speak(it.de);
   }
 
