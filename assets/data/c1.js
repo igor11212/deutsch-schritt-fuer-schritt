@@ -1,5 +1,5 @@
-import { modules as part2 } from './c1-part2.js?v=20260817a';
-import { modules as part3 } from './c1-part3.js?v=20260817a';
+import { modules as part2 } from './c1-part2.js?v=20260817b';
+import { modules as part3 } from './c1-part3.js?v=20260817b';
 
 export default {
   intro:
@@ -175,61 +175,6 @@ allerdings nicht geben.</em>
 <em>нібито</em>, <em>як стверджує</em>. Саме тому переклади вище звучать саме так.</div>`,
       },
     ],
-
-    vocab: [
-      {
-        group: 'Введення чужої мови',
-        items: [
-          { de: 'betonen', uk: 'наголошувати' },
-          { de: 'behaupten', uk: 'стверджувати (часто з сумнівом)' },
-          { de: 'einräumen', uk: 'визнавати, поступатися' },
-          { de: 'bestreiten', uk: 'заперечувати, спростовувати' },
-          { de: 'versichern', uk: 'запевняти' },
-          { de: 'andeuten', uk: 'натякати' },
-          { de: 'zugeben', uk: 'зізнаватися' },
-          { de: 'ergänzen', uk: 'додавати (до сказаного)' },
-          { de: 'entgegnen', uk: 'заперечувати у відповідь' },
-          { de: 'laut + Dat.', uk: 'згідно з (за словами)' },
-          { de: 'nach Angaben + Gen.', uk: 'за даними' },
-          { de: '… zufolge', uk: 'за (стоїть після іменника)' },
-        ],
-      },
-      {
-        group: 'Медіа та публічний дискурс',
-        items: [
-          { de: 'die Stellungnahme, -n', uk: 'заява, позиція' },
-          { de: 'die Pressekonferenz', uk: 'пресконференція' },
-          { de: 'der Sprecher / die Sprecherin', uk: 'речник / речниця' },
-          { de: 'die Quelle, -n', uk: 'джерело' },
-          { de: 'glaubwürdig / unglaubwürdig', uk: 'достовірний / непереконливий' },
-          { de: 'die Schlagzeile, -n', uk: 'заголовок' },
-          { de: 'recherchieren', uk: 'проводити журналістське розслідування' },
-          { de: 'der Sachverhalt', uk: 'стан справ, обставини' },
-          { de: 'die Darstellung', uk: 'виклад, подання' },
-          { de: 'verzerren', uk: 'викривляти' },
-          { de: 'relativieren', uk: 'релятивізувати, пом’якшувати' },
-          { de: 'sich distanzieren von + Dat.', uk: 'дистанціюватися від' },
-        ],
-      },
-      {
-        group: 'Наукове цитування',
-        items: [
-          { de: 'die These, -n', uk: 'теза' },
-          { de: 'die Studie, -n', uk: 'дослідження' },
-          { de: 'die Erhebung, -en', uk: 'збір даних, опитування' },
-          { de: 'zu dem Schluss kommen', uk: 'дійти висновку' },
-          { de: 'nachweisen', uk: 'доводити' },
-          { de: 'widerlegen', uk: 'спростовувати' },
-          { de: 'hervorheben', uk: 'підкреслювати' },
-          { de: 'sich beziehen auf + Akk.', uk: 'посилатися на' },
-          { de: 'zitieren', uk: 'цитувати' },
-          { de: 'die Annahme, -n', uk: 'припущення' },
-          { de: 'plausibel', uk: 'правдоподібний' },
-          { de: 'umstritten', uk: 'спірний' },
-        ],
-      },
-    ],
-
     exercises: [
       { type: 'gap', q: 'Er sagte, er ___ müde. (sein → Konj. I)', answers: ['sei'] },
       { type: 'gap', q: 'Sie erklärte, sie ___ keine Zeit. (haben → Konj. I, 3. Pers. Sg.)', answers: ['habe'] },
@@ -516,59 +461,6 @@ beschlossenen</span> <strong>Maßnahmen</strong></em> → «заходи, які
 «цифри, <u>які наведено у звіті</u>». Не намагайтеся зберегти німецький порядок — вийде нечитабельно.</div>`,
       },
     ],
-
-    vocab: [
-      {
-        group: 'Номіналізація частотних дієслів',
-        items: [
-          { de: 'entwickeln → die Entwicklung', uk: 'розвивати → розвиток' },
-          { de: 'steigen → der Anstieg', uk: 'зростати → зростання' },
-          { de: 'sinken → der Rückgang', uk: 'спадати → спад' },
-          { de: 'einführen → die Einführung', uk: 'запроваджувати → запровадження' },
-          { de: 'durchführen → die Durchführung', uk: 'проводити → проведення' },
-          { de: 'verbessern → die Verbesserung', uk: 'покращувати → покращення' },
-          { de: 'entscheiden → die Entscheidung', uk: 'вирішувати → рішення' },
-          { de: 'anwenden → die Anwendung', uk: 'застосовувати → застосування' },
-          { de: 'unterzeichnen → die Unterzeichnung', uk: 'підписувати → підписання' },
-          { de: 'berücksichtigen → die Berücksichtigung', uk: 'враховувати → врахування' },
-          { de: 'zusammenarbeiten → die Zusammenarbeit', uk: 'співпрацювати → співпраця' },
-          { de: 'verzichten → der Verzicht', uk: 'відмовлятися → відмова' },
-        ],
-      },
-      {
-        group: 'Прийменники книжного регістру',
-        items: [
-          { de: 'aufgrund + Gen.', uk: 'на підставі, через' },
-          { de: 'infolge + Gen.', uk: 'унаслідок' },
-          { de: 'anlässlich + Gen.', uk: 'з нагоди' },
-          { de: 'hinsichtlich + Gen.', uk: 'щодо' },
-          { de: 'angesichts + Gen.', uk: 'з огляду на' },
-          { de: 'mittels + Gen.', uk: 'за допомогою' },
-          { de: 'zwecks + Gen.', uk: 'з метою' },
-          { de: 'seitens + Gen.', uk: 'з боку' },
-          { de: 'im Zuge + Gen.', uk: 'у ході' },
-          { de: 'im Hinblick auf + Akk.', uk: 'з огляду на' },
-          { de: 'unter Berücksichtigung + Gen.', uk: 'з урахуванням' },
-          { de: 'im Falle + Gen.', uk: 'у разі' },
-        ],
-      },
-      {
-        group: 'Оцінка тенденцій',
-        items: [
-          { de: 'ein anhaltender Trend', uk: 'стійка тенденція' },
-          { de: 'ein deutlich erkennbarer Anstieg', uk: 'чітко помітне зростання' },
-          { de: 'die zu erwartenden Folgen', uk: 'очікувані наслідки' },
-          { de: 'die bereits ergriffenen Maßnahmen', uk: 'уже вжиті заходи' },
-          { de: 'die im Bericht genannten Zahlen', uk: 'наведені у звіті цифри' },
-          { de: 'eine kaum zu übersehende Entwicklung', uk: 'розвиток, який важко не помітити' },
-          { de: 'wachsend / zunehmend', uk: 'зростаючий' },
-          { de: 'rückläufig', uk: 'спадний' },
-          { de: 'ausschlaggebend', uk: 'вирішальний' },
-          { de: 'weitreichend', uk: 'далекосяжний' },
-        ],
-      },
-    ],
-
     exercises: [
       { type: 'gap', q: 'die Katze, die schläft → die ___ Katze (Partizip I)', answers: ['schlafende'] },
       { type: 'gap', q: 'das Problem, das gelöst wurde → das ___ Problem (Partizip II)', answers: ['gelöste|geloeste'] },

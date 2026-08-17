@@ -148,55 +148,6 @@ const m3 = {
 </tbody></table>`,
     },
   ],
-
-  vocab: [
-    {
-      group: 'Частки та їхні відтінки',
-      items: [
-        { de: 'doch (Partikel)', uk: '«ж» — апеляція до відомого' },
-        { de: 'mal (Partikel)', uk: '«-но» — м’якшить прохання' },
-        { de: 'ja (Partikel)', uk: '«ж» — здивування' },
-        { de: 'eben / halt', uk: '«так уже є»' },
-        { de: 'wohl (Partikel)', uk: 'мабуть' },
-        { de: 'schon (Partikel)', uk: '«воно-то так»' },
-        { de: 'denn (im Fragesatz)', uk: '«а … ж» у питанні' },
-        { de: 'etwa (im Fragesatz)', uk: 'невже' },
-        { de: 'bloß / nur (im Fragesatz)', uk: '«та де ж» — нетерпіння' },
-        { de: 'ruhig (Partikel)', uk: '«спокійно можеш» — дозвіл' },
-      ],
-    },
-    {
-      group: 'Дипломатична розмова',
-      items: [
-        { de: 'einlenken', uk: 'іти на поступки' },
-        { de: 'einräumen', uk: 'визнавати (частково)' },
-        { de: 'relativieren', uk: 'відносити, применшувати категоричність' },
-        { de: 'zustimmen + Dat.', uk: 'погоджуватися з' },
-        { de: 'widersprechen + Dat.', uk: 'заперечувати комусь' },
-        { de: 'abschwächen', uk: 'послаблювати, м’якшити' },
-        { de: 'schroff', uk: 'різкий' },
-        { de: 'taktvoll', uk: 'тактовний' },
-        { de: 'der Vorwurf, ¨-e', uk: 'закид' },
-        { de: 'der Unmut', uk: 'невдоволення' },
-      ],
-    },
-    {
-      group: 'Розмовні звороти',
-      items: [
-        { de: 'Das geht schon.', uk: 'Та нічого, зійде.' },
-        { de: 'Das ist eben so.', uk: 'Так уже воно є.' },
-        { de: 'Komm doch mal vorbei!', uk: 'Зайшов би ти якось!' },
-        { de: 'Was ist denn los?', uk: 'А що ж сталося?' },
-        { de: 'Sag mal, …', uk: 'Слухай-но, …' },
-        { de: 'Na ja, …', uk: 'Ну, як би …' },
-        { de: 'Also gut.', uk: 'Ну добре.' },
-        { de: 'Ach so!', uk: 'А, ось як!' },
-        { de: 'Immerhin', uk: 'принаймні, все ж таки' },
-        { de: 'Von mir aus.', uk: 'Як на мене, то нехай.' },
-      ],
-    },
-  ],
-
   exercises: [
     { type: 'gap', q: 'М’якше прохання: Kannst du ___ helfen? (частка)', answers: ['mal'] },
     { type: 'gap', q: 'Апеляція до відомого: Das habe ich dir ___ gesagt.', answers: ['doch'] },
@@ -508,55 +459,6 @@ Konjunktiv I, тому <em>sei</em> не змінюється ніколи. Пі
 </tbody></table>`,
     },
   ],
-
-  vocab: [
-    {
-      group: 'Поступка (книжний реєстр)',
-      items: [
-        { de: 'gleichwohl', uk: 'і все ж' },
-        { de: 'indes / indessen', uk: 'проте; тим часом' },
-        { de: 'wenngleich / obgleich', uk: 'хоча' },
-        { de: 'ungeachtet + Gen.', uk: 'незважаючи на' },
-        { de: 'bei allem Respekt', uk: 'при всій повазі' },
-        { de: 'zugegeben', uk: 'визнаю, слід визнати' },
-        { de: 'freilich', uk: 'щоправда; звісно' },
-        { de: 'nichtsdestotrotz', uk: 'незважаючи на це' },
-        { de: 'dennoch', uk: 'проте' },
-        { de: 'allerdings', uk: 'щоправда' },
-      ],
-    },
-    {
-      group: 'Обмеження та умови',
-      items: [
-        { de: 'sofern', uk: 'за умови що' },
-        { de: 'insofern (als)', uk: 'тією мірою, якою' },
-        { de: 'es sei denn', uk: 'хіба що' },
-        { de: 'vorausgesetzt, dass', uk: 'за умови що' },
-        { de: 'abgesehen von + Dat.', uk: 'окрім' },
-        { de: 'lediglich', uk: 'лише' },
-        { de: 'bedingt', uk: 'умовно, до певної міри' },
-        { de: 'in gewissem Maße', uk: 'певною мірою' },
-        { de: 'mit Einschränkungen', uk: 'із застереженнями' },
-        { de: 'unter der Bedingung, dass', uk: 'за умови, що' },
-      ],
-    },
-    {
-      group: 'Академічна оцінка',
-      items: [
-        { de: 'der Befund, -e', uk: 'результат дослідження' },
-        { de: 'die Stichprobe, -n', uk: 'вибірка' },
-        { de: 'aussagekräftig', uk: 'показовий, промовистий' },
-        { de: 'nachvollziehbar', uk: 'зрозумілий, обґрунтований' },
-        { de: 'plausibel', uk: 'правдоподібний' },
-        { de: 'zutreffen', uk: 'бути слушним' },
-        { de: 'berechtigt', uk: 'виправданий' },
-        { de: 'einseitig', uk: 'однобічний' },
-        { de: 'differenziert', uk: 'диференційований, нюансований' },
-        { de: 'die Einschränkung, -en', uk: 'обмеження, застереження' },
-      ],
-    },
-  ],
-
   exercises: [
     { type: 'gap', q: 'Der Plan ist ___ teuer, ___ ist er realistisch. (хоч і … щоправда)',
       answers: ['zwar', 'allerdings'] },
@@ -880,55 +782,6 @@ const m5 = {
 </tbody></table>`,
     },
   ],
-
-  vocab: [
-    {
-      group: 'Звороти з lassen',
-      items: [
-        { de: 'Das lässt sich machen.', uk: 'Це можна зробити.' },
-        { de: 'Es lässt sich nicht leugnen, dass …', uk: 'Не можна заперечити, що …' },
-        { de: 'Daraus lässt sich schließen, dass …', uk: 'Із цього можна зробити висновок, що …' },
-        { de: 'Darüber lässt sich streiten.', uk: 'Про це можна посперечатися.' },
-        { de: 'Das lässt sich so nicht sagen.', uk: 'Так сказати не можна.' },
-        { de: 'Der Fehler lässt sich beheben.', uk: 'Помилку можна усунути.' },
-        { de: 'Das ließe sich ändern.', uk: 'Це можна було б змінити.' },
-        { de: 'sich vermeiden lassen', uk: 'бути таким, якого можна уникнути' },
-        { de: 'sich nicht bestreiten lassen', uk: 'бути незаперечним' },
-        { de: 'sich erklären lassen', uk: 'мати пояснення' },
-      ],
-    },
-    {
-      group: 'Прикметники модальності',
-      items: [
-        { de: 'machbar', uk: 'здійсненний' },
-        { de: 'lösbar / unlösbar', uk: 'розв’язний / нерозв’язний' },
-        { de: 'vermeidbar', uk: 'той, якого можна уникнути' },
-        { de: 'vorstellbar', uk: 'уявний, мислимий' },
-        { de: 'nachvollziehbar', uk: 'зрозумілий, обґрунтований' },
-        { de: 'wettbewerbsfähig', uk: 'конкурентоспроможний' },
-        { de: 'anmeldepflichtig', uk: 'той, що потребує реєстрації' },
-        { de: 'gebührenpflichtig', uk: 'платний' },
-        { de: 'kostenfrei', uk: 'безкоштовний' },
-        { de: 'problemlos', uk: 'без проблем' },
-      ],
-    },
-    {
-      group: 'Офіційні вимоги',
-      items: [
-        { de: 'einreichen', uk: 'подавати документ' },
-        { de: 'einhalten', uk: 'дотримувати' },
-        { de: 'nachweisen', uk: 'підтверджувати документально' },
-        { de: 'beantragen', uk: 'подавати заяву на' },
-        { de: 'vorlegen', uk: 'надавати, пред’являти' },
-        { de: 'beachten', uk: 'зважати, дотримувати' },
-        { de: 'entrichten', uk: 'сплачувати (офіційно)' },
-        { de: 'die Auflage, -n', uk: 'умова, вимога' },
-        { de: 'die Vorgabe, -n', uk: 'настанова, задана вимога' },
-        { de: 'fristgerecht', uk: 'у встановлений термін' },
-      ],
-    },
-  ],
-
   exercises: [
     { type: 'gap', q: 'Das Problem ___ ___ lösen. (sich lassen)', answers: ['lässt', 'sich'] },
     { type: 'gap', q: 'Der Fehler ___ ___ nicht beheben. (Präteritum: sich lassen)',
