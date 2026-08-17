@@ -338,9 +338,13 @@ Andererseits darf man nicht vergessen, dass Jugendliche den Umgang mit digitalen
 Zwar verstehe ich die Sorge der Lehrkräfte, aber ein generelles Verbot verschiebt das Problem nur nach Hause.
 Aus eigener Erfahrung kann ich sagen, dass mein Sohn im Unterricht sinnvoll mit dem Handy recherchiert hat.
 
-Zusammenfassend lässt sich sagen, dass ein vollständiges Verbot zu weit geht. Sinnvoller wären klare Regeln:
-Handys in Pausen aus, im Unterricht nur nach Aufforderung. Je früher Kinder verantwortungsvoll mit Medien
-umgehen lernen, desto besser.
+Hinzu kommt, dass ein Verbot kaum kontrollierbar wäre. Die Lehrkräfte müssten ständig aufpassen, statt zu
+unterrichten, und genau diese Zeit fehlt am Ende den Schülerinnen und Schülern.
+
+Zusammenfassend lässt sich sagen, dass ein vollständiges Verbot zu weit geht. Sinnvoller wären klare Regeln,
+die gemeinsam mit den Klassen erarbeitet werden: Handys in den Pausen aus, im Unterricht nur nach
+Aufforderung der Lehrkraft. Je früher Kinder verantwortungsvoll mit Medien umgehen lernen, desto besser
+sind sie später auf ein Studium und den Beruf vorbereitet.
 
 Mit freundlichen Grüßen
 Iryna Kowal`,

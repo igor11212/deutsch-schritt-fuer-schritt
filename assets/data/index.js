@@ -34,13 +34,13 @@ export const LEVELS = [
   },
 ];
 
-import { READING } from './reading.js?v=20260816j';
+import { READING } from './reading.js?v=20260816k';
 
 const CACHE = new Map();
 
 export async function loadLevel(id) {
   if (CACHE.has(id)) return CACHE.get(id);
-  const mod = await import(`./${id}.js?v=20260816j`);
+  const mod = await import(`./${id}.js?v=20260816k`);
   const level = { ...mod.default, reading: READING[id] || [] };
   CACHE.set(id, level);
   return level;

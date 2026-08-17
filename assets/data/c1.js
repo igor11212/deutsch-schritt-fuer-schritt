@@ -336,11 +336,16 @@ Wer seine Arbeitszeit selbst einteilen könne, sei insgesamt zufriedener und ber
 Erschöpfung. Zugleich räumte sie ein, dass diese Freiheit einen Preis habe. Die Grenzen zwischen Beruf
 und Privatleben verschwämmen zunehmend, und viele Beschäftigte hätten Schwierigkeiten, abzuschalten.
 
-Die Untersuchung werde im Herbst fortgesetzt; dann solle vor allem geprüft werden, wie sich die
-Belastung über längere Zeiträume entwickle.
+Besonders betroffen seien nach ihren Angaben Eltern kleiner Kinder, die abends häufig noch einmal zum
+Rechner zurückkehrten. Bei ihnen habe das Team die höchsten Werte für gefühlten Zeitdruck gemessen,
+obwohl sie ihre Arbeitszeit formal frei einteilen könnten.
 
-Abschließend riet sie den Unternehmen, verbindliche Regeln zu vereinbaren. Nur so lasse sich verhindern,
-dass Flexibilität in ständige Erreichbarkeit umschlage.`,
+Die Untersuchung werde im Herbst fortgesetzt; dann solle vor allem geprüft werden, wie sich die
+Belastung über längere Zeiträume entwickle und welche Rolle die Unternehmenskultur dabei spiele.
+
+Abschließend riet sie den Unternehmen, verbindliche Regeln zu vereinbaren, etwa feste Zeiten ohne
+Erreichbarkeit. Nur so lasse sich verhindern, dass Flexibilität in ständige Verfügbarkeit umschlage
+und aus einem Gewinn an Freiheit am Ende eine zusätzliche Last werde.`,
         modelUk: 'Коротко: увесь переказ витриманий у Konjunktiv I (habe, seien, könne, sei, berichte, werde, solle, entwickle, lasse), а там, де форма збіглася б з Indikativ, ужито Konjunktiv II (verschwämmen, hätten). Прямих цитат немає, займенники перебудовані, дієслова введення варіюються: erläutern → einräumen → raten.',
       },
     ],
@@ -683,9 +688,14 @@ erwiesen.
 
 Vor der Anmeldung sind die dem Schreiben beigefügten Hinweise sorgfältig zu beachten. Die zur Bearbeitung
 erforderlichen Nachweise sind vollständig hochzuladen; unvollständige Anträge verlängern die Bearbeitungszeit
-erheblich.
+erheblich und müssen unter Umständen zurückgewiesen werden.
 
-Bei Rückfragen steht Ihnen unsere Servicestelle montags bis donnerstags zur Verfügung.
+Für Personen ohne Internetzugang wird in allen Bezirksämtern ein betreuter Terminalzugang eingerichtet.
+Die dort geleistete Unterstützung beschränkt sich auf technische Fragen; eine inhaltliche Beratung zu den
+einzureichenden Unterlagen ist ausschließlich telefonisch vorgesehen.
+
+Bei Rückfragen steht Ihnen unsere Servicestelle montags bis donnerstags von acht bis sechzehn Uhr zur
+Verfügung. Wir bitten um Verständnis für die mit der Umstellung verbundenen Verzögerungen.
 
 Mit freundlichen Grüßen
 Bürgerservice der Stadt`,
