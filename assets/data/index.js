@@ -16,31 +16,31 @@ export const LEVELS = [
   },
   {
     id: 'b1', code: 'B1', title: 'Mittelstufe',
-    desc: 'Konjunktiv II, пасив, Genitiv, зв’язний виклад думки. Ви впораєтеся в подорожі, на роботі й у навчанні.',
+    desc: 'Konjunktiv II, пасив, часові підрядні з Plusquamperfekt, інфінітив із zu, непрямі питання, парні сполучники, Futur I і дієприкметники як означення. Ви впораєтеся в подорожі, на роботі й у навчанні.',
     exam: 'Goethe-Zertifikat B1 · ÖSD Zertifikat B1',
-    words: '≈ 2400 слів', hours: '≈ 350 годин', status: 'partial',
+    words: '≈ 2400 слів', hours: '≈ 350 годин', status: 'full',
   },
   {
     id: 'b2', code: 'B2', title: 'Gute Mittelstufe',
-    desc: 'Складний синтаксис, номіналізація, аргументація. Ви розумієте абстрактні тексти й ведете дискусію.',
+    desc: 'Аргументація на конекторах, минулий Konjunktiv II, номінальний і вербальний стиль, партиципні означення, пасив у всіх часах, порядок слів і зв’язність тексту. Ви розумієте абстрактні тексти й ведете дискусію.',
     exam: 'Goethe-Zertifikat B2 · ÖSD Zertifikat B2',
-    words: '≈ 4000 слів', hours: '≈ 600 годин', status: 'partial',
+    words: '≈ 4000 слів', hours: '≈ 600 годин', status: 'full',
   },
   {
     id: 'c1', code: 'C1', title: 'Fortgeschritten',
-    desc: 'Стилістика, Konjunktiv I, партиципні конструкції, наукова мова. Ви висловлюєтесь вільно й точно.',
+    desc: 'Konjunktiv I і непряма мова, партиципні конструкції, модальні частки, книжні конектори, замінники пасиву, стійкі звороти, словотвір і свідома робота з реєстром. Ви висловлюєтесь вільно й точно.',
     exam: 'Goethe-Zertifikat C1 · ÖSD Zertifikat C1',
-    words: '≈ 6000 слів', hours: '≈ 800 годин', status: 'partial',
+    words: '≈ 6000 слів', hours: '≈ 800 годин', status: 'full',
   },
 ];
 
-import { READING } from './reading.js?v=20260816k';
+import { READING } from './reading.js?v=20260817a';
 
 const CACHE = new Map();
 
 export async function loadLevel(id) {
   if (CACHE.has(id)) return CACHE.get(id);
-  const mod = await import(`./${id}.js?v=20260816k`);
+  const mod = await import(`./${id}.js?v=20260817a`);
   const level = { ...mod.default, reading: READING[id] || [] };
   CACHE.set(id, level);
   return level;

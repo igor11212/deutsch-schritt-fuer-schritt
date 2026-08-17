@@ -1,8 +1,11 @@
+import { modules as part2 } from './b1-part2.js?v=20260817a';
+import { modules as part3 } from './b1-part3.js?v=20260817a';
+
 export default {
   intro:
-    'На рівні B1 мова перестає бути «шкільною»: ви вчитеся формулювати ввічливо й дипломатично, ' +
-    'описувати процеси незалежно від виконавця, скаржитися, домовлятися й аргументувати. ' +
-    'Нижче — два ключових модулі рівня.',
+    'Повний курс рівня B1: вісім модулів. На цьому рівні мова перестає бути «шкільною» — ви вчитеся ' +
+    'формулювати ввічливо й дипломатично, описувати процеси незалежно від виконавця, розповідати ' +
+    'послідовність подій у минулому, аргументувати парними сполучниками й висловлювати припущення.',
 
   examNote: `
 <p>Іспит B1 модульний: <strong>кожну з чотирьох частин можна складати окремо</strong> й перескладати
@@ -18,15 +21,6 @@ export default {
 <p><strong>Що додає балів у Schreiben на B1:</strong> різноманітні конектори (<em>deshalb, trotzdem, außerdem,
 allerdings</em>), ввічливий Konjunktiv II у проханнях і чіткий поділ на абзаци.</p>`,
 
-  planned: [
-    'Модуль 3: Relativsätze в усіх відмінках + wo, was, wer',
-    'Модуль 4: Genitiv і прийменники wegen, trotz, während, statt',
-    'Модуль 5: Verben mit Präpositionen і питальні конструкції wofür / dafür',
-    'Модуль 6: Infinitiv mit zu, um … zu, ohne … zu, statt … zu',
-    'Модуль 7: Temporalsätze — bevor, nachdem, seit(dem), während',
-    'Модуль 8: Präteritum у письмовій оповіді + Plusquamperfekt',
-    'Модуль 9: Комплексний тест рівня B1 (усі чотири модулі іспиту)',
-  ],
 
   modules: [
 
@@ -652,5 +646,8 @@ Zusammenfassend würde ich vorschlagen, dass in jeder Schule erklärt wird, wie 
     ],
   },
 
+
+  ...part2,
+  ...part3,
   ],
 };
