@@ -22,6 +22,8 @@ sehr sein seine seinen seinem ihre ihren ihrem meine meinen meinem deine deinen 
 haben habe hast hatte hatten sind ist bist waren dass wenn weil dieser diese dieses
 schon immer wieder etwas mehr viele viel alle alles etwa dann damit dabei
 werden wurde wird kann können muss müssen möchte möchten sollte sollten würde würden
+hätte hätten hättest wäre wären wärst könnte könnten müsste müssten dürfte sollten wüsste
+worden geworden
 über unter durch gegen ohne nach beim zum zur vom bei mit von für auf aus
 ihnen mich mir dich dir uns euch`.split(/\s+/).filter(Boolean));
 
@@ -94,15 +96,15 @@ const EXPECTED = {
 
 const UPGRADE = [
   [/\bsehr gut\b/gi,   'ausgezeichnet, hervorragend'],
-  [/\bgut\b/gi,        'gelungen, überzeugend, angenehm'],
   [/\bschön\b/gi,      'wunderbar, angenehm, ansprechend'],
   [/\bschlecht\b/gi,   'unbefriedigend, mangelhaft'],
   // не «lässt sich sagen» чи «sagen, dass» — це стійкі звороти самого C1
   [/\b(ich sage|er sagt|sie sagt)\b/gi, 'erklären, betonen, erwähnen'],
-  [/\bmachen\b/gi,     'erledigen, unternehmen, durchführen'],
+  // саме «machen» — одне з найчастотніших дієслів; підказка лише для сполук,
+  // де справді є точніший відповідник
+  [/\b(eine Aufgabe|die Arbeit|Hausaufgaben|einen Termin) machen\b/gi, 'erledigen, durchführen, vereinbaren'],
   [/\bbekommen\b/gi,   'erhalten'],
   [/\bkaufen\b/gi,     'erwerben, anschaffen'],
-  [/\bdenken\b/gi,     'der Ansicht sein, davon ausgehen'],
   [/\bwichtig\b/gi,    'entscheidend, wesentlich, zentral'],
   [/\b(großes|viele) Problem/g, 'Schwierigkeit, Herausforderung'],
   [/\bviele? Leute\b/gi, 'zahlreiche Menschen'],
@@ -158,14 +160,20 @@ export function checkWriting(text, task, ctx = {}) {
   /* ── 2. Орфографія і пунктуація ────────────────────────────────────── */
 
   // Кома перед підрядним сполучником — у німецькій обов’язкова.
-  const commaRe = /(\p{L})\s+(weil|dass|obwohl|wenn|damit|sodass|falls|während|bevor|nachdem|sobald)\s/giu;
+  // «damit» тут немає навмисно: воно буває й займенником (da+mit) усередині речення,
+  // де кома не потрібна — «dass sich damit alles ändert».
+  // Кома «спрацьовує» самою будовою регексу: якщо перед сполучником стоїть кома,
+  // то перед пробілом уже не літера — і збігу просто немає.
+  const commaRe = /(\p{L}+)\s+(weil|dass|obwohl|wenn|sodass|falls|während|bevor|nachdem|sobald)\s+(\p{L}+)/giu;
   for (const m of t.matchAll(commaRe)) {
-    if (!/[,;:]$/.test(m[1])) {
-      add('error', `Пропущена кома перед «${m[2]}»`,
-        'У німецькій кома перед підрядним реченням обов’язкова — це не стилістика, а правило.',
-        `…${m[1]} ${m[2]} …  →  …${m[1]}, ${m[2]} …`);
-      break;                                   // одного прикладу досить
-    }
+    // «während» і «bis» бувають прийменниками: «während des Studiums» — коми не потребують.
+    if (/^(während|bis)$/i.test(m[2]) && /^(des|der|dem|den|eines|einer|meines|meiner|ihres|ihrer|seines|seiner)$/i.test(m[3])) continue;
+    // після іншого сполучника коми теж немає: «…, sondern weil …», «und dass …».
+    if (/^(sondern|und|aber|oder|denn|sowie)$/i.test(m[1])) continue;
+    add('error', `Пропущена кома перед «${m[2]}»`,
+      'У німецькій кома перед підрядним реченням обов’язкова — це не стилістика, а правило.',
+      `…${m[1]} ${m[2]} …  →  …${m[1]}, ${m[2]} …`);
+    break;                                     // одного прикладу досить
   }
 
   // weil / dass / obwohl + дієслово не в кінці.
