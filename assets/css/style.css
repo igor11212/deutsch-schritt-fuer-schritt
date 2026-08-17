@@ -762,6 +762,27 @@ table.vt .vt__ex { color: var(--muted); font-size: .88rem; }
 table.vt td:first-child { font-family: var(--font); }
 table.vt .speak-btn { width: 26px; height: 26px; font-size: .74rem; }
 
+/* ---- прогрес вивчення ---- */
+
+.vocab-progress {
+  border-radius: var(--r); border: 1px solid var(--line-soft);
+  background: var(--surface); padding: 1rem 1.2rem; box-shadow: var(--shadow-sm);
+}
+.vocab-progress__head {
+  display: flex; align-items: center; gap: .7rem; flex-wrap: wrap; margin-bottom: .6rem;
+}
+.vocab-progress__head .grow { flex: 1 1 auto; }
+.vocab-progress .progress-line { height: 10px; }
+.vocab-progress .progress-line i { background: linear-gradient(90deg, var(--accent), var(--accent-vivid)); }
+
+table.vt tr.is-known .vt__de .de { color: var(--ok); }
+table.vt tr.is-known .vt__no::after { content: " ✓"; color: var(--ok); }
+
+.vocab-group__note {
+  margin: .2rem 0 .9rem; color: var(--text-soft); font-size: .92rem;
+  border-left: 3px solid var(--accent-soft); padding-left: .8rem; line-height: 1.6;
+}
+
 /* ---- флеш-картки ---- */
 
 .flash[hidden] { display: none; }
@@ -779,12 +800,18 @@ table.vt .speak-btn { width: 26px; height: 26px; font-size: .74rem; }
 .flash__counter { font-size: .86rem; color: var(--muted); font-variant-numeric: tabular-nums; }
 
 .flash__card {
+  position: relative;
   min-height: 190px; display: flex; flex-direction: column;
   align-items: center; justify-content: center; gap: .5rem; text-align: center;
   padding: 1.6rem 1.3rem; border-radius: var(--r-lg); cursor: pointer;
   background: linear-gradient(150deg, var(--accent-soft), var(--surface-2));
   border: 1.5px solid var(--line-soft);
   transition: transform .18s ease, box-shadow .18s ease, background .25s ease;
+}
+.flash__card.is-known { border-color: var(--ok); }
+.flash__mark {
+  position: absolute; top: .8rem; right: 1rem;
+  font-size: .76rem; font-weight: 650; color: var(--ok);
 }
 .flash__card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
 .flash__card.is-flipped { background: var(--surface); }
@@ -801,7 +828,8 @@ table.vt .speak-btn { width: 26px; height: 26px; font-size: .74rem; }
 .flash__done { display: flex; flex-direction: column; gap: .3rem; }
 .flash__done p { margin: 0; }
 
-.flash__actions { display: flex; gap: .55rem; justify-content: center; flex-wrap: wrap; }
+.flash__actions { display: flex; gap: .55rem; justify-content: center; flex-wrap: wrap; align-items: center; }
+.flash__actions .btn[disabled] { opacity: .35; }
 .flash__stats { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
 .flash__stats .grow { flex: 1 1 auto; }
 
