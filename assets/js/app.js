@@ -1,16 +1,16 @@
 /* Роутер + сторінки. Хеш-навігація, щоб працювало на GitHub Pages без сервера. */
 
-import { LEVELS, loadLevel } from '../data/index.js?v=20260818e';
-import { el, renderExercise, renderExerciseSet } from './exercises.js?v=20260818e';
-import { speak, speakDialogue, stop as stopSpeech, ttsSupported, hasGermanVoice } from './tts.js?v=20260818e';
-import { checkWriting } from './writing-check.js?v=20260818e';
-import { glossTerms } from './glossary.js?v=20260818e';
+import { LEVELS, loadLevel } from '../data/index.js?v=20260818f';
+import { el, renderExercise, renderExerciseSet } from './exercises.js?v=20260818f';
+import { speak, speakDialogue, stop as stopSpeech, ttsSupported, hasGermanVoice } from './tts.js?v=20260818f';
+import { checkWriting } from './writing-check.js?v=20260818f';
+import { glossTerms } from './glossary.js?v=20260818f';
 import {
   load as srsLoad, save as srsSave, stats as srsStats, isKnown as srsIsKnown,
   isDue as srsIsDue, boxOf as srsBox, promote as srsPromote, demote as srsDemote,
   cleanWord, buildQuiz as buildQuizData, quizableThemes,
   pickForWriting, containsWord,
-} from './vocab-srs.js?v=20260818e';
+} from './vocab-srs.js?v=20260818f';
 
 const main = document.getElementById('main');
 
@@ -946,7 +946,11 @@ function buildFlashcards(groups, map, onChange) {
   const onKey = e => {
     if (!wrap.isConnected || wrap.closest('[hidden]')) return;
     const t = e.target;
-    if (t && (t.matches('input, textarea, select') || t.isContentEditable)) return;
+    if (t && typeof t.matches === 'function'
+        && (t.matches('input, textarea, select, button') || t.isContentEditable)) return;
+    // Якщо картки прокручені за межі екрана, клавіші лишаються сторінці.
+    const box = card.getBoundingClientRect();
+    if (box.bottom < 0 || box.top > window.innerHeight) return;
     const act = { ' ': 'flip', Enter: 'know', ArrowRight: 'next', ArrowLeft: 'prev',
       Backspace: 'again', s: 'speak', ы: 'speak', і: 'speak' }[e.key];
     if (!act) return;
