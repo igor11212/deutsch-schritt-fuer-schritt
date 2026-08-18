@@ -1,21 +1,21 @@
 /* Роутер + сторінки. Хеш-навігація, щоб працювало на GitHub Pages без сервера. */
 
-import { LEVELS, loadLevel } from '../data/index.js?v=20260819g';
-import { el, renderExercise, renderExerciseSet } from './exercises.js?v=20260819g';
-import { speak, speakDialogue, stop as stopSpeech, ttsSupported, hasGermanVoice } from './tts.js?v=20260819g';
-import { checkWriting } from './writing-check.js?v=20260819g';
-import { glossTerms } from './glossary.js?v=20260819g';
+import { LEVELS, loadLevel } from '../data/index.js?v=20260819h';
+import { el, renderExercise, renderExerciseSet } from './exercises.js?v=20260819h';
+import { speak, speakDialogue, stop as stopSpeech, ttsSupported, hasGermanVoice } from './tts.js?v=20260819h';
+import { checkWriting } from './writing-check.js?v=20260819h';
+import { glossTerms } from './glossary.js?v=20260819h';
 import {
   load as srsLoad, save as srsSave, stats as srsStats, isKnown as srsIsKnown,
   isDue as srsIsDue, boxOf as srsBox, promote as srsPromote, demote as srsDemote,
   cleanWord, buildQuiz as buildQuizData, quizableThemes,
   pickForWriting, containsWord, knownCount,
   loadStars, toggleStar,
-} from './vocab-srs.js?v=20260819g';
-import * as prog from './progress.js?v=20260819g';
-import { renderExam } from './exam.js?v=20260819g';
-import { EXAM, PART_META } from '../data/exam.js?v=20260819g';
-import { buildIndex, search as runSearch, snippet, TYPE_LABEL } from './search.js?v=20260819g';
+} from './vocab-srs.js?v=20260819h';
+import * as prog from './progress.js?v=20260819h';
+import { renderExam } from './exam.js?v=20260819h';
+import { EXAM, PART_META } from '../data/exam.js?v=20260819h';
+import { buildIndex, search as runSearch, snippet, TYPE_LABEL } from './search.js?v=20260819h';
 
 const main = document.getElementById('main');
 
@@ -971,10 +971,11 @@ function buildFlashcards(groups, map, levelId, onChange) {
   const starBtn = el('button', { class: 'flash__star', type: 'button',
     'aria-label': 'Позначити зіркою', title: 'Зірочка (клавіша S)' }, '☆');
 
-  /* Обидві сторони існують одночасно — інакше не буде справжнього обертання. */
-  const frontFace = el('div', { class: 'flash__side flash__side--front' });
-  const backFace  = el('div', { class: 'flash__side flash__side--back' });
-  const inner = el('div', { class: 'flash__inner' }, frontFace, backFace);
+  /* Одна грань, вміст якої підмінюється. Двошарова конструкція з обертанням
+     тут не працює: досить одного transform на будь-якому з батьків, щоб
+     3D-контекст сплющився, і перегортання тихо зникає. */
+  const face = el('div', { class: 'flash__face' });
+  const inner = el('div', { class: 'flash__inner' }, face);
   const hint  = el('div', { class: 'flash__hint' });
   const card  = el('div', { class: 'flash__card', tabindex: '0', role: 'button' },
     mark, theme, starBtn, inner, hint);
@@ -1048,15 +1049,13 @@ function buildFlashcards(groups, map, levelId, onChange) {
       mark.textContent = '';
       theme.textContent = '';
       starBtn.hidden = true;
-      inner.classList.remove('is-flipped');
       card.classList.remove('is-known');
       hint.textContent = '';
       controls.forEach(b => b.disabled = true);
       [speakBtn, exBtn, playBtn].forEach(b => b.disabled = true);
-      backFace.replaceChildren();
 
       if (!deck.length) {
-        frontFace.replaceChildren(el('div', { class: 'flash__done' },
+        face.replaceChildren(el('div', { class: 'flash__done' },
           el('strong', {}, 'На сьогодні тут порожньо 🎉'),
           el('p', { class: 'muted' },
             modeSel.value === 'due'
@@ -1069,7 +1068,7 @@ function buildFlashcards(groups, map, levelId, onChange) {
 
       const again = el('button', { class: 'btn btn--soft', type: 'button' }, '↻ Ще один підхід');
       again.addEventListener('click', build);
-      frontFace.replaceChildren(el('div', { class: 'flash__done' },
+      face.replaceChildren(el('div', { class: 'flash__done' },
         el('strong', {}, 'Підхід завершено 👏'),
         el('p', { class: 'flash__summary' },
           `Ви переглянули ${seen} ${plural(seen, 'картку', 'картки', 'карток')}, `
@@ -1095,18 +1094,6 @@ function buildFlashcards(groups, map, levelId, onChange) {
     drawStar();
     exBtn.hidden = !it.ex;
 
-    // Обидві сторони наповнюємо одразу — перегортання лише обертає картку.
-    frontFace.replaceChildren(
-      el('span', { class: 'flash__front' + (dirSel.value === 'de' ? ' de' : '') },
-        dirSel.value === 'de' ? cleanWord(it.de) : it.uk));
-    backFace.replaceChildren(...[
-      el('span', { class: 'flash__front' + (dirSel.value === 'de' ? ' de' : '') },
-        dirSel.value === 'de' ? it.de : it.uk),
-      el('span', { class: 'flash__back' + (dirSel.value === 'uk' ? ' de' : '') },
-        dirSel.value === 'de' ? it.uk : it.de),
-      it.ex ? el('span', { class: 'flash__ex' }, it.ex) : null,
-    ].filter(Boolean));
-
     showFront(false);
   }
 
@@ -1116,23 +1103,44 @@ function buildFlashcards(groups, map, levelId, onChange) {
     starBtn.classList.toggle('is-on', !!on);
   }
 
-  /* Анімація перегортання: картка стискається до ребра, і саме в цей момент
-     міняється бік. Тому бік перемикаємо не одразу, а на середині анімації. */
+  /* Перегортання: коротке затухання грані, підміна вмісту, поява назад.
+     Тримаємося opacity — вона на цій сторінці працює скрізь і завжди. */
   let turnTimer = null;
-  function turn(toBack) {
-    clearTimeout(turnTimer);
-    inner.classList.remove('is-turning');
-    void inner.offsetWidth;                       // перезапуск анімації
-    inner.classList.add('is-turning');
-    turnTimer = setTimeout(() => inner.classList.toggle('is-flipped', toBack), 200);
+  function paint(toBack) {
+    const it = deck[pos];
+    if (!toBack) {
+      face.replaceChildren(
+        el('span', { class: 'flash__front' + (dirSel.value === 'de' ? ' de' : '') },
+          dirSel.value === 'de' ? cleanWord(it.de) : it.uk));
+      return;
+    }
+    face.replaceChildren(...[
+      el('span', { class: 'flash__front' + (dirSel.value === 'de' ? ' de' : '') },
+        dirSel.value === 'de' ? it.de : it.uk),
+      el('span', { class: 'flash__back' + (dirSel.value === 'uk' ? ' de' : '') },
+        dirSel.value === 'de' ? it.uk : it.de),
+      it.ex ? el('span', { class: 'flash__ex' }, it.ex) : null,
+    ].filter(Boolean));
   }
-  inner.addEventListener('animationend', () => inner.classList.remove('is-turning'));
+
+  function setSide(toBack, animate) {
+    clearTimeout(turnTimer);
+    if (!animate) {
+      face.classList.remove('is-fading');
+      paint(toBack);
+      return;
+    }
+    face.classList.add('is-fading');
+    turnTimer = setTimeout(() => {
+      paint(toBack);
+      face.classList.remove('is-fading');
+    }, 130);
+  }
 
   function showFront(animate) {
     if (!deck.length || done) return;
     flipped = false;
-    if (animate) turn(false);
-    else { clearTimeout(turnTimer); inner.classList.remove('is-flipped', 'is-turning'); }
+    setSide(false, animate);
     hint.textContent = 'Картка або пробіл — перевернути. Свайп: ← ще вчу, → знаю';
     if (dirSel.value === 'de' && autoBox.checked && ttsSupported) speak(cleanWord(deck[pos].de));
   }
@@ -1140,8 +1148,7 @@ function buildFlashcards(groups, map, levelId, onChange) {
   function showBack(animate = true) {
     if (!deck.length || done) return;
     flipped = true;
-    if (animate) turn(true);
-    else inner.classList.add('is-flipped');
+    setSide(true, animate);
     hint.textContent = 'Знаєте це слово? Натисніть ще раз, щоб сховати переклад';
     if (dirSel.value === 'uk' && autoBox.checked && ttsSupported) speak(cleanWord(deck[pos].de));
   }
