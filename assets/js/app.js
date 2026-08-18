@@ -761,14 +761,23 @@ function buildSentencePractice(groups, map, levelId, onChange) {
         el('span', { class: 'de' }, it.ex)) : null);
   }
 
+  /** Лічильник зарахованих слів і смужка — оновлюються й одразу після
+      вдалої перевірки, не чекаючи автопереходу. */
+  function drawScore() {
+    const ok = solved.filter(Boolean).length;
+    barFill.style.width = list.length ? `${Math.round((ok / list.length) * 100)}%` : '0%';
+    scoreTag.textContent = list.length ? `Зараховано: ${ok} з ${list.length}` : '';
+    scoreTag.className = 'tag' + (list.length && ok === list.length ? ' tag--accent' : '');
+    return ok;
+  }
+
   function show() {
     report.replaceChildren();
     modelBox.replaceChildren();
 
     if (!list.length) {
       counter.textContent = '0 / 0';
-      barFill.style.width = '0%';
-      scoreTag.textContent = '';
+      drawScore();
       wordBox.replaceChildren(el('div', { class: 'flash__done' },
         el('strong', {}, 'У цій темі немає слів для речень'),
         el('p', { class: 'muted' },
@@ -777,14 +786,11 @@ function buildSentencePractice(groups, map, levelId, onChange) {
       return;
     }
 
-    const okCount = solved.filter(Boolean).length;
+    const okCount = drawScore();
     [ta, speakBtn].forEach(b => b.disabled = false);
     prevBtn.disabled = pos === 0;
     nextBtn.disabled = pos === list.length - 1;
     counter.textContent = `${pos + 1} / ${list.length}`;
-    barFill.style.width = `${Math.round((okCount / list.length) * 100)}%`;
-    scoreTag.textContent = `Зараховано: ${okCount} з ${list.length}`;
-    scoreTag.className = 'tag' + (okCount === list.length ? ' tag--accent' : '');
 
     const it = list[pos];
     wordBox.replaceChildren(
@@ -855,6 +861,7 @@ function buildSentencePractice(groups, map, levelId, onChange) {
     report.replaceChildren(renderReport(res));
     const clean = used && !res.issues.some(i => i.kind === 'error');
     if (clean && !solved[pos]) { solved[pos] = true; srsPromote(map, it.de); onChange(); }
+    drawScore();
 
     if (clean) {
       // Слово зараховано: самі переходимо далі, але лише якщо попереду є що робити.
