@@ -1,7 +1,7 @@
 // part4 — базові теми (прийменники, префікси); стоять одразу після Adjektivdeklination
-import { modules as part4 } from './a2-part4.js?v=20260819g';
-import { modules as part2 } from './a2-part2.js?v=20260819g';
-import { modules as part3 } from './a2-part3.js?v=20260819g';
+import { modules as part4 } from './a2-part4.js?v=20260819h';
+import { modules as part2 } from './a2-part2.js?v=20260819h';
+import { modules as part3 } from './a2-part3.js?v=20260819h';
 
 export default {
   intro:
