@@ -1,21 +1,21 @@
 /* Роутер + сторінки. Хеш-навігація, щоб працювало на GitHub Pages без сервера. */
 
-import { LEVELS, loadLevel } from '../data/index.js?v=20260819h';
-import { el, renderExercise, renderExerciseSet } from './exercises.js?v=20260819h';
-import { speak, speakDialogue, stop as stopSpeech, ttsSupported, hasGermanVoice } from './tts.js?v=20260819h';
-import { checkWriting } from './writing-check.js?v=20260819h';
-import { glossTerms } from './glossary.js?v=20260819h';
+import { LEVELS, loadLevel } from '../data/index.js?v=20260819i';
+import { el, renderExercise, renderExerciseSet } from './exercises.js?v=20260819i';
+import { speak, speakDialogue, stop as stopSpeech, ttsSupported, hasGermanVoice } from './tts.js?v=20260819i';
+import { checkWriting } from './writing-check.js?v=20260819i';
+import { glossTerms } from './glossary.js?v=20260819i';
 import {
   load as srsLoad, save as srsSave, stats as srsStats, isKnown as srsIsKnown,
   isDue as srsIsDue, boxOf as srsBox, promote as srsPromote, demote as srsDemote,
   cleanWord, buildQuiz as buildQuizData, quizableThemes,
   pickForWriting, containsWord, knownCount,
-  loadStars, toggleStar,
-} from './vocab-srs.js?v=20260819h';
-import * as prog from './progress.js?v=20260819h';
-import { renderExam } from './exam.js?v=20260819h';
-import { EXAM, PART_META } from '../data/exam.js?v=20260819h';
-import { buildIndex, search as runSearch, snippet, TYPE_LABEL } from './search.js?v=20260819h';
+  loadStars, toggleStar, wordStatus, whenBack, schedule,
+} from './vocab-srs.js?v=20260819i';
+import * as prog from './progress.js?v=20260819i';
+import { renderExam } from './exam.js?v=20260819i';
+import { EXAM, PART_META } from '../data/exam.js?v=20260819i';
+import { buildIndex, search as runSearch, snippet, TYPE_LABEL } from './search.js?v=20260819i';
 
 const main = document.getElementById('main');
 
@@ -510,11 +510,13 @@ function renderVocabulary(groups, levelId) {
   const pillLearn = el('span', { class: 'pill' });
   const pillDue   = el('span', { class: 'pill pill--warn' });
   const resetBtn  = el('button', { class: 'btn btn--ghost btn--sm', type: 'button' }, 'Скинути прогрес');
+  const schedBox  = el('div', { class: 'vocab-sched' });
 
   const progressBox = el('div', { class: 'vocab-progress' },
     el('div', { class: 'vocab-progress__head' }, barLabel, el('span', { class: 'grow' }), resetBtn),
     el('div', { class: 'progress-line' }, bar),
     el('div', { class: 'vocab-progress__pills' }, pillKnown, pillLearn, pillDue),
+    schedBox,
     el('p', { class: 'muted', style: 'margin:.7rem 0 0;font-size:.85rem' },
       'Слово проходить п’ять коробок: після правильної відповіді воно повертається ' +
       'через 1, 3, 7, 14 і 30 днів, після помилки — знову завтра. Вивченим вважається ' +
@@ -534,16 +536,58 @@ function renderVocabulary(groups, levelId) {
     pillDue.classList.toggle('pill--warn', st.due > 0);
     pillDue.classList.toggle('pill--ok', st.due === 0);
 
+    const sc = schedule(groups, map);
+    schedBox.replaceChildren(
+      el('strong', { class: 'vocab-sched__title' }, 'Коли слова повернуться'),
+      el('div', { class: 'vocab-sched__row' },
+        el('span', { class: 'chip chip--due' },  `сьогодні ${sc.due}`),
+        el('span', { class: 'chip' }, `завтра ${sc.tomorrow}`),
+        el('span', { class: 'chip' }, `цього тижня ${sc.week}`),
+        el('span', { class: 'chip' }, `пізніше ${sc.later}`),
+        el('span', { class: 'chip chip--fresh' }, `ще не бачили ${sc.fresh}`)),
+    );
+
     groups.forEach(g => {
       const c = groupCounters.get(g.group);
       if (!c) return;
       const k = g.items.filter(i => srsIsKnown(map, i.de)).length;
       c.el.textContent = `${k} / ${g.items.length}`;
       c.el.classList.toggle('pill--ok', k === g.items.length);
-      c.rows.forEach(({ tr, de }) => {
-        tr.classList.toggle('is-known', srsIsKnown(map, de));
-        tr.classList.toggle('is-learning', !srsIsKnown(map, de) && srsBox(map, de) > 0);
+      c.rows.forEach(({ tr, de, status }) => {
+        const st = wordStatus(map, de);
+        tr.classList.toggle('is-known', st.known === true);
+        tr.classList.toggle('is-learning', !st.known && st.box > 0);
+        tr.dataset.state = st.key;
+        status.replaceChildren(
+          el('span', { class: 'wstate wstate--' + st.key },
+            st.key === 'fresh' ? 'нове'
+              : st.key === 'due' ? 'на повторення'
+              : st.known ? `вивчено · коробка ${st.box}`
+              : `вчиться · коробка ${st.box}`),
+          st.days === null ? null
+            : el('small', { class: 'wstate__when' }, whenBack(st.days)),
+        );
       });
+    });
+    applyFilter();
+  }
+
+  /* — фільтр за станом: показуємо лише те, що цікавить — */
+  let filter = 'all';
+  function applyFilter() {
+    groupCounters.forEach(({ rows, section }) => {
+      let shown = 0;
+      rows.forEach(({ tr, de }) => {
+        const st = wordStatus(map, de);
+        const ok = filter === 'all'
+          || (filter === 'fresh'    && st.key === 'fresh')
+          || (filter === 'learning' && st.box > 0 && !st.known)
+          || (filter === 'known'    && st.known)
+          || (filter === 'due'      && st.key === 'due');
+        tr.hidden = !ok;
+        if (ok) shown++;
+      });
+      if (section) section.hidden = shown === 0;
     });
   }
 
@@ -588,7 +632,29 @@ function renderVocabulary(groups, levelId) {
     'Слова в кожній темі стоять не за абеткою, а в логічному порядку — так їх легше запам’ятати. ',
     el('div', { class: 'ex__actions', style: 'margin-top:.8rem' }, modes.map(m => m.btn))));
 
-  box.append(progressBox, ...modes.map(m => m.panel));
+  /* — кнопки фільтра над таблицями — */
+  const FILTERS = [
+    { id: 'all',      label: 'Усі слова' },
+    { id: 'due',      label: '⏰ На повторення' },
+    { id: 'learning', label: '📖 Вчаться' },
+    { id: 'known',    label: '✓ Вивчені' },
+    { id: 'fresh',    label: '○ Ще не бачили' },
+  ];
+  const filterBar = el('div', { class: 'vocab-filter' },
+    el('span', { class: 'muted', style: 'font-size:.85rem' }, 'Показати:'),
+    FILTERS.map(f => {
+      const b = el('button', { class: 'btn btn--ghost btn--sm' + (f.id === 'all' ? ' btn--active' : ''),
+        type: 'button', 'data-filter': f.id }, f.label);
+      b.addEventListener('click', () => {
+        filter = f.id;
+        filterBar.querySelectorAll('button').forEach(x =>
+          x.classList.toggle('btn--active', x.dataset.filter === filter));
+        applyFilter();
+      });
+      return b;
+    }));
+
+  box.append(progressBox, ...modes.map(m => m.panel), filterBar);
 
   if (ttsSupported && !hasGermanVoice()) {
     box.append(el('div', { class: 'no-tts' },
@@ -606,18 +672,19 @@ function renderVocabulary(groups, levelId) {
         onStart: () => btn.classList.add('is-playing'),
         onEnd:   () => btn.classList.remove('is-playing'),
       }));
+      const status = el('td', { class: 'vt__state' });
       const tr = el('tr', {},
         el('td', { class: 'vt__no' }, String(i + 1)),
         el('td', { class: 'vt__de' }, el('span', { class: 'de' }, it.de), btn),
         el('td', { class: 'vt__uk' }, it.uk),
+        status,
         el('td', { class: 'vt__ex' }, it.ex || ''),
       );
-      rows.push({ tr, de: it.de });
+      rows.push({ tr, de: it.de, status });
       return tr;
     });
 
     const counter = el('span', { class: 'pill' });
-    groupCounters.set(group.group, { el: counter, rows });
 
     const playBtn = ttsSupported
       ? el('button', { class: 'btn btn--soft btn--sm', type: 'button' }, '🔊 Прослухати тему')
@@ -632,7 +699,7 @@ function renderVocabulary(groups, levelId) {
       });
     });
 
-    box.append(el('section', { class: 'vocab-group' },
+    const section = el('section', { class: 'vocab-group' },
       el('div', { class: 'vocab-group__head' },
         el('h3', {}, `${gi + 1}. ${group.group}`), counter, playBtn),
       group.note ? el('p', { class: 'vocab-group__note' }, group.note) : null,
@@ -640,9 +707,11 @@ function renderVocabulary(groups, levelId) {
         el('table', { class: 'tbl vt' },
           el('thead', {}, el('tr', {},
             el('th', {}, '#'), el('th', {}, 'Deutsch'),
-            el('th', {}, 'Українською'), el('th', {}, 'Примітка'))),
+            el('th', {}, 'Українською'), el('th', {}, 'Стан'), el('th', {}, 'Примітка'))),
           el('tbody', {}, trs))),
-    ));
+    );
+    groupCounters.set(group.group, { el: counter, rows, section });
+    box.append(section);
   });
 
   refresh();
@@ -1088,7 +1157,11 @@ function buildFlashcards(groups, map, levelId, onChange) {
     const b = srsBox(map, it.de);
     card.classList.toggle('is-known', srsIsKnown(map, it.de));
     counter.textContent = `${pos + 1} / ${deck.length}`;
-    mark.textContent = repeated.has(it.de) ? 'повтор' : b ? `коробка ${b} з 5` : 'нове слово';
+    // На картці видно не лише коробку, а й коли слово повернеться саме.
+    const st = wordStatus(map, it.de);
+    mark.textContent = repeated.has(it.de) ? 'повтор'
+      : b ? `коробка ${b} з 5 · ${whenBack(st.days)}`
+      : 'нове слово';
     theme.textContent = it.group || '';
     starBtn.hidden = false;
     drawStar();

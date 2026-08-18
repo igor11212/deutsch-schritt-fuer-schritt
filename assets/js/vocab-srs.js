@@ -85,6 +85,59 @@ export function knownCount(map) {
   return Object.values(map || {}).filter(v => (v?.b || 0) >= KNOWN_BOX).length;
 }
 
+/* ──────────────────────── статус і розклад повторень ─────────────────── */
+
+/** Дата, коли слово повернеться на повторення (або null, якщо його не вчили). */
+export function dueDate(map, word) {
+  return map[word]?.d || null;
+}
+
+/** Скільки днів до повернення: 0 — сьогодні, від'ємне — прострочено. */
+export function daysUntil(date) {
+  if (!date) return null;
+  const ms = new Date(date + 'T00:00:00') - new Date(today() + 'T00:00:00');
+  return Math.round(ms / 86400000);
+}
+
+/** Стан одного слова людською мовою — для таблиці й для картки. */
+export function wordStatus(map, word) {
+  const box = boxOf(map, word);
+  if (!box) return { key: 'fresh', box: 0, label: 'нове', due: null, days: null };
+  const due = dueDate(map, word);
+  const days = daysUntil(due);
+  const known = box >= KNOWN_BOX;
+  return {
+    key: days <= 0 ? 'due' : known ? 'known' : 'learning',
+    box, due, days, known,
+    label: days <= 0 ? 'на повторення' : known ? 'вивчено' : 'вчиться',
+  };
+}
+
+/** Коли повернеться — короткою фразою. */
+export function whenBack(days) {
+  if (days === null) return '';
+  if (days < 0)  return 'прострочено';
+  if (days === 0) return 'сьогодні';
+  if (days === 1) return 'завтра';
+  if (days < 5)   return `через ${days} дні`;
+  return `через ${days} днів`;
+}
+
+/** Скільки слів повернеться сьогодні, завтра, цього тижня й далі. */
+export function schedule(groups, map) {
+  const out = { due: 0, tomorrow: 0, week: 0, later: 0, fresh: 0, known: 0, learning: 0 };
+  groups.flatMap(g => g.items).forEach(it => {
+    const st = wordStatus(map, it.de);
+    if (st.key === 'fresh') { out.fresh++; return; }
+    if (st.known) out.known++; else out.learning++;
+    if (st.days <= 0) out.due++;
+    else if (st.days === 1) out.tomorrow++;
+    else if (st.days <= 7) out.week++;
+    else out.later++;
+  });
+  return out;
+}
+
 /* ───────────────────────────── обрані слова ──────────────────────────── */
 
 /* Зірочка на картці. Живе окремо від інтервального повторення: це не оцінка
