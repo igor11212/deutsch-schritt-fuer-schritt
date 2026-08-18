@@ -1,19 +1,20 @@
 /* Роутер + сторінки. Хеш-навігація, щоб працювало на GitHub Pages без сервера. */
 
-import { LEVELS, loadLevel } from '../data/index.js?v=20260819c';
-import { el, renderExercise, renderExerciseSet } from './exercises.js?v=20260819c';
-import { speak, speakDialogue, stop as stopSpeech, ttsSupported, hasGermanVoice } from './tts.js?v=20260819c';
-import { checkWriting } from './writing-check.js?v=20260819c';
-import { glossTerms } from './glossary.js?v=20260819c';
+import { LEVELS, loadLevel } from '../data/index.js?v=20260819d';
+import { el, renderExercise, renderExerciseSet } from './exercises.js?v=20260819d';
+import { speak, speakDialogue, stop as stopSpeech, ttsSupported, hasGermanVoice } from './tts.js?v=20260819d';
+import { checkWriting } from './writing-check.js?v=20260819d';
+import { glossTerms } from './glossary.js?v=20260819d';
 import {
   load as srsLoad, save as srsSave, stats as srsStats, isKnown as srsIsKnown,
   isDue as srsIsDue, boxOf as srsBox, promote as srsPromote, demote as srsDemote,
   cleanWord, buildQuiz as buildQuizData, quizableThemes,
   pickForWriting, containsWord, knownCount,
-} from './vocab-srs.js?v=20260819c';
-import * as prog from './progress.js?v=20260819c';
-import { renderExam } from './exam.js?v=20260819c';
-import { EXAM, PART_META } from '../data/exam.js?v=20260819c';
+} from './vocab-srs.js?v=20260819d';
+import * as prog from './progress.js?v=20260819d';
+import { renderExam } from './exam.js?v=20260819d';
+import { EXAM, PART_META } from '../data/exam.js?v=20260819d';
+import { buildIndex, search as runSearch, snippet, TYPE_LABEL } from './search.js?v=20260819d';
 
 const main = document.getElementById('main');
 
@@ -41,8 +42,17 @@ document.getElementById('themeBtn').addEventListener('click', () => {
 const topnav = document.getElementById('topnav');
 topnav.append(
   ...LEVELS.map(l => el('a', { href: `#/${l.id}`, 'data-level': l.id }, l.code)),
+  el('a', { href: '#/suche', 'data-level': 'suche', class: 'topnav__prog', title: 'Пошук (Ctrl + K)' }, '🔍'),
   el('a', { href: '#/progress', 'data-level': 'progress', class: 'topnav__prog', title: 'Мій прогрес' }, '📊'),
 );
+
+// Ctrl/⌘ + K відкриває пошук із будь-якої сторінки — звична комбінація.
+document.addEventListener('keydown', e => {
+  if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+    e.preventDefault();
+    location.hash = '#/suche';
+  }
+});
 
 function markNav(levelId) {
   topnav.querySelectorAll('a').forEach(a => {
@@ -1668,6 +1678,102 @@ const RENDERERS = {
   },
 };
 
+/* ------------------------------------------------------------ пошук ----- */
+
+async function viewSearch(query) {
+  markNav('suche');
+
+  const input = el('input', {
+    class: 'search__input', type: 'search', autocomplete: 'off', spellcheck: 'false',
+    placeholder: 'Тема, слово або німецька фраза…', 'aria-label': 'Пошук по курсу',
+    value: query || '',
+  });
+  const status = el('p', { class: 'muted', style: 'margin:.2rem 0 0;font-size:.85rem' },
+    'Шукає по назвах модулів, поясненнях граматики, словнику, текстах і завданнях усіх п’яти рівнів.');
+  const results = el('div', { class: 'stack' });
+
+  const head = el('header', { class: 'level-head' },
+    el('span', { class: 'tag' }, 'Пошук'),
+    el('h1', {}, '🔍 Знайти в курсі'),
+    el('div', { class: 'search__box' }, input),
+    status,
+  );
+
+  setView(el('div', {},
+    crumbs({ label: 'Головна', href: '#/' }, { label: 'Пошук' }),
+    head, results,
+  ), 'Пошук');
+
+  input.focus();
+  input.setSelectionRange(input.value.length, input.value.length);
+
+  let index = null;
+  let token = 0;
+
+  function render(list, q) {
+    results.replaceChildren();
+    if (!q || q.trim().length < 2) {
+      results.append(el('div', { class: 'card muted center' },
+        'Уведіть щонайменше дві літери. Наприклад: «Konjunktiv», «weil», «Wetter» або «поспішати».'));
+      return;
+    }
+    if (!list.length) {
+      results.append(el('div', { class: 'card center stack' },
+        el('strong', {}, 'Нічого не знайшлося'),
+        el('p', { class: 'muted' },
+          'Спробуйте коротший запит або інше слово. Пошук розуміє й ä, і ae — писати умлаути не обов’язково.')));
+      return;
+    }
+
+    status.textContent = `Знайдено: ${list.length} ${plural(list.length, 'збіг', 'збіги', 'збігів')}`;
+    const raw = q.trim().toLowerCase();
+
+    list.forEach(e => {
+      const t = TYPE_LABEL[e.type] || { icon: '•', label: e.type };
+      const card = el('a', { class: 'search__hit', href: e.href },
+        el('span', { class: 'search__icon', 'aria-hidden': 'true' }, t.icon),
+        el('div', { class: 'search__body' },
+          el('div', { class: 'search__meta' },
+            el('span', { class: 'tag' }, t.label),
+            el('span', { class: 'tag tag--accent' }, e.level)),
+          el('strong', { class: e.type === 'word' ? 'de' : '' }, e.title),
+          e.sub ? el('span', { class: 'muted' }, e.sub) : null,
+          e.body ? el('span', { class: 'search__snippet' }, snippet(e, raw)) : null),
+        el('span', { class: 'module-card__go', 'aria-hidden': 'true' }, '›'),
+      );
+      results.append(card);
+    });
+  }
+
+  async function run() {
+    const q = input.value;
+    const my = ++token;
+    if (location.hash !== `#/suche/${encodeURIComponent(q)}` && q.trim().length >= 2) {
+      history.replaceState(null, '', `#/suche/${encodeURIComponent(q)}`);
+    }
+    if (q.trim().length < 2) { render([], q); return; }
+
+    if (!index) {
+      results.replaceChildren(el('div', { class: 'card center muted' },
+        'Готую покажчик — це буває лише раз за візит…'));
+      index = await buildIndex();
+      if (my !== token) return;                 // поки чекали, запит змінився
+    }
+    render(runSearch(index, q), q);
+  }
+
+  let timer = null;
+  input.addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(run, 180); });
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      const first = results.querySelector('.search__hit');
+      if (first) { e.preventDefault(); location.hash = first.getAttribute('href'); }
+    }
+  });
+
+  run();
+}
+
 /* ------------------------------------------------- пробний іспит -------- */
 
 async function viewExam(levelId) {
@@ -1820,6 +1926,7 @@ async function route() {
     if (!path.length) return viewHome();
     const [levelId, modNo, tab] = path;
     if (levelId === 'progress') return viewProgress();
+    if (levelId === 'suche') return await viewSearch(modNo ? decodeURIComponent(modNo) : '');
     if (!modNo) return await viewLevel(levelId);
     if (modNo === 'pruefung') return await viewExam(levelId);
     if (SKILLS.some(sk => sk.id === modNo)) return await viewSkill(levelId, modNo);
