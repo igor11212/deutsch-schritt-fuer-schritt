@@ -853,10 +853,9 @@ table.vt tr.is-learning .vt__no::after { content: " •"; color: var(--warn); }
   transition: width .25s ease;
 }
 
-/* Перегортання робимо двовимірним: картка стискається по горизонталі до
-   ребра, у цей момент міняється бік, і вона розкривається знову. Виглядає як
-   поворот, але не залежить від 3D-контексту, який легко зламати одним
-   transform на будь-якому з батьків. */
+/* Перегортання: грань на мить блідне, вміст міняється, грань повертається.
+   Свідомо без 3D — досить одного transform на будь-якому з батьків, щоб
+   тривимірний контекст сплющився й обертання тихо зникло. */
 .flash__stage { position: relative; transition: transform .18s ease; }
 
 .flash__card {
@@ -867,23 +866,14 @@ table.vt tr.is-learning .vt__no::after { content: " •"; color: var(--warn); }
   border: 1.5px solid var(--line-soft);
   transition: box-shadow .18s ease, background .25s ease;
 }
-.flash__inner { position: relative; flex: 1 1 auto; min-height: 210px; }
-.flash__inner.is-turning { animation: flashTurn .42s ease; }
-@keyframes flashTurn {
-  0%   { transform: scaleX(1); }
-  48%  { transform: scaleX(.06); }
-  100% { transform: scaleX(1); }
-}
-/* Обидва боки лежать один на одному — висота картки не стрибає. */
-.flash__side {
-  position: absolute; inset: 0;
+.flash__inner { flex: 1 1 auto; display: flex; }
+.flash__face {
+  flex: 1 1 auto;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   gap: .45rem; text-align: center; padding: 1.6rem 1.3rem;
-  transition: opacity .1s linear;
+  transition: opacity .13s ease, transform .13s ease;
 }
-.flash__side--back { opacity: 0; pointer-events: none; }
-.flash__inner.is-flipped .flash__side--front { opacity: 0; pointer-events: none; }
-.flash__inner.is-flipped .flash__side--back  { opacity: 1; pointer-events: auto; }
+.flash__face.is-fading { opacity: 0; transform: scale(.96); }
 
 /* Свайп-сортування: картка від'їжджає в бік вердикту. */
 .flash__stage.is-swipe-right { transform: translateX(70px) rotate(6deg); opacity: .35; }
@@ -906,13 +896,12 @@ table.vt tr.is-learning .vt__no::after { content: " •"; color: var(--warn); }
 .flash__seg--known { background: var(--ok); }
 .flash__seg--learn { background: var(--warn); }
 
-/* Повний екран: картка займає весь простір, решта відступає. */
+/* Повний екран: картка займає весь простір. */
 .flash-deck.is-full {
   background: var(--bg); padding: 2rem clamp(1rem, 6vw, 5rem);
   display: flex; flex-direction: column; justify-content: center; overflow: auto;
 }
-.flash-deck.is-full .flash__card,
-.flash-deck.is-full .flash__inner { min-height: clamp(240px, 46vh, 460px); }
+.flash-deck.is-full .flash__card { min-height: clamp(240px, 46vh, 460px); }
 .flash-deck.is-full .flash__front { font-size: clamp(1.6rem, 4.5vw, 2.6rem); }
 
 .flash__card.is-known { border-color: var(--ok); }
@@ -954,8 +943,8 @@ table.vt tr.is-learning .vt__no::after { content: " •"; color: var(--warn); }
 
 @media (max-width: 720px) {
   table.vt .vt__ex { display: none; }
-  .flash__card, .flash__inner { min-height: 180px; }
-  .flash__side { padding: 1.2rem 1rem; }
+  .flash__card { min-height: 180px; }
+  .flash__face { padding: 1.2rem 1rem; }
   .flash__front { font-size: 1.25rem; }
   .vocab-group__head .btn { margin-left: 0; }
 }
