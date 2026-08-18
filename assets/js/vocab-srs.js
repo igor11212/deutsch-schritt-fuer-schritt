@@ -85,6 +85,34 @@ export function knownCount(map) {
   return Object.values(map || {}).filter(v => (v?.b || 0) >= KNOWN_BOX).length;
 }
 
+/* ───────────────────────────── обрані слова ──────────────────────────── */
+
+/* Зірочка на картці. Живе окремо від інтервального повторення: це не оцінка
+   знання, а особиста позначка «до цього слова я хочу вертатися». */
+const STAR_KEY = 'dssf-starred';
+
+export function loadStars(levelId) {
+  try {
+    const all = JSON.parse(localStorage.getItem(STAR_KEY) || '{}');
+    return new Set(Array.isArray(all[levelId]) ? all[levelId] : []);
+  } catch { return new Set(); }
+}
+
+export function saveStars(levelId, set) {
+  try {
+    const all = JSON.parse(localStorage.getItem(STAR_KEY) || '{}');
+    all[levelId] = [...set];
+    localStorage.setItem(STAR_KEY, JSON.stringify(all));
+  } catch { /* приватний режим */ }
+  return set;
+}
+
+export function toggleStar(levelId, set, de) {
+  if (set.has(de)) set.delete(de); else set.add(de);
+  saveStars(levelId, set);
+  return set.has(de);
+}
+
 /* ─────────────────────────── генератор вправ ─────────────────────────── */
 
 /** Прибирає службові хвости: «der Name, -n (des Namens)» → «der Name». */

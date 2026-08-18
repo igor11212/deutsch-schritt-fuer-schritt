@@ -1,20 +1,21 @@
 /* Роутер + сторінки. Хеш-навігація, щоб працювало на GitHub Pages без сервера. */
 
-import { LEVELS, loadLevel } from '../data/index.js?v=20260819d';
-import { el, renderExercise, renderExerciseSet } from './exercises.js?v=20260819d';
-import { speak, speakDialogue, stop as stopSpeech, ttsSupported, hasGermanVoice } from './tts.js?v=20260819d';
-import { checkWriting } from './writing-check.js?v=20260819d';
-import { glossTerms } from './glossary.js?v=20260819d';
+import { LEVELS, loadLevel } from '../data/index.js?v=20260819e';
+import { el, renderExercise, renderExerciseSet } from './exercises.js?v=20260819e';
+import { speak, speakDialogue, stop as stopSpeech, ttsSupported, hasGermanVoice } from './tts.js?v=20260819e';
+import { checkWriting } from './writing-check.js?v=20260819e';
+import { glossTerms } from './glossary.js?v=20260819e';
 import {
   load as srsLoad, save as srsSave, stats as srsStats, isKnown as srsIsKnown,
   isDue as srsIsDue, boxOf as srsBox, promote as srsPromote, demote as srsDemote,
   cleanWord, buildQuiz as buildQuizData, quizableThemes,
   pickForWriting, containsWord, knownCount,
-} from './vocab-srs.js?v=20260819d';
-import * as prog from './progress.js?v=20260819d';
-import { renderExam } from './exam.js?v=20260819d';
-import { EXAM, PART_META } from '../data/exam.js?v=20260819d';
-import { buildIndex, search as runSearch, snippet, TYPE_LABEL } from './search.js?v=20260819d';
+  loadStars, toggleStar,
+} from './vocab-srs.js?v=20260819e';
+import * as prog from './progress.js?v=20260819e';
+import { renderExam } from './exam.js?v=20260819e';
+import { EXAM, PART_META } from '../data/exam.js?v=20260819e';
+import { buildIndex, search as runSearch, snippet, TYPE_LABEL } from './search.js?v=20260819e';
 
 const main = document.getElementById('main');
 
@@ -557,7 +558,7 @@ function renderVocabulary(groups, levelId) {
   /* — перемикач режимів — */
   const modes = [
     { id: 'cards', label: '🃏 Картки',  panel: el('div', { class: 'flash', hidden: 'hidden' }),
-      build: p => p.append(buildFlashcards(groups, map, commit)) },
+      build: p => p.append(buildFlashcards(groups, map, levelId, commit)) },
     { id: 'quiz',  label: '✍ Вправи',  panel: el('div', { class: 'vquiz', hidden: 'hidden' }),
       build: p => p.append(buildVocabQuiz(groups, map, commit)) },
     { id: 'write', label: '📝 Речення', panel: el('div', { class: 'vsent', hidden: 'hidden' }),
@@ -926,9 +927,10 @@ function buildSentencePractice(groups, map, levelId, onChange) {
 }
 
 /** Флеш-картки: фіксована колода, вільна навігація, оцінка веде інтервальне повторення. */
-function buildFlashcards(groups, map, onChange) {
-  const wrap = el('div', { class: 'card stack' });
+function buildFlashcards(groups, map, levelId, onChange) {
+  const wrap = el('div', { class: 'card stack flash-deck' });
   const allWords = groups.flatMap(g => g.items.map(it => ({ ...it, group: g.group })));
+  const stars = loadStars(levelId);
 
   const themeSel = el('select', { class: 'flash__select', 'aria-label': 'Тема' },
     el('option', { value: 'all' }, `Усі теми (${allWords.length})`),
@@ -942,6 +944,7 @@ function buildFlashcards(groups, map, onChange) {
     el('option', { value: 'due' }, 'До повторення сьогодні'),
     el('option', { value: 'new' }, 'Тільки нові'),
     el('option', { value: 'hard' }, 'Складні (коробки 1–2)'),
+    el('option', { value: 'star' }, '⭐ Тільки з зіркою'),
     el('option', { value: 'all' }, 'Усі слова'));
 
   const sizeSel = el('select', { class: 'flash__select', 'aria-label': 'Розмір підходу' },
@@ -955,15 +958,27 @@ function buildFlashcards(groups, map, onChange) {
   const counter = el('span', { class: 'flash__counter' });
   const statKnown = el('span', { class: 'pill pill--ok' });
   const statLeft  = el('span', { class: 'pill' });
+  const statStars = el('span', { class: 'pill' });
 
-  const barFill = el('span', { class: 'flash__progress__fill' });
-  const bar = el('div', { class: 'flash__progress', role: 'presentation' }, barFill);
+  /* Смужка з двох частин, як у Quizlet: зелена — вивчене, бурштинова — у роботі. */
+  const barKnown = el('span', { class: 'flash__seg flash__seg--known' });
+  const barLearn = el('span', { class: 'flash__seg flash__seg--learn' });
+  const bar = el('div', { class: 'flash__progress flash__progress--split', role: 'presentation' },
+    barKnown, barLearn);
 
   const theme = el('span', { class: 'flash__theme' });
-  const face = el('div', { class: 'flash__face' });
-  const hint = el('div', { class: 'flash__hint' });
-  const mark = el('span', { class: 'flash__mark' });
-  const card = el('div', { class: 'flash__card', tabindex: '0', role: 'button' }, mark, theme, face, hint);
+  const mark  = el('span', { class: 'flash__mark' });
+  const starBtn = el('button', { class: 'flash__star', type: 'button',
+    'aria-label': 'Позначити зіркою', title: 'Зірочка (клавіша S)' }, '☆');
+
+  /* Обидві сторони існують одночасно — інакше не буде справжнього обертання. */
+  const frontFace = el('div', { class: 'flash__side flash__side--front' });
+  const backFace  = el('div', { class: 'flash__side flash__side--back' });
+  const inner = el('div', { class: 'flash__inner' }, frontFace, backFace);
+  const hint  = el('div', { class: 'flash__hint' });
+  const card  = el('div', { class: 'flash__card', tabindex: '0', role: 'button' },
+    mark, theme, starBtn, inner, hint);
+  const stage = el('div', { class: 'flash__stage' }, card);
 
   const prevBtn  = el('button', { class: 'btn btn--ghost', type: 'button', title: 'Стрілка ліворуч' }, '←');
   const nextBtn  = el('button', { class: 'btn btn--ghost', type: 'button', title: 'Стрілка праворуч' }, '→');
@@ -971,26 +986,33 @@ function buildFlashcards(groups, map, onChange) {
   const againBtn = el('button', { class: 'btn btn--ghost', type: 'button' }, '↻ Ще вчу');
   const speakBtn = el('button', { class: 'btn btn--ghost btn--sm', type: 'button' }, '🔊 Вимова');
   const exBtn    = el('button', { class: 'btn btn--ghost btn--sm', type: 'button' }, '🔊 Приклад');
+  const playBtn  = el('button', { class: 'btn btn--ghost btn--sm', type: 'button' }, '▶ Автогра');
+  const fullBtn  = el('button', { class: 'btn btn--ghost btn--sm', type: 'button' }, '⛶ На весь екран');
 
   const controls = [prevBtn, againBtn, knowBtn, nextBtn];
 
   let deck = [], pos = 0, flipped = false, done = false;
   let seen = 0, right = 0;
+  let auto = null;
   const repeated = new Set();
 
   function pool() {
-    const pick = themeSel.value === 'all' ? allWords : allWords.filter(w => w.group === groups[Number(themeSel.value)].group);
+    const pick = themeSel.value === 'all'
+      ? allWords
+      : allWords.filter(w => w.group === groups[Number(themeSel.value)].group);
     const mode = modeSel.value;
     return pick.filter(w => {
       const b = srsBox(map, w.de);
       if (mode === 'all')  return true;
       if (mode === 'new')  return b === 0;
       if (mode === 'hard') return b === 1 || b === 2;
+      if (mode === 'star') return stars.has(w.de);
       return b === 0 || srsIsDue(map, w.de);
     });
   }
 
   function build() {
+    stopAuto();
     deck = pool();
     if (shuffleBox.checked) {
       for (let i = deck.length - 1; i > 0; i--) {
@@ -1005,35 +1027,49 @@ function buildFlashcards(groups, map, onChange) {
     render();
   }
 
-  function render() {
+  function drawStats() {
     const kn = deck.filter(w => srsIsKnown(map, w.de)).length;
+    const learn = deck.filter(w => !srsIsKnown(map, w.de) && srsBox(map, w.de) > 0).length;
     statKnown.textContent = `Вивчено в колоді: ${kn}`;
     statLeft.textContent = `Лишилось: ${Math.max(0, deck.length - kn)}`;
+    statStars.textContent = `⭐ ${stars.size}`;
+    statStars.hidden = !stars.size;
+    const n = deck.length || 1;
+    barKnown.style.width = `${Math.round((kn / n) * 100)}%`;
+    barLearn.style.width = `${Math.round((learn / n) * 100)}%`;
+  }
+
+  function render() {
+    drawStats();
     card.classList.toggle('is-done', done || !deck.length);
 
     if (!deck.length || done) {
       counter.textContent = deck.length ? `${deck.length} / ${deck.length}` : '0 / 0';
-      barFill.style.width = deck.length ? '100%' : '0%';
       mark.textContent = '';
       theme.textContent = '';
-      card.classList.remove('is-flipped', 'is-known');
+      starBtn.hidden = true;
+      inner.classList.remove('is-flipped');
+      card.classList.remove('is-known');
       hint.textContent = '';
       controls.forEach(b => b.disabled = true);
-      [speakBtn, exBtn].forEach(b => b.disabled = true);
+      [speakBtn, exBtn, playBtn].forEach(b => b.disabled = true);
+      backFace.replaceChildren();
 
       if (!deck.length) {
-        face.replaceChildren(el('div', { class: 'flash__done' },
+        frontFace.replaceChildren(el('div', { class: 'flash__done' },
           el('strong', {}, 'На сьогодні тут порожньо 🎉'),
           el('p', { class: 'muted' },
             modeSel.value === 'due'
               ? 'Усе, що мало повернутися сьогодні, вже повторено. Оберіть «тільки нові» або «усі слова».'
-              : 'Оберіть іншу тему або інший режим.')));
+              : modeSel.value === 'star'
+                ? 'Ви ще не позначили жодного слова зіркою. Натисніть ☆ на картці — і слово потрапить сюди.'
+                : 'Оберіть іншу тему або інший режим.')));
         return;
       }
 
       const again = el('button', { class: 'btn btn--soft', type: 'button' }, '↻ Ще один підхід');
       again.addEventListener('click', build);
-      face.replaceChildren(el('div', { class: 'flash__done' },
+      frontFace.replaceChildren(el('div', { class: 'flash__done' },
         el('strong', {}, 'Підхід завершено 👏'),
         el('p', { class: 'flash__summary' },
           `Ви переглянули ${seen} ${plural(seen, 'картку', 'картки', 'карток')}, `
@@ -1045,7 +1081,7 @@ function buildFlashcards(groups, map, onChange) {
     }
 
     controls.forEach(b => b.disabled = false);
-    [speakBtn, exBtn].forEach(b => b.disabled = false);
+    [speakBtn, exBtn, playBtn].forEach(b => b.disabled = false);
     prevBtn.disabled = pos === 0;
     nextBtn.disabled = pos === deck.length - 1;
 
@@ -1053,40 +1089,47 @@ function buildFlashcards(groups, map, onChange) {
     const b = srsBox(map, it.de);
     card.classList.toggle('is-known', srsIsKnown(map, it.de));
     counter.textContent = `${pos + 1} / ${deck.length}`;
-    barFill.style.width = `${Math.round(((pos + 1) / deck.length) * 100)}%`;
     mark.textContent = repeated.has(it.de) ? 'повтор' : b ? `коробка ${b} з 5` : 'нове слово';
     theme.textContent = it.group || '';
+    starBtn.hidden = false;
+    drawStar();
     exBtn.hidden = !it.ex;
-    showFront();
-  }
 
-  function showFront() {
-    if (!deck.length || done) return;
-    const it = deck[pos];
-    flipped = false;
-    card.classList.remove('is-flipped');
-    hint.textContent = 'Натисніть картку або пробіл, щоб перевернути';
-    face.replaceChildren(
+    // Обидві сторони наповнюємо одразу — перегортання лише обертає картку.
+    frontFace.replaceChildren(
       el('span', { class: 'flash__front' + (dirSel.value === 'de' ? ' de' : '') },
         dirSel.value === 'de' ? cleanWord(it.de) : it.uk));
-    if (dirSel.value === 'de' && autoBox.checked && ttsSupported) speak(cleanWord(it.de));
-  }
-
-  function showBack() {
-    if (!deck.length || done) return;
-    const it = deck[pos];
-    flipped = true;
-    card.classList.add('is-flipped');
-    hint.textContent = 'Знаєте це слово? Натисніть ще раз, щоб сховати переклад';
-    // replaceChildren не відсіює null, як це робить el() — тому фільтруємо самі
-    face.replaceChildren(...[
+    backFace.replaceChildren(...[
       el('span', { class: 'flash__front' + (dirSel.value === 'de' ? ' de' : '') },
         dirSel.value === 'de' ? it.de : it.uk),
       el('span', { class: 'flash__back' + (dirSel.value === 'uk' ? ' de' : '') },
         dirSel.value === 'de' ? it.uk : it.de),
       it.ex ? el('span', { class: 'flash__ex' }, it.ex) : null,
     ].filter(Boolean));
-    if (dirSel.value === 'uk' && autoBox.checked && ttsSupported) speak(cleanWord(it.de));
+
+    showFront();
+  }
+
+  function drawStar() {
+    const on = deck.length && !done && stars.has(deck[pos].de);
+    starBtn.textContent = on ? '★' : '☆';
+    starBtn.classList.toggle('is-on', !!on);
+  }
+
+  function showFront() {
+    if (!deck.length || done) return;
+    flipped = false;
+    inner.classList.remove('is-flipped');
+    hint.textContent = 'Картка або пробіл — перевернути. Свайп: ← ще вчу, → знаю';
+    if (dirSel.value === 'de' && autoBox.checked && ttsSupported) speak(cleanWord(deck[pos].de));
+  }
+
+  function showBack() {
+    if (!deck.length || done) return;
+    flipped = true;
+    inner.classList.add('is-flipped');
+    hint.textContent = 'Знаєте це слово? Натисніть ще раз, щоб сховати переклад';
+    if (dirSel.value === 'uk' && autoBox.checked && ttsSupported) speak(cleanWord(deck[pos].de));
   }
 
   function flip() { if (deck.length && !done) flipped ? showFront() : showBack(); }
@@ -1100,9 +1143,13 @@ function buildFlashcards(groups, map, onChange) {
     // «Ще вчу» повертає слово в кінець колоди — один раз, щоб підхід не став нескінченним.
     if (!good && !repeated.has(it.de)) { repeated.add(it.de); deck.push(it); }
     onChange();
-    if (pos < deck.length - 1) pos++;
-    else done = true;
-    render();
+    card.classList.add(good ? 'is-swipe-right' : 'is-swipe-left');
+    setTimeout(() => {
+      card.classList.remove('is-swipe-right', 'is-swipe-left');
+      if (pos < deck.length - 1) pos++;
+      else done = true;
+      render();
+    }, 180);
   }
 
   function move(step) {
@@ -1113,7 +1160,41 @@ function buildFlashcards(groups, map, onChange) {
     render();
   }
 
-  card.addEventListener('click', flip);
+  /* ── автогра: перевертає картку, потім переходить далі ──────────────── */
+  function stopAuto() {
+    if (!auto) return;
+    clearInterval(auto);
+    auto = null;
+    playBtn.textContent = '▶ Автогра';
+    playBtn.classList.remove('btn--active');
+  }
+
+  function startAuto() {
+    let phase = 0;
+    playBtn.textContent = '⏸ Пауза';
+    playBtn.classList.add('btn--active');
+    auto = setInterval(() => {
+      if (!deck.length || done) { stopAuto(); return; }
+      if (phase === 0) { showBack(); phase = 1; return; }
+      phase = 0;
+      if (pos < deck.length - 1) move(1);
+      else { done = true; render(); stopAuto(); }
+    }, 2600);
+  }
+
+  card.addEventListener('click', e => {
+    if (e.target === starBtn || starBtn.contains(e.target)) return;
+    flip();
+  });
+
+  starBtn.addEventListener('click', e => {
+    e.stopPropagation();
+    if (!deck.length || done) return;
+    toggleStar(levelId, stars, deck[pos].de);
+    drawStar();
+    drawStats();
+  });
+
   // Клавіші працюють, поки блок карток на екрані, а не лише коли фокус на самій картці.
   const onKey = e => {
     if (!wrap.isConnected || wrap.closest('[hidden]')) return;
@@ -1121,35 +1202,61 @@ function buildFlashcards(groups, map, onChange) {
     if (t && typeof t.matches === 'function'
         && (t.matches('input, textarea, select, button') || t.isContentEditable)) return;
     const act = { ' ': 'flip', Enter: 'know', ArrowRight: 'next', ArrowLeft: 'prev',
-      Backspace: 'again', s: 'speak', ы: 'speak', і: 'speak' }[e.key];
+      Backspace: 'again', s: 'star', S: 'star', і: 'star', ы: 'star',
+      f: 'speak', F: 'speak', а: 'speak' }[e.key];
     if (!act) return;
     e.preventDefault();
+    if (act !== 'flip') stopAuto();
     if (act === 'flip')  flip();
     if (act === 'know')  flipped ? grade(true) : flip();
     if (act === 'again') grade(false);
     if (act === 'next')  move(1);
     if (act === 'prev')  move(-1);
+    if (act === 'star')  starBtn.click();
     if (act === 'speak' && deck.length && !done) speak(cleanWord(deck[pos].de));
   };
   document.addEventListener('keydown', onKey);
 
-  // Гортання пальцем на телефоні.
-  let x0 = null, y0 = null;
-  card.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
+  /* ── свайп сортує картку, як у Quizlet: ліворуч «ще вчу», праворуч «знаю» ── */
+  let x0 = null, y0 = null, dragging = false;
+  card.addEventListener('touchstart', e => {
+    x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; dragging = true; stopAuto();
+  }, { passive: true });
+  card.addEventListener('touchmove', e => {
+    if (!dragging) return;
+    const dx = e.touches[0].clientX - x0;
+    const dy = e.touches[0].clientY - y0;
+    if (Math.abs(dx) < Math.abs(dy)) return;
+    card.style.transform = `translateX(${dx * 0.4}px) rotate(${dx * 0.02}deg)`;
+  }, { passive: true });
   card.addEventListener('touchend', e => {
-    if (x0 === null) return;
+    if (!dragging) return;
+    dragging = false;
+    card.style.transform = '';
     const dx = e.changedTouches[0].clientX - x0;
     const dy = e.changedTouches[0].clientY - y0;
     x0 = null;
-    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) move(dx < 0 ? 1 : -1);
+    if (Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy)) grade(dx > 0);
   }, { passive: true });
 
-  prevBtn.addEventListener('click', () => move(-1));
-  nextBtn.addEventListener('click', () => move(1));
-  knowBtn.addEventListener('click', () => { flipped ? grade(true) : flip(); });
-  againBtn.addEventListener('click', () => grade(false));
+  prevBtn.addEventListener('click', () => { stopAuto(); move(-1); });
+  nextBtn.addEventListener('click', () => { stopAuto(); move(1); });
+  knowBtn.addEventListener('click', () => { stopAuto(); flipped ? grade(true) : flip(); });
+  againBtn.addEventListener('click', () => { stopAuto(); grade(false); });
   speakBtn.addEventListener('click', () => { if (deck.length && !done) speak(cleanWord(deck[pos].de)); });
   exBtn.addEventListener('click', () => { if (deck.length && !done && deck[pos].ex) speak(deck[pos].ex); });
+  playBtn.addEventListener('click', () => { auto ? stopAuto() : startAuto(); });
+
+  fullBtn.addEventListener('click', () => {
+    if (document.fullscreenElement) { document.exitFullscreen?.(); return; }
+    wrap.requestFullscreen?.().catch(() => { /* браузер відмовив — не страшно */ });
+  });
+  document.addEventListener('fullscreenchange', () => {
+    const on = document.fullscreenElement === wrap;
+    wrap.classList.toggle('is-full', on);
+    fullBtn.textContent = on ? '⛶ Звичайний вигляд' : '⛶ На весь екран';
+  });
+
   [themeSel, dirSel, modeSel, sizeSel, shuffleBox].forEach(c => c.addEventListener('change', build));
 
   wrap.append(
@@ -1159,14 +1266,15 @@ function buildFlashcards(groups, map, onChange) {
       ttsSupported ? el('label', { class: 'flash__check' }, autoBox, ' озвучувати') : null,
       el('span', { class: 'grow' }), counter),
     bar,
-    card,
+    stage,
     el('div', { class: 'flash__actions' }, prevBtn, againBtn, knowBtn, nextBtn),
     el('div', { class: 'flash__stats' },
-      statKnown, statLeft, el('span', { class: 'grow' }),
+      statKnown, statLeft, statStars, el('span', { class: 'grow' }),
+      playBtn, fullBtn,
       ttsSupported ? speakBtn : null, ttsSupported ? exBtn : null),
-    el('p', { class: 'muted', style: 'margin:0;font-size:.82rem' },
-      'Клавіші: пробіл — перевернути, Enter — «знаю», Backspace — «ще вчу», ← та → — гортати, S — вимова. '
-      + 'На телефоні картку можна гортати пальцем.'),
+    el('p', { class: 'muted flash__keys', style: 'margin:0;font-size:.82rem' },
+      'Клавіші: пробіл — перевернути, Enter — «знаю», Backspace — «ще вчу», ← та → — гортати, '
+      + 'S — зірочка, F — вимова. На телефоні гортайте картку пальцем: ліворуч — «ще вчу», праворуч — «знаю».'),
   );
 
   build();

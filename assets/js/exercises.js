@@ -1,7 +1,7 @@
 /* Рушій вправ: рендер + перевірка.
    Типи: choice, multi, truefalse, gap, match, order. */
 
-import { speak, ttsSupported } from './tts.js?v=20260819d';
+import { speak, ttsSupported } from './tts.js?v=20260819e';
 
 /* --------------------------------------------------------- утиліти ------ */
 
