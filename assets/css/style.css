@@ -778,6 +778,22 @@ table.vt .speak-btn { width: 26px; height: 26px; font-size: .74rem; }
 
 table.vt tr.is-known .vt__de .de { color: var(--ok); }
 table.vt tr.is-known .vt__no::after { content: " ✓"; color: var(--ok); }
+table.vt tr.is-learning .vt__no::after { content: " •"; color: var(--warn); }
+
+.vocab-progress__pills { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .7rem; }
+
+.btn--active { background: var(--accent); color: var(--on-accent); }
+.btn--active:hover { background: var(--accent-deep); color: var(--on-accent); }
+
+/* ---- вправи зі словника ---- */
+
+.vquiz[hidden] { display: none; }
+.vquiz__score {
+  margin-top: 1rem; padding: 1rem 1.2rem; border-radius: var(--r);
+  background: var(--accent-soft); color: var(--accent-deep); text-align: center;
+}
+.vquiz__score strong { font-size: 1.15rem; }
+.vquiz__score p { color: var(--text-soft); }
 
 .vocab-group__note {
   margin: .2rem 0 .9rem; color: var(--text-soft); font-size: .92rem;
