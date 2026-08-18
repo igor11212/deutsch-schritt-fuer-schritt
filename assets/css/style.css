@@ -973,3 +973,10 @@ table.vt tr.is-learning .vt__no::after { content: " •"; color: var(--warn); }
 }
 
 .topnav__prog { font-size: 1rem; }
+
+.vsent__mark {
+  align-self: flex-start; font-size: .78rem; font-weight: 650;
+  color: var(--ok); padding: .15rem .6rem; border-radius: 99px;
+  background: var(--ok-soft, var(--surface-2)); border: 1px solid var(--ok);
+}
+.vsent .flash__progress { margin: .2rem 0 .4rem; }
