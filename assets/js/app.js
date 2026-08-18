@@ -1,16 +1,16 @@
 /* Роутер + сторінки. Хеш-навігація, щоб працювало на GitHub Pages без сервера. */
 
-import { LEVELS, loadLevel } from '../data/index.js?v=20260818c';
-import { el, renderExercise, renderExerciseSet } from './exercises.js?v=20260818c';
-import { speak, speakDialogue, stop as stopSpeech, ttsSupported, hasGermanVoice } from './tts.js?v=20260818c';
-import { checkWriting } from './writing-check.js?v=20260818c';
-import { glossTerms } from './glossary.js?v=20260818c';
+import { LEVELS, loadLevel } from '../data/index.js?v=20260818d';
+import { el, renderExercise, renderExerciseSet } from './exercises.js?v=20260818d';
+import { speak, speakDialogue, stop as stopSpeech, ttsSupported, hasGermanVoice } from './tts.js?v=20260818d';
+import { checkWriting } from './writing-check.js?v=20260818d';
+import { glossTerms } from './glossary.js?v=20260818d';
 import {
   load as srsLoad, save as srsSave, stats as srsStats, isKnown as srsIsKnown,
   isDue as srsIsDue, boxOf as srsBox, promote as srsPromote, demote as srsDemote,
   cleanWord, buildQuiz as buildQuizData, quizableThemes,
   pickForWriting, containsWord,
-} from './vocab-srs.js?v=20260818c';
+} from './vocab-srs.js?v=20260818d';
 
 const main = document.getElementById('main');
 
@@ -694,7 +694,10 @@ function buildSentencePractice(groups, map, levelId, onChange) {
     // Для окремого речення дві базові вимоги суворіші, ніж у листі:
     // велика літера на початку й розділовий знак у кінці.
     if (!/^[A-ZÄÖÜ]/.test(text)) {
-      res.issues.unshift({ kind: 'error', title: 'Речення починається з малої літери',
+      // перевіряльник уже має таке попередження — не дублюємо, а піднімаємо до помилки
+      const existing = res.issues.find(i => i.title === 'Речення починається з малої літери');
+      if (existing) existing.kind = 'error';
+      else res.issues.unshift({ kind: 'error', title: 'Речення починається з малої літери',
         detail: 'Кожне німецьке речення починається з великої літери — так само, як українське.' });
     }
     if (!/[.!?]$/.test(text)) {
