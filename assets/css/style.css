@@ -1076,3 +1076,35 @@ table.vt tr.is-learning .vt__no::after { content: " •"; color: var(--warn); }
   .search__hit { padding: .8rem .9rem; }
   .search__hit .module-card__go { display: none; }
 }
+
+/* ══════════════════════════ стан слів у словнику ═══════════════════════ */
+
+.vocab-sched { margin-top: .8rem; }
+.vocab-sched__title { display: block; font-size: .88rem; margin-bottom: .4rem; }
+.vocab-sched__row { display: flex; gap: .4rem; flex-wrap: wrap; }
+.chip {
+  font-size: .78rem; padding: .2rem .65rem; border-radius: 99px;
+  background: var(--surface-2); border: 1px solid var(--line-soft); color: var(--text-soft);
+}
+.chip--due   { background: var(--warn-soft); border-color: var(--warn); color: var(--warn); font-weight: 650; }
+.chip--fresh { border-style: dashed; }
+
+.vocab-filter {
+  display: flex; align-items: center; gap: .4rem; flex-wrap: wrap;
+  margin: 1.6rem 0 -.4rem;
+}
+
+.vt__state { white-space: nowrap; }
+.wstate {
+  display: inline-block; font-size: .76rem; font-weight: 650;
+  padding: .12rem .55rem; border-radius: 99px;
+  background: var(--surface-2); border: 1px solid var(--line-soft); color: var(--muted);
+}
+.wstate--known    { background: var(--ok-soft);   border-color: var(--ok);   color: var(--ok); }
+.wstate--learning { background: var(--accent-soft); border-color: var(--accent); color: var(--accent-deep); }
+.wstate--due      { background: var(--warn-soft); border-color: var(--warn); color: var(--warn); }
+.wstate--fresh    { border-style: dashed; }
+.wstate__when { display: block; margin-top: .2rem; font-size: .72rem; color: var(--muted); }
+
+/* Порожню тему після фільтра ховаємо цілком, щоб не лишалися голі заголовки. */
+.vocab-group[hidden] { display: none; }
