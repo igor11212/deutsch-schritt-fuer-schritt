@@ -785,6 +785,27 @@ table.vt tr.is-learning .vt__no::after { content: " •"; color: var(--warn); }
 .btn--active { background: var(--accent); color: var(--on-accent); }
 .btn--active:hover { background: var(--accent-deep); color: var(--on-accent); }
 
+/* ---- речення з новим словом ---- */
+
+.vsent[hidden] { display: none; }
+.vsent__word {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: .5rem .9rem;
+  padding: 1rem 1.2rem; border-radius: var(--r);
+  background: linear-gradient(140deg, var(--accent-soft), var(--surface-2));
+  border: 1px solid var(--line-soft);
+}
+.vsent__de { font-size: 1.3rem; font-weight: 650; }
+.vsent__uk { color: var(--text-soft); }
+.vsent__note { flex-basis: 100%; font-size: .88rem; }
+.vsent textarea.write { min-height: 90px; }
+
+.vsent__ok, .vsent__again {
+  margin-top: 1rem; padding: .9rem 1.2rem; border-radius: var(--r);
+  border-left: 3px solid var(--ok); background: var(--ok-soft);
+}
+.vsent__again { border-left-color: var(--warn); background: var(--warn-soft); }
+.vsent__ok p, .vsent__again p { margin: 0; }
+
 /* ---- вправи зі словника ---- */
 
 .vquiz[hidden] { display: none; }
