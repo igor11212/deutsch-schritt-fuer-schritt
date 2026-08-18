@@ -837,6 +837,16 @@ table.vt tr.is-learning .vt__no::after { content: " •"; color: var(--warn); }
 .flash__bar .grow { flex: 1 1 auto; }
 .flash__counter { font-size: .86rem; color: var(--muted); font-variant-numeric: tabular-nums; }
 
+.flash__progress {
+  height: 7px; border-radius: 99px; overflow: hidden;
+  background: var(--surface-2); border: 1px solid var(--line-soft);
+}
+.flash__progress__fill {
+  display: block; height: 100%; width: 0;
+  border-radius: 99px; background: var(--accent);
+  transition: width .25s ease;
+}
+
 .flash__card {
   position: relative;
   min-height: 190px; display: flex; flex-direction: column;
@@ -850,6 +860,12 @@ table.vt tr.is-learning .vt__no::after { content: " •"; color: var(--warn); }
 .flash__mark {
   position: absolute; top: .8rem; right: 1rem;
   font-size: .76rem; font-weight: 650; color: var(--ok);
+}
+.flash__card.is-done { cursor: default; background: var(--surface); }
+.flash__card.is-done:hover { transform: none; box-shadow: none; }
+.flash__theme {
+  position: absolute; top: .8rem; left: 1rem; max-width: 55%;
+  font-size: .74rem; color: var(--muted); text-align: left; line-height: 1.25;
 }
 .flash__card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
 .flash__card.is-flipped { background: var(--surface); }
@@ -865,6 +881,8 @@ table.vt tr.is-learning .vt__no::after { content: " •"; color: var(--warn); }
 .flash__hint { font-size: .8rem; color: var(--muted); }
 .flash__done { display: flex; flex-direction: column; gap: .3rem; }
 .flash__done p { margin: 0; }
+.flash__summary { font-weight: 600; }
+.flash__done .btn { align-self: center; margin-top: .5rem; }
 
 .flash__actions { display: flex; gap: .55rem; justify-content: center; flex-wrap: wrap; align-items: center; }
 .flash__actions .btn[disabled] { opacity: .35; }
