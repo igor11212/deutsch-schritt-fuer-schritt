@@ -853,12 +853,15 @@ table.vt tr.is-learning .vt__no::after { content: " •"; color: var(--warn); }
   transition: width .25s ease;
 }
 
-/* Сцена задає перспективу — без неї обертання виглядає плоским. */
-.flash__stage { perspective: 1400px; }
+/* Перспектива має стояти на БЕЗПОСЕРЕДНЬОМУ батькові того, що обертається.
+   Якщо поставити її на зовнішню обгортку, картка з transform-style: flat
+   сплющить обертання дитини в свою площину — і воно зникне. */
+.flash__stage { position: relative; }
 
 .flash__card {
   position: relative;
   display: flex; flex-direction: column;
+  perspective: 1400px;
   min-height: 210px; border-radius: var(--r-lg); cursor: pointer;
   background: linear-gradient(150deg, var(--accent-soft), var(--surface-2));
   border: 1.5px solid var(--line-soft);
@@ -880,8 +883,8 @@ table.vt tr.is-learning .vt__no::after { content: " •"; color: var(--warn); }
 .flash__card.is-done .flash__inner { transform: none; }
 
 /* Свайп-сортування: картка від'їжджає в бік вердикту. */
-.flash__card.is-swipe-right { transform: translateX(70px) rotate(6deg); opacity: .35; }
-.flash__card.is-swipe-left  { transform: translateX(-70px) rotate(-6deg); opacity: .35; }
+.flash__stage.is-swipe-right { transform: translateX(70px) rotate(6deg); opacity: .35; }
+.flash__stage.is-swipe-left  { transform: translateX(-70px) rotate(-6deg); opacity: .35; }
 
 /* Зірочка «повернутися до цього слова». */
 .flash__star {
@@ -914,12 +917,16 @@ table.vt tr.is-learning .vt__no::after { content: " •"; color: var(--warn); }
   font-size: .76rem; font-weight: 650; color: var(--ok);
 }
 .flash__card.is-done { cursor: default; background: var(--surface); }
-.flash__card.is-done:hover { transform: none; box-shadow: none; }
+.flash__card.is-done:hover { box-shadow: none; }
+.flash-deck:has(.is-done) .flash__stage:hover { transform: none; }
 .flash__theme {
   position: absolute; z-index: 2; top: .8rem; left: 1rem; max-width: 40%;
   font-size: .74rem; color: var(--muted); text-align: left; line-height: 1.25;
 }
-.flash__card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+/* Підіймаємо не картку, а сцену: transform на самій картці зруйнував би 3D. */
+.flash__stage:hover { transform: translateY(-2px); }
+.flash__stage { transition: transform .18s ease; }
+.flash__card:hover { box-shadow: var(--shadow); }
 .flash__card:has(.is-flipped) { background: var(--surface); }
 
 .flash__front { font-size: 1.45rem; font-weight: 650; line-height: 1.3; }
