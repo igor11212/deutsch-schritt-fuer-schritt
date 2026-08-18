@@ -5,11 +5,11 @@
    офлайновий перевіряльник, що й у модулі «Письмо», а мовлення учень
    оцінює сам за критеріями — і сайт про це чесно попереджає. */
 
-import { el, renderExerciseSet } from './exercises.js?v=20260819f';
-import { speakDialogue, stop as stopSpeech, ttsSupported } from './tts.js?v=20260819f';
-import { checkWriting } from './writing-check.js?v=20260819f';
-import { EXAM, PART_META } from '../data/exam.js?v=20260819f';
-import { saveExam } from './progress.js?v=20260819f';
+import { el, renderExerciseSet } from './exercises.js?v=20260819g';
+import { speakDialogue, stop as stopSpeech, ttsSupported } from './tts.js?v=20260819g';
+import { checkWriting } from './writing-check.js?v=20260819g';
+import { EXAM, PART_META } from '../data/exam.js?v=20260819g';
+import { saveExam } from './progress.js?v=20260819g';
 
 const PART_POINTS = 25;
 

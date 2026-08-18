@@ -1,21 +1,21 @@
 /* Роутер + сторінки. Хеш-навігація, щоб працювало на GitHub Pages без сервера. */
 
-import { LEVELS, loadLevel } from '../data/index.js?v=20260819f';
-import { el, renderExercise, renderExerciseSet } from './exercises.js?v=20260819f';
-import { speak, speakDialogue, stop as stopSpeech, ttsSupported, hasGermanVoice } from './tts.js?v=20260819f';
-import { checkWriting } from './writing-check.js?v=20260819f';
-import { glossTerms } from './glossary.js?v=20260819f';
+import { LEVELS, loadLevel } from '../data/index.js?v=20260819g';
+import { el, renderExercise, renderExerciseSet } from './exercises.js?v=20260819g';
+import { speak, speakDialogue, stop as stopSpeech, ttsSupported, hasGermanVoice } from './tts.js?v=20260819g';
+import { checkWriting } from './writing-check.js?v=20260819g';
+import { glossTerms } from './glossary.js?v=20260819g';
 import {
   load as srsLoad, save as srsSave, stats as srsStats, isKnown as srsIsKnown,
   isDue as srsIsDue, boxOf as srsBox, promote as srsPromote, demote as srsDemote,
   cleanWord, buildQuiz as buildQuizData, quizableThemes,
   pickForWriting, containsWord, knownCount,
   loadStars, toggleStar,
-} from './vocab-srs.js?v=20260819f';
-import * as prog from './progress.js?v=20260819f';
-import { renderExam } from './exam.js?v=20260819f';
-import { EXAM, PART_META } from '../data/exam.js?v=20260819f';
-import { buildIndex, search as runSearch, snippet, TYPE_LABEL } from './search.js?v=20260819f';
+} from './vocab-srs.js?v=20260819g';
+import * as prog from './progress.js?v=20260819g';
+import { renderExam } from './exam.js?v=20260819g';
+import { EXAM, PART_META } from '../data/exam.js?v=20260819g';
+import { buildIndex, search as runSearch, snippet, TYPE_LABEL } from './search.js?v=20260819g';
 
 const main = document.getElementById('main');
 
@@ -1107,7 +1107,7 @@ function buildFlashcards(groups, map, levelId, onChange) {
       it.ex ? el('span', { class: 'flash__ex' }, it.ex) : null,
     ].filter(Boolean));
 
-    showFront();
+    showFront(false);
   }
 
   function drawStar() {
@@ -1116,23 +1116,37 @@ function buildFlashcards(groups, map, levelId, onChange) {
     starBtn.classList.toggle('is-on', !!on);
   }
 
-  function showFront() {
+  /* Анімація перегортання: картка стискається до ребра, і саме в цей момент
+     міняється бік. Тому бік перемикаємо не одразу, а на середині анімації. */
+  let turnTimer = null;
+  function turn(toBack) {
+    clearTimeout(turnTimer);
+    inner.classList.remove('is-turning');
+    void inner.offsetWidth;                       // перезапуск анімації
+    inner.classList.add('is-turning');
+    turnTimer = setTimeout(() => inner.classList.toggle('is-flipped', toBack), 200);
+  }
+  inner.addEventListener('animationend', () => inner.classList.remove('is-turning'));
+
+  function showFront(animate) {
     if (!deck.length || done) return;
     flipped = false;
-    inner.classList.remove('is-flipped');
+    if (animate) turn(false);
+    else { clearTimeout(turnTimer); inner.classList.remove('is-flipped', 'is-turning'); }
     hint.textContent = 'Картка або пробіл — перевернути. Свайп: ← ще вчу, → знаю';
     if (dirSel.value === 'de' && autoBox.checked && ttsSupported) speak(cleanWord(deck[pos].de));
   }
 
-  function showBack() {
+  function showBack(animate = true) {
     if (!deck.length || done) return;
     flipped = true;
-    inner.classList.add('is-flipped');
+    if (animate) turn(true);
+    else inner.classList.add('is-flipped');
     hint.textContent = 'Знаєте це слово? Натисніть ще раз, щоб сховати переклад';
     if (dirSel.value === 'uk' && autoBox.checked && ttsSupported) speak(cleanWord(deck[pos].de));
   }
 
-  function flip() { if (deck.length && !done) flipped ? showFront() : showBack(); }
+  function flip() { if (deck.length && !done) flipped ? showFront(true) : showBack(true); }
 
   function grade(good) {
     if (!deck.length || done) return;
