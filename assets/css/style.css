@@ -410,6 +410,12 @@ table.tbl td:first-child { font-family: var(--font-de); }
 .callout strong { color: var(--warn); }
 .callout--tip { background: var(--ok-soft); border-left-color: var(--ok); }
 .callout--tip strong { color: var(--ok); }
+/* Пастка: те, що плутають найчастіше. Звичайний callout уже жовтий,
+   тому цей має бути помітно сильнішим — рамка по всьому периметру. */
+.callout--warn {
+  border: 1.5px solid var(--warn); border-left-width: 5px;
+  box-shadow: 0 1px 0 var(--warn-soft);
+}
 
 /* ------------------------------------------------------ лексика --------- */
 
