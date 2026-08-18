@@ -95,6 +95,12 @@ function usable(it) {
   return it.uk && !/[↔→…]/.test(de) && !/\s\/\s/.test(de) && de.length <= 34;
 }
 
+/** Придатне для власного речення: не готовий вигук чи запитання-зразок. */
+function writable(it) {
+  const w = bareWord(it.de);
+  return usable(it) && !/[!?]/.test(it.de) && w.split(/\s+/).length <= 4;
+}
+
 /** Придатне для диктанту: ще й без прийменникових позначок і не задовге. */
 function dictatable(it) {
   const w = cleanWord(it.de);
@@ -255,7 +261,7 @@ export function pickForWriting(groups, map, { count = 5, groupIndex = null } = {
   const source = groupIndex === null ? groups : [groups[groupIndex]];
   const pool = source
     .flatMap(g => g.items.map(it => ({ ...it, group: g.group })))
-    .filter(it => usable(it) && bareWord(it.de).split(/\s+/).length <= 4);
+    .filter(it => writable(it));
 
   const due      = pool.filter(it => isDue(map, it.de));
   const learning = pool.filter(it => boxOf(map, it.de) > 0 && !isDue(map, it.de));
