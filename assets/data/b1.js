@@ -1,5 +1,5 @@
-import { modules as part2 } from './b1-part2.js?v=20260819c';
-import { modules as part3 } from './b1-part3.js?v=20260819c';
+import { modules as part2 } from './b1-part2.js?v=20260819d';
+import { modules as part3 } from './b1-part3.js?v=20260819d';
 
 export default {
   intro:
@@ -303,8 +303,8 @@ Iryna Kowal`,
   /* ─────────────────────────────── МОДУЛЬ 2 ─────────────────────────────── */
   {
     id: 'm2',
-    title: 'Das Passiv',
-    titleUk: 'Пасивний стан: коли важлива дія, а не виконавець',
+    title: 'Passiv: Präsens und Präteritum',
+    titleUk: 'Пасивний стан у теперішньому й минулому: коли важлива дія, а не виконавець',
     can: [
       'утворювати Passiv Präsens, Präteritum і Perfekt',
       'вживати Passiv із модальними дієсловами',

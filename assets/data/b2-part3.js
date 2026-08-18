@@ -3,7 +3,7 @@
 
 const m6 = {
   id: 'm6',
-  title: 'Feste Verbindungen: Verben mit Präposition und Nomen-Verb-Gefüge',
+  title: 'Verben mit Präposition und Nomen-Verb-Gefüge',
   titleUk: 'Стійкі сполуки: дієслова з прийменником та іменниково-дієслівні звороти',
   can: [
     'уживати дієслова з фіксованим прийменником у складніших конструкціях',

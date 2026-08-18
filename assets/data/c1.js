@@ -1,5 +1,5 @@
-import { modules as part2 } from './c1-part2.js?v=20260819c';
-import { modules as part3 } from './c1-part3.js?v=20260819c';
+import { modules as part2 } from './c1-part2.js?v=20260819d';
+import { modules as part3 } from './c1-part3.js?v=20260819d';
 
 export default {
   intro:
@@ -328,8 +328,8 @@ und aus einem Gewinn an Freiheit am Ende eine zusätzliche Last werde.`,
   /* ─────────────────────────────── МОДУЛЬ 2 ─────────────────────────────── */
   {
     id: 'm2',
-    title: 'Partizipialkonstruktionen und Nominalstil',
-    titleUk: 'Партиципні означення та номінальний стиль',
+    title: 'Erweiterte Attribute und Nominalstil',
+    titleUk: 'Поширені означення й номінальний стиль: як згорнути ціле речення в означення',
     can: [
       'утворювати й розуміти поширені партиципні означення (erweiterte Attribute)',
       'відрізняти Partizip I від Partizip II за значенням і часом',

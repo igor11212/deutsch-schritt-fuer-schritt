@@ -3,8 +3,8 @@
 
 const m3 = {
   id: 'm3',
-  title: 'Modalpartikeln: die Feinabstimmung',
-  titleUk: 'Модальні частки: як німці передають відтінок',
+  title: 'Modalpartikeln: doch, ja, mal, denn',
+  titleUk: 'Модальні частки: як німці передають відтінок одним словом',
   can: [
     'розуміти doch, mal, ja, eben, halt, wohl, schon, denn у мовленні',
     'ставити частки на правильне місце в реченні',
@@ -635,8 +635,8 @@ niemand ernsthaft spricht, bleibt jede Gebührendebatte verfrüht.`,
 
 const m5 = {
   id: 'm5',
-  title: 'Passiversatz und Modalitätsausdruck',
-  titleUk: 'Замінники пасиву та вираження модальності',
+  title: 'Modalitätsausdruck ohne Modalverb',
+  titleUk: 'Як сказати «можна», «треба» й «не варто» без модального дієслова',
   can: [
     'уживати sich lassen замість пасиву з können',
     'утворювати прикметники на -bar, -lich, -fähig',
