@@ -264,7 +264,8 @@ Oksana`,
   title: 'Reflexive Verben und Verben mit Präpositionen',
   titleUk: 'Зворотні дієслова та дієслова з прийменниками',
   can: [
-    'вживати sich у правильному відмінку',
+    'вживати sich у правильному відмінку — mich проти mir',
+    'розрізняти «себе» (Akkusativ) і «собі» (Dativ)',
     'описувати свій розпорядок і почуття',
     'запам’ятати дієслова з фіксованими прийменниками',
     'ставити питання Worauf? Woran? і відповідати darauf, daran',
@@ -277,14 +278,14 @@ Oksana`,
 <p>Українською ми кажемо «мити<u>ся</u>», «готувати<u>ся</u>» — те саме «-ся» німецька передає
 окремим словом <strong>sich</strong>, яке змінюється за особами.</p>
 <table>
-<thead><tr><th>Особа</th><th>Форма</th><th>Приклад і переклад</th></tr></thead>
+<thead><tr><th>Особа</th><th>Akkusativ</th><th>Приклад і переклад</th></tr></thead>
 <tbody>
-<tr><td>ich</td><td><strong>mich</strong></td><td><em>Ich wasche mich.</em><span class="uk">Я мию́ся.</span></td></tr>
-<tr><td>du</td><td><strong>dich</strong></td><td><em>Du wäschst dich.</em><span class="uk">Ти мий́ся / ти мий́шся.</span></td></tr>
-<tr><td>er/sie/es</td><td><strong>sich</strong></td><td><em>Er wäscht sich.</em><span class="uk">Він мий́ться.</span></td></tr>
-<tr><td>wir</td><td><strong>uns</strong></td><td><em>Wir waschen uns.</em><span class="uk">Ми мий́мося.</span></td></tr>
-<tr><td>ihr</td><td><strong>euch</strong></td><td><em>Ihr wascht euch.</em><span class="uk">Ви мий́теся.</span></td></tr>
-<tr><td>sie/Sie</td><td><strong>sich</strong></td><td><em>Sie waschen sich.</em><span class="uk">Вони мий́ться.</span></td></tr>
+<tr><td>ich</td><td><strong>mich</strong></td><td><em>Ich wasche mich.</em><span class="uk">Я миюся.</span></td></tr>
+<tr><td>du</td><td><strong>dich</strong></td><td><em>Du wäschst dich.</em><span class="uk">Ти миєшся.</span></td></tr>
+<tr><td>er/sie/es</td><td><strong>sich</strong></td><td><em>Er wäscht sich.</em><span class="uk">Він миється.</span></td></tr>
+<tr><td>wir</td><td><strong>uns</strong></td><td><em>Wir waschen uns.</em><span class="uk">Ми миємося.</span></td></tr>
+<tr><td>ihr</td><td><strong>euch</strong></td><td><em>Ihr wascht euch.</em><span class="uk">Ви миєтеся.</span></td></tr>
+<tr><td>sie/Sie</td><td><strong>sich</strong></td><td><em>Sie waschen sich.</em><span class="uk">Вони миються.</span></td></tr>
 </tbody></table>
 <div class="callout"><strong>Порядок слів.</strong> <em>sich</em> стоїть одразу після зміненого
 дієслова: <em>Ich <u>ziehe mich</u> schnell an.</em> А якщо речення починається не з підмета —
@@ -307,13 +308,62 @@ Oksana`,
 <tr><td><em>sich verspäten</em></td><td>запізнюватися</td><td><em>Er hat sich verspätet.</em></td></tr>
 <tr><td><em>sich vorstellen</em></td><td>представлятися</td><td><em>Darf ich mich vorstellen?</em></td></tr>
 </tbody></table>
-<p><strong>Іноді sich стоїть у Dativ</strong> — коли в реченні вже є прямий додаток:
-<em>Ich wasche <u>mir</u> die Hände.</em><span class="uk">Я мию собі руки.</span>
-Порівняйте: <em>Ich wasche <u>mich</u></em> (мию себе) — <em>Ich wasche <u>mir</u> die Haare</em>
-(мию собі волосся).</p>`,
+<p>Але це ще не вся картина: у половині цих дієслів <em>sich</em> може стояти
+й у <strong>Dativ</strong>. Коли саме — у наступному розділі.</p>`,
     },
     {
-      title: '3. Дієслова з фіксованим прийменником',
+      title: '3. mich чи mir: зворотний займенник у Dativ',
+      html: `
+<p>Зворотний займенник має <u>два</u> набори форм. Обрати правильний легше, ніж здається,
+бо різниця є лише у двох особах — <em>ich</em> і <em>du</em>.</p>
+<table>
+<thead><tr><th>Особа</th><th>Akkusativ</th><th>Dativ</th><th>Різниця</th></tr></thead>
+<tbody>
+<tr><td>ich</td><td><strong>mich</strong></td><td><strong>mir</strong></td><td>є</td></tr>
+<tr><td>du</td><td><strong>dich</strong></td><td><strong>dir</strong></td><td>є</td></tr>
+<tr><td>er/sie/es</td><td>sich</td><td>sich</td><td>однаково</td></tr>
+<tr><td>wir</td><td>uns</td><td>uns</td><td>однаково</td></tr>
+<tr><td>ihr</td><td>euch</td><td>euch</td><td>однаково</td></tr>
+<tr><td>sie/Sie</td><td>sich</td><td>sich</td><td>однаково</td></tr>
+</tbody></table>
+<div class="callout"><strong>Правило в одному рядку.</strong> Якщо в реченні вже є
+<u>прямий додаток</u> (кого? що?), то зворотному займеннику лишається тільки Dativ.
+Простіше кажучи: <em>sich</em> у Dativ означає «<u>собі</u>», а не «себе».</div>
+<table>
+<thead><tr><th>Akkusativ — «себе»</th><th>Dativ — «собі»</th></tr></thead>
+<tbody>
+<tr><td><em>Ich wasche <strong>mich</strong>.</em><span class="uk">Я мию себе (сам митися).</span></td>
+<td><em>Ich wasche <strong>mir</strong> die Hände.</em><span class="uk">Я мию собі руки.</span></td></tr>
+<tr><td><em>Ich ziehe <strong>mich</strong> an.</em><span class="uk">Я одягаюся.</span></td>
+<td><em>Ich ziehe <strong>mir</strong> den Mantel an.</em><span class="uk">Я вдягаю на себе пальто.</span></td></tr>
+<tr><td><em>Kannst du <strong>dich</strong> vorstellen?</em><span class="uk">Ти можеш представитися?</span></td>
+<td><em>Kannst du <strong>dir</strong> das vorstellen?</em><span class="uk">Ти можеш це собі уявити?</span></td></tr>
+</tbody></table>
+<div class="callout callout--warn"><strong>Пастка: sich vorstellen — два різні дієслова.</strong>
+<em>Ich stelle <u>mich</u> vor</em> — «я представляюся» (кажу, як мене звати).
+<em>Ich stelle <u>mir</u> das vor</em> — «я це собі уявляю». Відмінок тут не деталь,
+а те, що змінює зміст цілком.</div>
+<p><strong>Дієслова, після яких зворотний займенник майже завжди в Dativ</strong> —
+бо вони за своєю природою вимагають ще й прямого додатка:</p>
+<table>
+<thead><tr><th>Дієслово</th><th>Переклад</th><th>Приклад</th></tr></thead>
+<tbody>
+<tr><td><em>sich etwas vorstellen</em></td><td>уявляти собі</td><td><em>Ich stelle mir das schwierig vor.</em></td></tr>
+<tr><td><em>sich etwas merken</em></td><td>запам’ятовувати</td><td><em>Merk dir die Nummer!</em></td></tr>
+<tr><td><em>sich etwas ansehen</em></td><td>подивитися, оглянути</td><td><em>Wir sehen uns den Film an.</em></td></tr>
+<tr><td><em>sich etwas überlegen</em></td><td>обмірковувати</td><td><em>Ich überlege mir das noch.</em></td></tr>
+<tr><td><em>sich etwas wünschen</em></td><td>бажати собі</td><td><em>Was wünschst du dir?</em></td></tr>
+<tr><td><em>sich etwas leisten</em></td><td>дозволяти собі</td><td><em>Das kann ich mir nicht leisten.</em></td></tr>
+<tr><td><em>sich etwas kaufen</em></td><td>купувати собі</td><td><em>Ich kaufe mir neue Schuhe.</em></td></tr>
+<tr><td><em>sich die Zähne putzen</em></td><td>чистити зуби</td><td><em>Putz dir die Zähne!</em></td></tr>
+</tbody></table>
+<div class="callout callout--tip"><strong>Як перевірити себе за секунду.</strong>
+Спитайте: «а що саме?» Якщо на це питання є відповідь у реченні
+(<em>die Hände</em>, <em>den Mantel</em>, <em>das</em>) — то <em>mir/dir</em>.
+Якщо відповіді немає, бо дія повертається просто на мене — <em>mich/dich</em>.</div>`,
+    },
+    {
+      title: '4. Дієслова з фіксованим прийменником',
       html: `
 <p>Багато дієслів «зрослися» з певним прийменником, і той прийменник керує відмінком.
 Український відповідник часто інший, тому такі пари вчать напам’ять цілком.</p>
@@ -338,7 +388,7 @@ Oksana`,
 (літо ще буде) — <em>Ich freue mich über deinen Brief</em> (лист уже прийшов).</div>`,
     },
     {
-      title: '4. Питання й відповіді: Worauf? — Darauf',
+      title: '5. Питання й відповіді: Worauf? — Darauf',
       html: `
 <p>Коли йдеться про <u>річ</u>, прийменник зростається з <em>wo-</em> у питанні й <em>da-</em> у відповіді.
 Якщо про <u>людину</u> — прийменник лишається окремо з <em>wen/wem</em>.</p>
@@ -355,7 +405,7 @@ Oksana`,
 Порівняйте з <em>womit, damit, wovon, davon</em> — там вставки немає.</p>`,
     },
     {
-      title: '5. Слова з прикладів цієї теми',
+      title: '6. Слова з прикладів цієї теми',
       html: `
 <table>
 <thead><tr><th>Слово</th><th>Переклад</th><th>Як ужито</th></tr></thead>
@@ -378,6 +428,24 @@ Oksana`,
     { type: 'gap', q: 'Setzen Sie ___, bitte.', answers: ['sich'] },
     { type: 'gap', q: 'Ich wasche ___ die Hände. (Dativ)', answers: ['mir'],
       explain: 'Є прямий додаток «die Hände», тому sich стоїть у Dativ: mir.' },
+    { type: 'gap', q: 'Was wünschst du ___ zum Geburtstag?', answers: ['dir'],
+      explain: 'Прямий додаток — «was», тож зворотний займенник у Dativ: dir.' },
+    { type: 'gap', q: 'Merk ___ diese Nummer! (du)', answers: ['dir'] },
+    { type: 'gap', q: 'Das kann ich ___ leider nicht leisten.', answers: ['mir'] },
+    { type: 'gap', q: 'Wir sehen ___ heute Abend einen Film an.', answers: ['uns'],
+      explain: 'У формі wir Akkusativ і Dativ збігаються — обидва uns.' },
+    { type: 'choice', q: 'Darf ich ___ vorstellen? — «Дозвольте представитися».',
+      options: ['mich', 'mir', 'sich', 'mein'], answer: 0,
+      explain: 'Тут я представляю себе — Akkusativ. Порівняйте: «Ich stelle mir das vor» — я це собі уявляю.' },
+    { type: 'choice', q: 'Ich stelle ___ das anders vor. — «Я уявляю це собі інакше».',
+      options: ['mich', 'mir', 'sich', 'meiner'], answer: 1,
+      explain: 'У реченні вже є прямий додаток «das», тому зворотний займенник у Dativ.' },
+    { type: 'choice', q: 'У якій формі Akkusativ і Dativ зворотного займенника різні?',
+      options: ['wir', 'ihr', 'du', 'sie'], answer: 2,
+      explain: 'Різниця є лише в ich (mich/mir) і du (dich/dir); решта форм однакові.' },
+    { type: 'truefalse', q: 'Якщо в реченні вже є прямий додаток, зворотний займенник стоїть у Dativ.',
+      answer: true,
+      explain: 'Саме так: Ich wasche mir die Hände — «die Hände» вже займає місце прямого додатка.' },
     { type: 'choice', q: 'Ich warte ___ den Bus.', options: ['auf', 'für', 'über', 'an'], answer: 0 },
     { type: 'choice', q: 'Sie interessiert sich ___ Musik.', options: ['auf', 'für', 'über', 'an'], answer: 1 },
     { type: 'choice', q: 'Ich freue mich ___ den Urlaub im Juli.', options: ['über', 'auf', 'für', 'an'], answer: 1,

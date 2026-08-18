@@ -8,6 +8,7 @@ const mPrep = {
   titleUk: 'Прийменники: який відмінок вимагає кожен і чому це не можна вгадати',
   can: [
     'знати напам’ять групу прийменників з Akkusativ і групу з Dativ',
+    'правильно вживати bis — самостійно й у парі (bis zum, bis in)',
     'обирати правильну форму артикля після прийменника',
     'уживати злиті форми (im, am, zum, zur, vom, ins)',
     'відрізняти прийменники часу, місця й способу',
@@ -51,11 +52,14 @@ const mPrep = {
     {
       title: '2. Прийменники з Akkusativ — п’ять слів',
       html: `
-<p>Їх лише п’ять, і вони завжди з Akkusativ, без винятків. Німці запам’ятовують їх
-за першими літерами: <strong>durch, für, gegen, ohne, um</strong>.</p>
+<p>Їх шість, і вони завжди з Akkusativ, без винятків. Німці запам’ятовують їх
+одним рядком: <strong>bis, durch, für, gegen, ohne, um</strong>.</p>
 <table>
 <thead><tr><th>Прийменник</th><th>Переклад</th><th>Приклад</th></tr></thead>
 <tbody>
+<tr><td><strong>bis</strong></td><td>до (межі в часі чи просторі)</td>
+<td><em><strong>bis</strong> nächsten Montag</em><span class="uk">до наступного понеділка</span><br>
+<em>Der Bus fährt <strong>bis</strong> Köln.</em><span class="uk">Автобус їде до Кельна.</span></td></tr>
 <tr><td><strong>durch</strong></td><td>крізь, через (простір)</td>
 <td><em>Wir gehen <strong>durch den</strong> Park.</em><span class="uk">Ми йдемо через парк.</span></td></tr>
 <tr><td><strong>für</strong></td><td>для, за</td>
@@ -69,20 +73,34 @@ const mPrep = {
 <td><em><strong>um den</strong> Tisch</em><span class="uk">навколо столу</span><br>
 <em><strong>um</strong> acht Uhr</em><span class="uk">о восьмій</span></td></tr>
 </tbody></table>
+<div class="callout callout--warn"><strong>bis майже завжди без артикля.</strong>
+Саме тому його Akkusativ рідко видно: <em>bis Montag</em>, <em>bis morgen</em>,
+<em>bis Berlin</em>, <em>bis acht Uhr</em> — артикля просто немає.
+А коли артикль потрібен, німецька ставить <u>другий прийменник</u>, і відмінок диктує вже він:
+<em>bis <strong>zum</strong> Bahnhof</em> (Dativ від <em>zu</em>), <em>bis <strong>zur</strong> Brücke</em>,
+<em>bis <strong>in die</strong> Nacht</em> (Akkusativ від <em>in</em>).
+Akkusativ від самого <em>bis</em> видно лише з означенням:
+<em>bis <strong>nächsten</strong> Freitag</em>, <em>bis <strong>kommenden</strong> Sonntag</em>.</div>
+<p><strong>Ще один прийменник із Akkusativ — <em>entlang</em></strong> («уздовж»),
+але він незвичний тим, що стоїть <u>після</u> іменника:
+<em>Ich gehe <strong>den Fluss entlang</strong>.</em><span class="uk">Я йду вздовж річки.</span></p>
 <div class="callout"><strong>Пастка для українця.</strong> Ми кажемо «через парк» і «через дощ»
 одним словом. Німецька розрізняє: <em>durch den Park</em> — це рух <u>крізь</u> простір,
 а причина («через дощ») — це зовсім інше слово: <em>wegen des Regens</em>.
 Ніколи не перекладайте «через» як <em>durch</em>, якщо йдеться про причину.</div>`,
     },
     {
-      title: '3. Прийменники з Dativ — дев’ять слів',
+      title: '3. Прийменники з Dativ — десять слів',
       html: `
-<p>Ця група більша й трапляється частіше. Вивчіть її як список — вона окупається одразу.</p>
+<p>Ця група більша й трапляється частіше. Вивчіть її як список — вона окупається одразу.
+Перші вісім німецькі школярі заучують як лічилку: <em>aus, außer, bei, mit, nach, seit, von, zu</em>.</p>
 <table>
 <thead><tr><th>Прийменник</th><th>Переклад</th><th>Приклад</th></tr></thead>
 <tbody>
 <tr><td><strong>aus</strong></td><td>з (зсередини); походження</td>
 <td><em>Ich komme <strong>aus der</strong> Ukraine.</em><span class="uk">Я з України.</span></td></tr>
+<tr><td><strong>außer</strong></td><td>крім, окрім</td>
+<td><em><strong>Außer mir</strong> war niemand da.</em><span class="uk">Крім мене, нікого не було.</span></td></tr>
 <tr><td><strong>bei</strong></td><td>у, при, біля (у когось)</td>
 <td><em>Ich wohne <strong>bei meiner</strong> Tante.</em><span class="uk">Я живу в тітки.</span></td></tr>
 <tr><td><strong>mit</strong></td><td>з (разом); чим (засіб)</td>
@@ -177,6 +195,10 @@ const mPrep = {
 
   exercises: [
     { type: 'gap', q: 'Ich gehe ___ den Park. (крізь)', answers: ['durch'] },
+    { type: 'gap', q: 'Ich bleibe hier ___ Montag. (до понеділка, без артикля)', answers: ['bis'] },
+    { type: 'gap', q: 'Wir fahren ___ zum Bahnhof. (аж до вокзалу)', answers: ['bis'],
+      explain: 'Перед артиклем bis бере другий прийменник: bis zum Bahnhof.' },
+    { type: 'gap', q: '___ mir war niemand im Büro. (крім)', answers: ['Außer'] },
     { type: 'gap', q: 'Das Geschenk ist ___ meine Mutter. (для)', answers: ['für'] },
     { type: 'gap', q: 'Ich trinke Tee ___ Zucker. (без)', answers: ['ohne'] },
     { type: 'gap', q: 'Ich fahre ___ dem Zug. (яким чином)', answers: ['mit'] },
@@ -208,8 +230,14 @@ const mPrep = {
       pairs: [['in + dem', 'im'], ['in + das', 'ins'], ['an + dem', 'am'],
         ['zu + dem', 'zum'], ['zu + der', 'zur'], ['von + dem', 'vom']] },
     { type: 'multi', q: 'Позначте прийменники, які завжди вимагають Akkusativ.',
-      options: ['durch', 'mit', 'für', 'aus', 'ohne'],
-      answers: [0, 2, 4] },
+      options: ['durch', 'mit', 'für', 'aus', 'ohne', 'bis'],
+      answers: [0, 2, 4, 5] },
+    { type: 'choice', q: 'Як сказати «до вокзалу» (аж до самого вокзалу)?',
+      options: ['bis dem Bahnhof', 'bis zum Bahnhof', 'bis den Bahnhof', 'bis der Bahnhof'],
+      answer: 1,
+      explain: 'Коли після bis потрібен артикль, додається другий прийменник — найчастіше zu: bis zum Bahnhof.' },
+    { type: 'choice', q: 'Який відмінок вимагає <span class="de-inline">außer</span>?',
+      options: ['Akkusativ', 'Dativ', 'Genitiv', 'Nominativ'], answer: 1 },
     { type: 'truefalse', q: 'Відмінок після прийменника залежить від змісту речення.',
       answer: false,
       explain: 'Він закріплений за самим прийменником: für завжди Akkusativ, mit завжди Dativ.' },
