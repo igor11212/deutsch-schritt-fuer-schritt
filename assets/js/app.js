@@ -1,10 +1,10 @@
 /* Роутер + сторінки. Хеш-навігація, щоб працювало на GitHub Pages без сервера. */
 
-import { LEVELS, loadLevel } from '../data/index.js?v=20260817d';
-import { el, renderExercise, renderExerciseSet } from './exercises.js?v=20260817d';
-import { speak, speakDialogue, stop as stopSpeech, ttsSupported, hasGermanVoice } from './tts.js?v=20260817d';
-import { checkWriting } from './writing-check.js?v=20260817d';
-import { glossTerms } from './glossary.js?v=20260817d';
+import { LEVELS, loadLevel } from '../data/index.js?v=20260818a';
+import { el, renderExercise, renderExerciseSet } from './exercises.js?v=20260818a';
+import { speak, speakDialogue, stop as stopSpeech, ttsSupported, hasGermanVoice } from './tts.js?v=20260818a';
+import { checkWriting } from './writing-check.js?v=20260818a';
+import { glossTerms } from './glossary.js?v=20260818a';
 
 const main = document.getElementById('main');
 
@@ -14,7 +14,7 @@ const THEME_KEY = 'dssf-theme';
 function applyTheme(t) {
   document.documentElement.dataset.theme = t;
   document.getElementById('themeIcon').textContent = t === 'dark' ? '☀' : '☾';
-  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', t === 'dark' ? '#191a19' : '#f8f6f1');
+  document.querySelector('meta[name="theme-color"]')?.setAttribute('content', t === 'dark' ? '#16181f' : '#f4f5f8');
 }
 {
   const saved = localStorage.getItem(THEME_KEY);
@@ -621,23 +621,31 @@ function buildFlashcards(groups, known, onChange) {
 
     const it = deck[pos];
     const isKnown = known.has(it.de);
-    flipped = false;
-    card.classList.remove('is-flipped');
     card.classList.toggle('is-known', isKnown);
     counter.textContent = `${pos + 1} / ${deck.length}`;
     mark.textContent = isKnown ? '✓ вивчено' : '';
+    showFront();
+  }
+
+  /** Показує лицьовий бік. */
+  function showFront() {
+    if (!deck.length) return;
+    const it = deck[pos];
+    flipped = false;
+    card.classList.remove('is-flipped');
     hint.textContent = 'Натисніть картку або пробіл, щоб перевернути';
     face.replaceChildren(
       el('span', { class: 'flash__front' + (dirSel.value === 'de' ? ' de' : '') },
         dirSel.value === 'de' ? it.de : it.uk));
   }
 
-  function flip() {
-    if (!deck.length || flipped) return;
+  /** Показує зворот із перекладом. */
+  function showBack() {
+    if (!deck.length) return;
     const it = deck[pos];
     flipped = true;
     card.classList.add('is-flipped');
-    hint.textContent = 'Знаєте це слово?';
+    hint.textContent = 'Знаєте це слово? Натисніть ще раз, щоб сховати переклад';
     // replaceChildren не відсіює null, як це робить el() — тому фільтруємо самі
     face.replaceChildren(...[
       el('span', { class: 'flash__front' + (dirSel.value === 'de' ? ' de' : '') },
@@ -647,6 +655,12 @@ function buildFlashcards(groups, known, onChange) {
       it.ex ? el('span', { class: 'flash__ex' }, it.ex) : null,
     ].filter(Boolean));
     if (dirSel.value === 'uk' && ttsSupported) speak(it.de);
+  }
+
+  /** Клік по картці перегортає її в обидва боки. */
+  function flip() {
+    if (!deck.length) return;
+    flipped ? showFront() : showBack();
   }
 
   /** Позначає слово й переходить далі. Останню картку не перегортаємо. */
@@ -673,7 +687,7 @@ function buildFlashcards(groups, known, onChange) {
     const act = keys[e.key];
     if (!act) return;
     e.preventDefault();
-    if (act === 'flip') flipped ? move(1) : flip();
+    if (act === 'flip') flip();
     if (act === 'know') setKnown(true);
     if (act === 'next') move(1);
     if (act === 'prev') move(-1);
@@ -700,7 +714,7 @@ function buildFlashcards(groups, known, onChange) {
       statKnown, statLeft, el('span', { class: 'grow' }),
       ttsSupported ? speakBtn : null),
     el('p', { class: 'muted', style: 'margin:0;font-size:.82rem' },
-      'Клавіші: пробіл — перевернути, Enter — «знаю», ← та → — гортати між словами.'),
+      'Клавіші: пробіл — перевернути картку туди й назад, Enter — «знаю», ← та → — гортати між словами.'),
   );
 
   build(false);
