@@ -1,16 +1,19 @@
 /* Роутер + сторінки. Хеш-навігація, щоб працювало на GitHub Pages без сервера. */
 
-import { LEVELS, loadLevel } from '../data/index.js?v=20260818g';
-import { el, renderExercise, renderExerciseSet } from './exercises.js?v=20260818g';
-import { speak, speakDialogue, stop as stopSpeech, ttsSupported, hasGermanVoice } from './tts.js?v=20260818g';
-import { checkWriting } from './writing-check.js?v=20260818g';
-import { glossTerms } from './glossary.js?v=20260818g';
+import { LEVELS, loadLevel } from '../data/index.js?v=20260819a';
+import { el, renderExercise, renderExerciseSet } from './exercises.js?v=20260819a';
+import { speak, speakDialogue, stop as stopSpeech, ttsSupported, hasGermanVoice } from './tts.js?v=20260819a';
+import { checkWriting } from './writing-check.js?v=20260819a';
+import { glossTerms } from './glossary.js?v=20260819a';
 import {
   load as srsLoad, save as srsSave, stats as srsStats, isKnown as srsIsKnown,
   isDue as srsIsDue, boxOf as srsBox, promote as srsPromote, demote as srsDemote,
   cleanWord, buildQuiz as buildQuizData, quizableThemes,
-  pickForWriting, containsWord,
-} from './vocab-srs.js?v=20260818g';
+  pickForWriting, containsWord, knownCount,
+} from './vocab-srs.js?v=20260819a';
+import * as prog from './progress.js?v=20260819a';
+import { renderExam } from './exam.js?v=20260819a';
+import { EXAM, PART_META } from '../data/exam.js?v=20260819a';
 
 const main = document.getElementById('main');
 
@@ -36,7 +39,10 @@ document.getElementById('themeBtn').addEventListener('click', () => {
 /* ------------------------------------------------------- навігація ------ */
 
 const topnav = document.getElementById('topnav');
-topnav.append(...LEVELS.map(l => el('a', { href: `#/${l.id}`, 'data-level': l.id }, l.code)));
+topnav.append(
+  ...LEVELS.map(l => el('a', { href: `#/${l.id}`, 'data-level': l.id }, l.code)),
+  el('a', { href: '#/progress', 'data-level': 'progress', class: 'topnav__prog', title: 'Мій прогрес' }, '📊'),
+);
 
 function markNav(levelId) {
   topnav.querySelectorAll('a').forEach(a => {
@@ -71,6 +77,7 @@ function setView(node, title) {
   document.title = title ? `${title} — Deutsch Schritt für Schritt` : 'Deutsch Schritt für Schritt';
   enhanceTables(main);
   main.focus({ preventScroll: true });
+  if (title) prog.setLast(location.hash || '#/', title);
 }
 
 function loading() {
@@ -87,7 +94,7 @@ function viewHome() {
     el('h1', {}, 'Німецька від A1 до C1 — самостійно'),
     el('p', { class: 'lead' },
       'На кожному рівні — модулі граматики (пояснення українською, вправи, тест) ' +
-      'і чотири окремі модулі навичок: лексика, читання, аудіювання та письмо. ' +
+      'і п’ять окремих модулів навичок: лексика, читання, аудіювання, письмо та мовлення. ' +
       'Формати завдань узяті зі структури іспитів Goethe-Zertifikat та ÖSD.'),
     el('div', { class: 'hero__facts' },
       el('span', { class: 'tag' }, '📘 Граматика українською'),
@@ -95,24 +102,55 @@ function viewHome() {
       el('span', { class: 'tag' }, '📖 Читання з текстами'),
       el('span', { class: 'tag' }, '🔊 Аудіювання в браузері'),
       el('span', { class: 'tag' }, '✍ Письмо з модельними відповідями'),
+      el('span', { class: 'tag' }, '🗣 Мовлення із зразками'),
       el('span', { class: 'tag' }, '🎯 Тест після кожного модуля'),
+      el('span', { class: 'tag' }, '📝 Повний пробний іспит'),
     ),
   );
 
-  const cards = LEVELS.map(l => el('a', {
-    class: 'level-card', href: `#/${l.id}`, style: `--c: var(--${l.id})`,
-  },
-    el('span', { class: 'level-card__code' }, l.code),
-    el('h3', {}, l.title),
-    el('p', {}, l.desc),
-    el('div', { class: 'level-card__meta' },
-      el('span', { class: 'tag' }, l.words),
-      el('span', { class: 'tag' }, l.hours),
-      l.status === 'full'
-        ? el('span', { class: 'tag tag--accent' }, 'Повний курс')
-        : el('span', { class: 'tag tag--warn' }, 'Модулі додаються'),
-    ),
-  ));
+  const state = prog.load();
+  const course = prog.courseStats(state, Object.fromEntries(LEVELS.map(l => [l.id, l.modules])));
+
+  const cards = LEVELS.map(l => {
+    const st = prog.levelStats(state, l.id, l.modules);
+    return el('a', {
+      class: 'level-card', href: `#/${l.id}`, style: `--c: var(--${l.id})`,
+    },
+      el('span', { class: 'level-card__code' }, l.code),
+      el('h3', {}, l.title),
+      el('p', {}, l.desc),
+      el('div', { class: 'level-card__meta' },
+        el('span', { class: 'tag' }, l.words),
+        el('span', { class: 'tag' }, l.hours),
+        l.status === 'full'
+          ? el('span', { class: 'tag tag--accent' }, 'Повний курс')
+          : el('span', { class: 'tag tag--warn' }, 'Модулі додаються'),
+      ),
+      st.touched ? el('div', { class: 'level-card__prog' },
+        el('div', { class: 'progress-line' }, el('i', { style: `width:${st.pct}%` })),
+        el('small', {}, `Модулів складено: ${st.passed} з ${st.total}`
+          + (st.exam ? ` · пробний іспит ${st.exam.pct}/100` : '')),
+      ) : null,
+    );
+  });
+
+  const last = prog.getLast(state);
+  const resume = last ? el('section', { class: 'card resume' },
+    el('div', {},
+      el('strong', {}, 'Продовжити навчання'),
+      el('p', { class: 'muted', style: 'margin:.2rem 0 0' },
+        `${last.title} · ${prog.human(last.date)}`)),
+    el('span', { class: 'grow' }),
+    el('a', { class: 'btn', href: last.hash }, 'Далі →'),
+  ) : null;
+
+  const overview = course.passed ? el('section', { class: 'card resume' },
+    el('div', {},
+      el('strong', {}, `Пройдено ${course.passed} ${plural(course.passed, 'модуль', 'модулі', 'модулів')} зі ${course.total}`),
+      el('p', { class: 'muted', style: 'margin:.2rem 0 0' }, 'Прогрес зберігається у вашому браузері.')),
+    el('span', { class: 'grow' }),
+    el('a', { class: 'btn btn--soft', href: '#/progress' }, 'Мій прогрес'),
+  ) : null;
 
   const how = el('section', { class: 'card stack' },
     el('h2', {}, 'Як користуватися'),
@@ -128,7 +166,9 @@ function viewHome() {
     ),
   );
 
-  setView(el('div', {}, hero, el('h2', {}, 'Рівні'), el('div', { class: 'levels' }, cards), el('div', { style: 'height:2rem' }), how));
+  setView(el('div', {}, hero, resume, overview,
+    el('h2', {}, 'Рівні'), el('div', { class: 'levels' }, cards),
+    el('div', { style: 'height:2rem' }), how));
 }
 
 /* ------------------------------------------------------- рівень --------- */
@@ -152,17 +192,30 @@ async function viewLevel(levelId) {
     ),
   );
 
+  const state = prog.load();
+  const stats = prog.levelStats(state, levelId, level.modules.length);
+
   const list = el('div', { class: 'module-list' },
-    level.modules.map((m, i) => el('a', {
-      class: 'module-card', href: `#/${levelId}/${i + 1}`, style: `--c: var(--${levelId})`,
-    },
-      el('span', { class: 'module-card__no' }, String(i + 1)),
-      el('div', {},
-        el('h3', {}, m.title),
-        el('p', {}, m.titleUk),
-      ),
-      el('span', { class: 'module-card__go', 'aria-hidden': 'true' }, '›'),
-    )),
+    level.modules.map((m, i) => {
+      const t = prog.getTest(state, levelId, i + 1);
+      const ex = prog.getExercises(state, levelId, i + 1);
+      const passed = t && t.pct >= prog.PASS;
+      return el('a', {
+        class: 'module-card' + (passed ? ' is-passed' : ''),
+        href: `#/${levelId}/${i + 1}`, style: `--c: var(--${levelId})`,
+      },
+        el('span', { class: 'module-card__no' }, passed ? '✓' : String(i + 1)),
+        el('div', {},
+          el('h3', {}, m.title),
+          el('p', {}, m.titleUk),
+          (t || ex) ? el('div', { class: 'module-card__tags' },
+            t ? el('span', { class: 'tag ' + (passed ? 'tag--accent' : 'tag--warn') }, `тест ${t.pct} %`) : null,
+            ex ? el('span', { class: 'tag' }, `вправи ${ex.done}/${ex.total}`) : null,
+          ) : null,
+        ),
+        el('span', { class: 'module-card__go', 'aria-hidden': 'true' }, '›'),
+      );
+    }),
   );
 
   const skills = buildSkills(level);
@@ -176,7 +229,10 @@ async function viewLevel(levelId) {
           : p.known ? `Вивчено ${p.known} з ${p.total}`
           : `${p.total} ${plural(p.total, 'слово', 'слова', 'слів')} · ${list.length} ${plural(list.length, 'тема', 'теми', 'тем')}`;
       } else {
-        badge = `${list.length} ${plural(list.length, 'завдання', 'завдання', 'завдань')}`;
+        const sp = prog.getSkill(state, levelId, sk.id);
+        badge = sp && sp.total
+          ? `Опрацьовано ${sp.done} з ${sp.total}`
+          : `${list.length} ${plural(list.length, 'завдання', 'завдання', 'завдань')}`;
       }
       return el('a', {
         class: 'level-card', href: `#/${levelId}/${sk.id}`, style: `--c: var(--${levelId})`,
@@ -190,18 +246,49 @@ async function viewLevel(levelId) {
     }),
   );
 
+  const examPlan = EXAM[levelId];
+  const examCard = examPlan ? el('section', { class: 'card exam-cta', style: `--c: var(--${levelId})` },
+    el('div', {},
+      el('span', { class: 'tag tag--accent' }, 'Пробний іспит'),
+      el('h3', { style: 'margin:.5rem 0 .3rem' }, examPlan.title),
+      el('p', { class: 'muted', style: 'margin:0' },
+        `Чотири частини поспіль із таймером, разом ${examPlan.parts.reduce((a, b) => a + b.minutes, 0)} хвилин. `
+        + 'Бали рахуються за схемою Goethe.'),
+      stats.exam ? el('p', { style: 'margin:.6rem 0 0' },
+        el('span', { class: 'tag ' + (stats.exam.pass ? 'tag--accent' : 'tag--warn') },
+          `Ваш результат: ${stats.exam.pct} / 100`),
+        el('span', { class: 'tag' }, `спроб: ${stats.exam.tries}`)) : null),
+    el('span', { class: 'grow' }),
+    el('a', { class: 'btn', href: `#/${levelId}/pruefung` }, stats.exam ? 'Пройти ще раз' : 'Почати іспит'),
+  ) : null;
+
+  const progressCard = stats.touched ? el('section', { class: 'card' },
+    el('div', { class: 'flash__bar' },
+      el('strong', {}, `Ваш прогрес на ${meta.code}`),
+      el('span', { class: 'grow' }),
+      el('a', { class: 'btn btn--ghost btn--sm', href: '#/progress' }, 'Подробиці')),
+    el('div', { class: 'progress-line' }, el('i', { style: `width:${stats.pct}%` })),
+    el('div', { class: 'vocab-progress__pills' },
+      el('span', { class: 'pill pill--ok' }, `Модулів складено: ${stats.passed} з ${stats.total}`),
+      el('span', { class: 'pill' }, `Тестів пройдено: ${stats.started}`),
+      stats.avg ? el('span', { class: 'pill' }, `Середній бал: ${stats.avg} %`) : null),
+  ) : null;
+
   const view = el('div', {},
     crumbs({ label: 'Головна', href: '#/' }, { label: meta.code }),
     head,
+    progressCard,
     el('h2', {}, 'Навички'),
     el('p', { class: 'muted', style: 'margin-top:-.5rem' },
-      'Лексика, читання, аудіювання й письмо зібрані окремо — так, як їх перевіряють на іспиті.'),
+      'Лексика, читання, аудіювання, письмо й мовлення зібрані окремо — так, як їх перевіряють на іспиті.'),
     skillCards,
     el('div', { style: 'height:2rem' }),
     el('h2', {}, 'Граматика за модулями'),
     el('p', { class: 'muted', style: 'margin-top:-.5rem' },
       'Кожен модуль розкриває одну тему: пояснення, лексика, вправи й тест.'),
     list,
+    el('div', { style: 'height:2rem' }),
+    examCard,
   );
 
   if (level.planned?.length) {
@@ -240,6 +327,8 @@ const SKILLS = [
     desc: 'Усі діалоги й монологи рівня зібрані разом, із транскриптом і завданнями.' },
   { id: 'schreiben', de: 'Schreiben', label: 'Письмо',     icon: '✍',
     desc: 'Завдання на письмо з перевіркою тексту, корисними фразами й прикладом.' },
+  { id: 'sprechen', de: 'Sprechen', label: 'Мовлення',  icon: '🗣',
+    desc: 'Усні завдання у форматі іспиту: картка, таймер підготовки, зразок відповіді та власний запис.' },
 ];
 
 /** Збирає матеріали навичок з усіх модулів рівня. */
@@ -250,7 +339,7 @@ function buildSkills(level) {
     (m.listening || []).forEach(t => hoeren.push({ ...t, from, mod: m }));
     (m.writing   || []).forEach(t => schreiben.push({ ...t, from, mod: m }));
   });
-  return { wortschatz: level.vocab || [], lesen: level.reading || [], hoeren, schreiben };
+  return { wortschatz: level.vocab || [], lesen: level.reading || [], hoeren, schreiben, sprechen: level.speaking || [] };
 }
 
 async function viewModule(levelId, index, tabId) {
@@ -373,11 +462,13 @@ async function viewSkill(levelId, skillId) {
   } else if (skillId === 'wortschatz') {
     body.append(renderVocabulary(items, levelId));
   } else if (skillId === 'lesen') {
-    body.append(renderReading(items));
+    body.append(renderReading(items, levelId));
+  } else if (skillId === 'sprechen') {
+    body.append(renderSpeaking(items, meta));
   } else if (skillId === 'hoeren') {
-    body.append(RENDERERS.listening({ listening: items }, meta));
+    body.append(RENDERERS.listening({ listening: items }, meta, null, { track: true }));
   } else {
-    body.append(RENDERERS.writing({ writing: items, vocab: level.vocab || [], id: 'skill' }, meta));
+    body.append(RENDERERS.writing({ writing: items, vocab: level.vocab || [], id: 'skill' }, meta, null, { track: true }));
   }
 
   const nav = el('div', { class: 'ex__actions', style: 'margin-top:2.4rem;justify-content:space-between' },
@@ -1001,8 +1092,188 @@ function buildFlashcards(groups, map, onChange) {
   return wrap;
 }
 
+/** Рахує опрацьовані завдання набору й віддає їх назовні.
+    Слухаємо click/change на контейнері: самі кнопки «Перевірити» лежать
+    усередині карток, тож окремо підписуватися на кожну не треба. */
+function trackAnswered(root, items, save) {
+  if (!items.length) return;
+  let last = -1;
+  const refresh = () => {
+    const done = items.filter(i => i.isAnswered()).length;
+    if (done === last) return;
+    last = done;
+    save(done, items.length);
+  };
+  root.addEventListener('click', () => setTimeout(refresh, 0));
+  root.addEventListener('change', () => setTimeout(refresh, 0));
+}
+
+/** Мовлення: картка завдання, таймери підготовки й відповіді,
+    власний запис у браузері та зразок із озвученням. */
+function renderSpeaking(items, meta) {
+  const box = el('div', { class: 'stack' },
+    el('div', { class: 'section-note' },
+      'Це найважча навичка для самостійного вивчення, тому працюйте вголос. '
+      + 'Прочитайте картку, увімкніть таймер підготовки, а потім говоріть — без пауз на роздуми. '
+      + 'Запис ведеться лише у вашому браузері: він нікуди не надсилається і зникає, щойно ви закриєте сторінку.'));
+
+  items.forEach((task, ti) => {
+    const card = el('section', { class: 'writing-card' },
+      el('span', { class: 'tag tag--accent' }, task.exam),
+      el('h3', { style: 'margin-top:.6rem' }, `${task.title} — ${task.titleUk}`),
+      el('p', { class: 'muted' }, task.instruction),
+    );
+
+    if (task.card) {
+      card.append(el('div', { class: 'prompt sprech-card' },
+        el('strong', {}, task.card.heading),
+        el('ul', {}, task.card.items.map(i => el('li', {}, i))),
+        task.card.note ? el('p', { class: 'muted', style: 'margin-bottom:0' }, task.card.note) : null));
+    }
+
+    /* ── таймери ─────────────────────────────────────────────────── */
+    const clock = el('span', { class: 'sprech-clock' }, '—');
+    const phase = el('strong', {}, 'Готові?');
+    let timer = null;
+
+    const run = (seconds, label, done) => {
+      clearInterval(timer);
+      let left = seconds;
+      phase.textContent = label;
+      const tick = () => {
+        const m = Math.floor(left / 60), sec = left % 60;
+        clock.textContent = `${m}:${String(sec).padStart(2, '0')}`;
+        clock.classList.toggle('is-low', left <= 10);
+        if (left <= 0) { clearInterval(timer); done?.(); return; }
+        left--;
+      };
+      tick();
+      timer = setInterval(tick, 1000);
+    };
+
+    const prepBtn = task.prep
+      ? el('button', { class: 'btn btn--ghost btn--sm', type: 'button' }, `⏳ Підготовка ${Math.round(task.prep / 60) || 1} хв`)
+      : null;
+    const speakStart = el('button', { class: 'btn btn--sm', type: 'button' }, '▶ Почати відповідь');
+    const stopBtn = el('button', { class: 'btn btn--ghost btn--sm', type: 'button' }, '⏹ Стоп');
+
+    prepBtn?.addEventListener('click', () => run(task.prep, 'Підготовка', () => {
+      phase.textContent = 'Час підготовки вичерпано — говоріть';
+    }));
+    speakStart.addEventListener('click', () => run(task.speak, 'Ваша відповідь', () => {
+      phase.textContent = 'Час вийшов';
+    }));
+    stopBtn.addEventListener('click', () => { clearInterval(timer); phase.textContent = 'Зупинено'; });
+
+    card.append(el('div', { class: 'sprech-bar' },
+      phase, el('span', { class: 'grow' }), clock,
+      prepBtn, speakStart, stopBtn));
+
+    /* ── власний запис ───────────────────────────────────────────── */
+    const canRecord = !!(navigator.mediaDevices?.getUserMedia && window.MediaRecorder);
+    const player = el('div', { class: 'sprech-rec' });
+    if (canRecord) {
+      const recBtn = el('button', { class: 'btn btn--soft btn--sm', type: 'button' }, '🎙 Записати себе');
+      let rec = null, chunks = [], url = null;
+
+      recBtn.addEventListener('click', async () => {
+        if (rec && rec.state === 'recording') { rec.stop(); return; }
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          chunks = [];
+          rec = new MediaRecorder(stream);
+          rec.addEventListener('dataavailable', e => { if (e.data.size) chunks.push(e.data); });
+          rec.addEventListener('stop', () => {
+            stream.getTracks().forEach(t => t.stop());
+            if (url) URL.revokeObjectURL(url);
+            url = URL.createObjectURL(new Blob(chunks, { type: rec.mimeType || 'audio/webm' }));
+            player.replaceChildren(
+              el('audio', { controls: 'controls', src: url }),
+              el('span', { class: 'muted', style: 'font-size:.8rem' },
+                'Запис лише у вашому браузері. Послухайте себе: чи не було довгих пауз і чи звучите ви впевнено?'));
+            recBtn.textContent = '🎙 Записати ще раз';
+            recBtn.classList.remove('is-rec');
+          });
+          rec.start();
+          recBtn.textContent = '⏹ Зупинити запис';
+          recBtn.classList.add('is-rec');
+        } catch {
+          player.replaceChildren(el('span', { class: 'muted' },
+            'Браузер не дав доступу до мікрофона. Це не заважає виконати завдання — просто говоріть уголос.'));
+        }
+      });
+      card.append(el('div', { class: 'ex__actions' }, recBtn), player);
+    } else {
+      card.append(el('p', { class: 'muted', style: 'font-size:.85rem' },
+        'Ваш браузер не вміє записувати звук — просто говоріть уголос і оцініть себе за критеріями нижче.'));
+    }
+
+    /* ── фрази ───────────────────────────────────────────────────── */
+    if (task.phrases?.length) {
+      card.append(el('details', { class: 'transcript', style: 'margin-top:1rem' },
+        el('summary', {}, 'Корисні фрази (Redemittel)'),
+        el('div', { class: 'transcript__body' },
+          task.phrases.map(ph => el('p', { class: 'line' },
+            el('span', {}, ph.de), el('span', { class: 'tr' }, ph.uk))))));
+    }
+
+    /* ── зразок ──────────────────────────────────────────────────── */
+    const modelBody = el('div', { class: 'transcript__body' },
+      el('p', { class: 'muted', style: 'margin-top:0' },
+        'Спершу скажіть своє — і лише потім відкривайте зразок. Інакше ви запам’ятаєте чужі слова замість власних.'));
+
+    if (task.modelLines) {
+      modelBody.append(el('div', { class: 'model-answer' },
+        task.modelLines.map(l => el('p', { class: 'line' },
+          el('b', {}, l.speaker + ': '), el('span', {}, l.de),
+          l.uk ? el('span', { class: 'tr' }, l.uk) : null))));
+    } else {
+      modelBody.append(el('div', { class: 'model-answer' }, task.model));
+    }
+
+    if (ttsSupported) {
+      const playBtn = el('button', { class: 'btn btn--ghost btn--sm', type: 'button' }, '🔊 Прослухати зразок');
+      playBtn.addEventListener('click', () => {
+        const rate = { a1: 0.95, a2: 1.0, b1: 1.05, b2: 1.1, c1: 1.16 }[meta.id] ?? 1;
+        if (task.modelLines) speakDialogue(task.modelLines, { rate, pauseScale: 1.2 });
+        else speakDialogue([{ de: task.model }], { rate, pauseScale: 1.2 });
+      });
+      modelBody.append(el('div', { class: 'ex__actions' }, playBtn));
+    }
+    if (task.modelUk) modelBody.append(el('p', { class: 'muted' }, task.modelUk));
+
+    card.append(el('details', { class: 'transcript transcript--model', style: 'margin-top:1rem' },
+      el('summary', {}, '📄 Зразок відповіді'), modelBody));
+
+    /* ── самоперевірка з підрахунком ─────────────────────────────── */
+    if (task.checklist?.length) {
+      const badge = el('span', { class: 'tag' }, `0 / ${task.checklist.length}`);
+      const list = el('ul', { class: 'checklist' }, task.checklist.map(c => {
+        const id = 'sp' + Math.random().toString(36).slice(2);
+        return el('li', {}, el('input', { type: 'checkbox', id }), el('label', { for: id }, c));
+      }));
+      list.addEventListener('change', () => {
+        const boxes = [...list.querySelectorAll('input')];
+        const ok = boxes.filter(b => b.checked).length;
+        badge.textContent = `${ok} / ${boxes.length}`;
+        badge.className = 'tag' + (ok === boxes.length ? ' tag--accent' : '');
+        prog.saveSkill(meta.id, 'sprechen', { done: ok === boxes.length ? ti + 1 : 0, total: items.length });
+      });
+      card.append(el('div', { style: 'margin-top:1rem' },
+        el('div', { class: 'flash__bar' }, el('strong', {}, 'Критерії оцінювання:'),
+          el('span', { class: 'grow' }), badge),
+        list));
+    }
+
+    box.append(card);
+  });
+
+  return box;
+}
+
 /** Тексти для читання: сам текст, словничок і завдання. */
-function renderReading(items) {
+function renderReading(items, levelId) {
+  const all = [];
   const box = el('div', { class: 'stack' },
     el('div', { class: 'section-note' },
       'Спершу прочитайте текст цілком, не зупиняючись на кожному слові, — і лише потім ' +
@@ -1028,9 +1299,13 @@ function renderReading(items) {
       ));
     }
 
-    card.append(renderExerciseSet(t.tasks, { instant: true }).el);
+    const set = renderExerciseSet(t.tasks, { instant: true });
+    all.push(...set.items);
+    card.append(set.el);
     box.append(card);
   });
+
+  if (levelId) trackAnswered(box, all, (done, total) => prog.saveSkill(levelId, 'lesen', { done, total }));
   return box;
 }
 
@@ -1048,17 +1323,28 @@ const RENDERERS = {
     );
   },
 
-  exercises(mod) {
+  exercises(mod, meta, index) {
     const box = el('div', { class: 'stack' },
       el('div', { class: 'section-note' },
         'Виконуйте по порядку. Перевірка миттєва — після кожної спроби ви бачите правильну відповідь і пояснення.'),
     );
-    box.append(renderExerciseSet(mod.exercises, { instant: true }).el);
+    const set = renderExerciseSet(mod.exercises, { instant: true });
+    box.append(set.el);
+    if (meta && index) {
+      const before = prog.getExercises(prog.load(), meta.id, index);
+      if (before?.done) {
+        box.querySelector('.section-note').append(el('div', { style: 'margin-top:.5rem' },
+          el('span', { class: 'tag tag--accent' },
+            `Минулого разу опрацьовано ${before.done} з ${before.total}`)));
+      }
+      trackAnswered(box, set.items, (done, total) => prog.saveExercises(meta.id, index, { done, total }));
+    }
     return box;
   },
 
-  listening(mod, meta) {
+  listening(mod, meta, _i, opts = {}) {
     const box = el('div', { class: 'stack' });
+    const all = [];
     // Темп скрізь близький до людського — розтягнуті звуки якраз і звучать
     // машинно. Різницю між рівнями дають ПАУЗИ: на A1 вони майже вдвічі
     // довші, тож новачок встигає зрозуміти, а мовлення лишається живим.
@@ -1120,7 +1406,9 @@ const RENDERERS = {
         speedBox,
       ));
 
-      card.append(renderExerciseSet(task.tasks, { instant: true }).el);
+      const tset = renderExerciseSet(task.tasks, { instant: true });
+      all.push(...tset.items);
+      card.append(tset.el);
 
       card.append(el('details', { class: 'transcript' },
         el('summary', {}, 'Транскрипт і переклад — відкривайте після відповідей'),
@@ -1136,14 +1424,16 @@ const RENDERERS = {
       box.append(card);
     });
 
+    if (opts.track) trackAnswered(box, all, (done, total) => prog.saveSkill(meta.id, 'hoeren', { done, total }));
     return box;
   },
 
-  writing(mod, meta) {
+  writing(mod, meta, _i, opts = {}) {
     const box = el('div', { class: 'stack' },
       el('div', { class: 'section-note' },
         'Напишіть свій текст і натисніть «Перевірити текст» — сайт знайде типові помилки й підкаже, ' +
         'що покращити. Приклад готового тексту є під кожним завданням. Нічого нікуди не надсилається.'));
+    const written = new Set();
 
     mod.writing.forEach(task => {
       const card = el('section', { class: 'writing-card' },
@@ -1181,6 +1471,10 @@ const RENDERERS = {
       const clearBtn = el('button', { class: 'btn btn--ghost', type: 'button' }, 'Очистити');
 
       checkBtn.addEventListener('click', () => {
+        if (opts.track) {
+          written.add(task.title);
+          prog.saveSkill(meta.id, 'schreiben', { done: written.size, total: mod.writing.length });
+        }
         const res = checkWriting(ta.value, task, {
           levelId: meta.id,
           moduleId: task.mod?.id || mod.id,
@@ -1242,6 +1536,15 @@ const RENDERERS = {
       el('div', { class: 'progress-line' }, el('i', { style: 'width:0%' })),
     ));
 
+    const best = prog.getTest(prog.load(), meta.id, index);
+    if (best) {
+      box.querySelector('.test-intro').append(el('div', { class: 'test-best' },
+        el('span', { class: 'tag ' + (best.pct >= prog.PASS ? 'tag--accent' : 'tag--warn') },
+          `Найкращий результат: ${best.pct} %`),
+        el('span', { class: 'tag' }, `Спроб: ${best.tries}`),
+        el('span', { class: 'tag' }, `Востаннє: ${prog.human(best.date)}`)));
+    }
+
     const set = renderExerciseSet(mod.test, { instant: false });
     box.append(set.el);
 
@@ -1267,7 +1570,8 @@ const RENDERERS = {
     checkBtn.addEventListener('click', () => {
       const right = set.items.reduce((n, i) => n + (i.check() ? 1 : 0), 0);
       const pct = Math.round(right / total * 100);
-      const pass = pct >= 60;
+      const pass = pct >= prog.PASS;
+      const saved = prog.saveTest(meta.id, index, { right, total });
       const ringColor = pass ? 'var(--ok)' : 'var(--warn)';
 
       const result = el('div', { class: 'score-card' },
@@ -1277,6 +1581,12 @@ const RENDERERS = {
         el('p', {}, pass
           ? 'Ви впевнено засвоїли матеріал модуля — можна переходити далі.'
           : 'Поверніться до розділів «Граматика» і «Лексика», повторіть матеріал і пройдіть тест ще раз. Нижче біля кожного завдання показано правильну відповідь.'),
+        el('p', { class: 'muted', style: 'font-size:.85rem' },
+          saved.tries > 1
+            ? `Результат збережено. Це спроба № ${saved.tries}, ваш найкращий результат — ${saved.pct} %.`
+            : 'Результат збережено — його видно на сторінці «Мій прогрес».'),
+        el('div', { class: 'ex__actions' },
+          el('a', { class: 'btn btn--ghost btn--sm', href: '#/progress' }, 'Мій прогрес')),
       );
       box.prepend(result);
       result.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -1286,6 +1596,166 @@ const RENDERERS = {
     return box;
   },
 };
+
+/* ------------------------------------------------- пробний іспит -------- */
+
+async function viewExam(levelId) {
+  const meta = LEVELS.find(l => l.id === levelId);
+  if (!meta || !EXAM[levelId]) return viewNotFound();
+  markNav(levelId);
+  loading();
+
+  const level = await loadLevel(levelId);
+  setView(el('div', {},
+    crumbs({ label: 'Головна', href: '#/' }, { label: meta.code, href: `#/${levelId}` }, { label: 'Пробний іспит' }),
+    el('header', { class: 'level-head', style: `--c: var(--${levelId})` },
+      el('span', { class: 'tag' }, `${meta.code} · Modelltest`),
+      el('h1', {}, '📝 Пробний іспит'),
+      el('p', { class: 'lead' },
+        'Повний прогін іспиту: усі частини поспіль, із таймером і підрахунком балів. '
+        + 'Проходьте його раз на кілька тижнів — так видно справжній рівень, а не окремі теми.')),
+    renderExam(level, meta, level.speaking || []),
+  ), `Пробний іспит · ${meta.code}`);
+}
+
+/* ------------------------------------------------------ мій прогрес ----- */
+
+function viewProgress() {
+  markNav('progress');
+  const state = prog.load();
+  const counts = Object.fromEntries(LEVELS.map(l => [l.id, l.modules]));
+  const course = prog.courseStats(state, counts);
+
+  const head = el('header', { class: 'level-head' },
+    el('span', { class: 'tag' }, 'Особисте'),
+    el('h1', {}, '📊 Мій прогрес'),
+    el('p', { class: 'lead' },
+      'Усі результати зберігаються лише у вашому браузері: ані реєстрації, ані сервера. '
+      + 'Якщо очистити дані сайту або відкрити його в іншому браузері, прогрес не перенесеться — '
+      + 'тому нижче є кнопка збереження у файл.'),
+  );
+
+  const top = el('section', { class: 'card stack' },
+    el('div', { class: 'flash__bar' },
+      el('strong', {}, `Пройдено ${course.passed} ${plural(course.passed, 'модуль', 'модулі', 'модулів')} зі ${course.total}`),
+      el('span', { class: 'grow' }),
+      el('span', { class: 'tag tag--accent' }, course.pct + ' %')),
+    el('div', { class: 'progress-line' }, el('i', { style: `width:${course.pct}%` })),
+    el('p', { class: 'muted', style: 'margin:0;font-size:.85rem' },
+      'Модуль вважається складеним, коли його тест написано щонайменше на 60 % — так само, як на іспиті.'),
+  );
+
+  const body = el('div', { class: 'stack' });
+
+  LEVELS.forEach(l => {
+    const st = prog.levelStats(state, l.id, l.modules);
+    const card = el('section', { class: 'card stack', style: `--c: var(--${l.id})` });
+
+    card.append(el('div', { class: 'flash__bar' },
+      el('h3', { style: 'margin:0' }, `${l.code} — ${l.title}`),
+      el('span', { class: 'grow' }),
+      el('a', { class: 'btn btn--ghost btn--sm', href: `#/${l.id}` }, 'До рівня')));
+
+    if (!st.touched) {
+      card.append(el('p', { class: 'muted', style: 'margin:0' }, 'Цей рівень ще не починали.'));
+      body.append(card);
+      return;
+    }
+
+    card.append(el('div', { class: 'progress-line' }, el('i', { style: `width:${st.pct}%` })));
+    card.append(el('div', { class: 'vocab-progress__pills' },
+      el('span', { class: 'pill pill--ok' }, `Складено: ${st.passed} з ${st.total}`),
+      el('span', { class: 'pill' }, `Тестів пройдено: ${st.started}`),
+      st.avg ? el('span', { class: 'pill' }, `Середній бал: ${st.avg} %`) : null,
+      st.exam ? el('span', { class: 'pill ' + (st.exam.pass ? 'pill--ok' : '') },
+        `Пробний іспит: ${st.exam.pct} / 100`) : null));
+
+    // Тести за модулями
+    const rows = [];
+    for (let i = 1; i <= l.modules; i++) {
+      const t = prog.getTest(state, l.id, i);
+      if (!t) continue;
+      rows.push(el('tr', {},
+        el('td', {}, el('a', { href: `#/${l.id}/${i}/test` }, `Модуль ${i}`)),
+        el('td', {}, `${t.right} з ${t.total}`),
+        el('td', {}, el('span', { class: 'tag ' + (t.pct >= prog.PASS ? 'tag--accent' : 'tag--warn') }, t.pct + ' %')),
+        el('td', { class: 'muted' }, `${t.tries} · ${prog.human(t.date)}`)));
+    }
+    if (rows.length) {
+      card.append(el('div', { class: 'tbl-scroll' }, el('table', { class: 'tbl' },
+        el('thead', {}, el('tr', {},
+          el('th', {}, 'Модуль'), el('th', {}, 'Відповіді'), el('th', {}, 'Бал'), el('th', {}, 'Спроб · дата'))),
+        el('tbody', {}, rows))));
+    }
+
+    // Навички
+    const skillRows = SKILLS.filter(sk => sk.id !== 'wortschatz').map(sk => {
+      const d = prog.getSkill(state, l.id, sk.id);
+      if (!d || !d.total) return null;
+      return el('span', { class: 'pill' }, `${sk.icon} ${sk.label}: ${d.done} з ${d.total}`);
+    }).filter(Boolean);
+    const learned = knownCount(srsLoad(l.id));
+    if (learned) skillRows.unshift(el('span', { class: 'pill pill--ok' }, `🗂 Слів вивчено: ${learned}`));
+    if (skillRows.length) card.append(el('div', { class: 'vocab-progress__pills' }, skillRows));
+
+    const reset = el('button', { class: 'btn btn--ghost btn--sm', type: 'button' }, 'Скинути прогрес рівня');
+    reset.addEventListener('click', () => {
+      if (!confirm(`Стерти всі результати рівня ${l.code}? Слова у флеш-картках це не зачепить.`)) return;
+      prog.resetLevel(l.id);
+      route();
+    });
+    card.append(el('div', { class: 'ex__actions' }, reset));
+    body.append(card);
+  });
+
+  /* ── збереження й перенесення ─────────────────────────────────────── */
+  const io = el('section', { class: 'card stack' },
+    el('h3', { style: 'margin:0' }, 'Перенести прогрес на інший пристрій'),
+    el('p', { class: 'muted', style: 'margin:0' },
+      'Файл містить лише ваші результати й вивчені слова. Він зберігається на ваш пристрій, '
+      + 'а не надсилається кудись.'));
+
+  const saveBtn = el('button', { class: 'btn btn--soft btn--sm', type: 'button' }, '⬇ Зберегти у файл');
+  saveBtn.addEventListener('click', () => {
+    const vocab = Object.fromEntries(LEVELS.map(l => [l.id, srsLoad(l.id)]));
+    const blob = new Blob([prog.exportAll({ vocab })], { type: 'application/json' });
+    const a = el('a', { href: URL.createObjectURL(blob), download: `deutsch-progress-${prog.today()}.json` });
+    document.body.append(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  });
+
+  const file = el('input', { type: 'file', accept: 'application/json,.json', style: 'display:none' });
+  const loadBtn = el('button', { class: 'btn btn--ghost btn--sm', type: 'button' }, '⬆ Завантажити з файлу');
+  const ioNote = el('span', { class: 'muted', style: 'font-size:.85rem' });
+  loadBtn.addEventListener('click', () => file.click());
+  file.addEventListener('change', async () => {
+    const f = file.files?.[0];
+    if (!f) return;
+    try {
+      const data = prog.importAll(await f.text());
+      if (data.vocab) Object.entries(data.vocab).forEach(([lvl, map]) => srsSave(lvl, map));
+      ioNote.textContent = 'Прогрес відновлено.';
+      setTimeout(route, 600);
+    } catch (err) {
+      ioNote.textContent = 'Не вдалося прочитати файл: ' + (err?.message || err);
+    }
+  });
+  io.append(el('div', { class: 'ex__actions' }, saveBtn, loadBtn, file, ioNote));
+
+  const wipe = el('button', { class: 'btn btn--ghost btn--sm', type: 'button' }, 'Стерти весь прогрес');
+  wipe.addEventListener('click', () => {
+    if (!confirm('Стерти геть усе: результати тестів, іспитів і вивчені слова? Це не можна скасувати.')) return;
+    prog.resetAll();
+    LEVELS.forEach(l => srsSave(l.id, {}));
+    route();
+  });
+
+  setView(el('div', {},
+    crumbs({ label: 'Головна', href: '#/' }, { label: 'Мій прогрес' }),
+    head, top, body, io,
+    el('div', { class: 'ex__actions', style: 'margin-top:1.5rem' }, wipe),
+  ), 'Мій прогрес');
+}
 
 /* ------------------------------------------------------- інше ----------- */
 
@@ -1313,7 +1783,9 @@ async function route() {
   try {
     if (!path.length) return viewHome();
     const [levelId, modNo, tab] = path;
+    if (levelId === 'progress') return viewProgress();
     if (!modNo) return await viewLevel(levelId);
+    if (modNo === 'pruefung') return await viewExam(levelId);
     if (SKILLS.some(sk => sk.id === modNo)) return await viewSkill(levelId, modNo);
     const index = parseInt(modNo, 10);
     if (!Number.isInteger(index)) return viewNotFound();

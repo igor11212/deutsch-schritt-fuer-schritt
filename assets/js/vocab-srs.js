@@ -79,6 +79,12 @@ export function stats(groups, map) {
   return { total: all.length, known, learning, due, fresh: all.length - known - learning };
 }
 
+/** Скільки слів рівня вже вважаються вивченими — без потреби вантажити
+    сам словник (потрібно сторінці прогресу). */
+export function knownCount(map) {
+  return Object.values(map || {}).filter(v => (v?.b || 0) >= KNOWN_BOX).length;
+}
+
 /* ─────────────────────────── генератор вправ ─────────────────────────── */
 
 /** Прибирає службові хвости: «der Name, -n (des Namens)» → «der Name». */
