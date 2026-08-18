@@ -1,5 +1,7 @@
-import { modules as part2 } from './a2-part2.js?v=20260817d';
-import { modules as part3 } from './a2-part3.js?v=20260817d';
+// part4 — базові теми (прийменники, префікси); стоять одразу після Adjektivdeklination
+import { modules as part4 } from './a2-part4.js?v=20260818a';
+import { modules as part2 } from './a2-part2.js?v=20260818a';
+import { modules as part3 } from './a2-part3.js?v=20260818a';
 
 export default {
   intro:
@@ -299,90 +301,225 @@ Oksana`,
 
     grammar: [
       {
-        title: '1. Логіка системи: сигнал роду має бути один',
+        title: '1. Спершу головне: коли закінчення взагалі потрібне',
         html: `
-<p>Німецькій мові потрібен <strong>один</strong> чіткий сигнал роду й відмінка в групі іменника.
-Якщо цей сигнал уже дає артикль, прикметник «розслабляється» й бере слабке закінчення
-(<em>-e</em> або <em>-en</em>). Якщо артикля немає або він неінформативний (<em>ein</em>),
-сигнал мусить нести сам прикметник.</p>
-<p>Тому все відмінювання зводиться до трьох таблиць.</p>`,
+<p>Половина помилок з’являється ще до відмінювання — бо прикметник ставлять у неправильну позицію.
+Німецький прикметник має закінчення <strong>лише тоді, коли стоїть перед іменником</strong>.
+Після дієслова він голий, як в українській «стіл — новий».</p>
+<table>
+<thead><tr><th>Позиція</th><th>Приклад</th><th>Закінчення</th></tr></thead>
+<tbody>
+<tr><td>після дієслова <em>sein, werden, bleiben</em></td>
+<td><em>Der Tisch ist <strong>neu</strong>.</em><span class="uk">Стіл новий.</span></td>
+<td><strong>немає ніколи</strong></td></tr>
+<tr><td>після дієслова, множина</td>
+<td><em>Die Möbel sind <strong>neu</strong>.</em><span class="uk">Меблі нові.</span></td>
+<td><strong>немає ніколи</strong></td></tr>
+<tr><td>перед іменником</td>
+<td><em>der <strong>neue</strong> Tisch</em><span class="uk">новий стіл</span></td>
+<td><strong>обов’язкове</strong></td></tr>
+<tr><td>перед іменником, множина</td>
+<td><em>die <strong>neuen</strong> Möbel</em><span class="uk">нові меблі</span></td>
+<td><strong>обов’язкове</strong></td></tr>
+</tbody></table>
+<div class="callout"><strong>Найчастіша помилка початківця.</strong> «<s>Der Tisch ist neuer</s>» —
+тут <em>-er</em> зайве, бо прикметник стоїть після дієслова. А «<s>der neu Tisch</s>» —
+навпаки, закінчення забули там, де воно обов’язкове. Спершу подивіться, <u>де стоїть слово</u>,
+і лише потім думайте, яке закінчення.</div>`,
       },
       {
-        title: '2. Після означеного артикля (der, die, das, dieser, jeder, alle)',
+        title: '2. Уся система — це одне питання: чи видно рід по артиклю',
         html: `
-<p>Тут усе просто: у п’яти клітинках <em>-e</em>, в усіх решта <em>-en</em>.</p>
+<p>Німецькій потрібен <strong>рівно один</strong> чіткий сигнал роду й відмінка в групі
+«артикль + прикметник + іменник». Ось як цей сигнал виглядає:</p>
+<table>
+<thead><tr><th>Рід</th><th>Означений артикль</th><th>Сигнальна літера</th></tr></thead>
+<tbody>
+<tr><td>чоловічий</td><td>de<strong>r</strong> Tisch</td><td><strong>-r</strong></td></tr>
+<tr><td>жіночий</td><td>di<strong>e</strong> Lampe</td><td><strong>-e</strong></td></tr>
+<tr><td>середній</td><td>da<strong>s</strong> Bett</td><td><strong>-s</strong></td></tr>
+</tbody></table>
+<p>А тепер подивіться на неозначений артикль — і на те, що робить прикметник:</p>
+<table>
+<thead><tr><th>Рід</th><th>Неозначений артикль</th><th>Сигнал?</th><th>Хто його підхоплює</th></tr></thead>
+<tbody>
+<tr><td>чоловічий</td><td><strong>ein</strong> Tisch</td><td>сигналу немає</td>
+<td>прикметник: <em>ein neu<strong>er</strong> Tisch</em></td></tr>
+<tr><td>жіночий</td><td><strong>eine</strong> Lampe</td><td>є <em>-e</em></td>
+<td>прикметник розслабляється: <em>eine neu<strong>e</strong> Lampe</em></td></tr>
+<tr><td>середній</td><td><strong>ein</strong> Bett</td><td>сигналу немає</td>
+<td>прикметник: <em>ein neu<strong>es</strong> Bett</em></td></tr>
+</tbody></table>
+<div class="callout callout--tip"><strong>Ось і вся логіка, одним реченням.</strong>
+Прикметник забирає собі ту саму літеру, якої бракує артиклю: <em>-r</em> для чоловічого,
+<em>-s</em> для середнього. Порівняйте самі: <em>de<u>r</u> Tisch</em> → <em>ein neu<u>er</u> Tisch</em>;
+<em>da<u>s</u> Bett</em> → <em>ein neu<u>es</u> Bett</em>. Це не збіг — це та сама літера,
+яка просто переїхала на сусіднє слово.</div>
+<p>Коли ж сигнал уже поданий артиклем, прикметникові нема чого показувати —
+і він бере найпростіше можливе закінчення: <strong>-e</strong> або <strong>-en</strong>.</p>`,
+      },
+      {
+        title: '3. Таблиця 1: після der / die / das',
+        html: `
+<p>Найлегша з трьох. Запам’ятайте форму блоку, а не окремі клітинки:
+<strong>-e</strong> стоїть лише вгорі ліворуч, усе інше — <strong>-en</strong>.</p>
 <table>
 <thead><tr><th></th><th>чоловічий</th><th>жіночий</th><th>середній</th><th>множина</th></tr></thead>
 <tbody>
-<tr><td><strong>Nom.</strong></td><td>der neu<strong>e</strong> Tisch</td><td>die neu<strong>e</strong> Lampe</td><td>das neu<strong>e</strong> Bett</td><td>die neu<strong>en</strong> Möbel</td></tr>
-<tr><td><strong>Akk.</strong></td><td>den neu<strong>en</strong> Tisch</td><td>die neu<strong>e</strong> Lampe</td><td>das neu<strong>e</strong> Bett</td><td>die neu<strong>en</strong> Möbel</td></tr>
-<tr><td><strong>Dat.</strong></td><td>dem neu<strong>en</strong> Tisch</td><td>der neu<strong>en</strong> Lampe</td><td>dem neu<strong>en</strong> Bett</td><td>den neu<strong>en</strong> Möbel<strong>n</strong></td></tr>
+<tr><td><strong>Nom.</strong></td>
+<td>der neu<strong>e</strong> Tisch</td><td>die neu<strong>e</strong> Lampe</td>
+<td>das neu<strong>e</strong> Bett</td><td>die neu<strong>en</strong> Möbel</td></tr>
+<tr><td><strong>Akk.</strong></td>
+<td>den neu<strong>en</strong> Tisch</td><td>die neu<strong>e</strong> Lampe</td>
+<td>das neu<strong>e</strong> Bett</td><td>die neu<strong>en</strong> Möbel</td></tr>
+<tr><td><strong>Dat.</strong></td>
+<td>dem neu<strong>en</strong> Tisch</td><td>der neu<strong>en</strong> Lampe</td>
+<td>dem neu<strong>en</strong> Bett</td><td>den neu<strong>en</strong> Möbel<strong>n</strong></td></tr>
 </tbody></table>
-<div class="callout callout--tip"><strong>Мнемоніка «п’ять -e».</strong> Намалюйте таблицю подумки:
-<em>-e</em> стоїть у верхньому лівому куті блоком (Nom. усі три роди + Akk. жіночий і середній).
-Усе інше — <em>-en</em>. Тобто в 11 із 16 клітинок буде <em>-en</em>.</div>`,
+<div class="callout callout--tip"><strong>Порахуйте: у таблиці 12 клітинок.</strong>
+У п’ятьох стоїть <em>-e</em>, у семи — <em>-en</em>. Тобто <u>якщо вагаєтесь — ставте -en</u>
+і будете праві частіше, ніж ні. А п’ять клітинок з <em>-e</em> тримаються купи:
+увесь верхній рядок плюс дві клітинки під ним.</div>
+<p><strong>Ті самі закінчення</strong> діють після слів, які відмінюються як означений артикль:
+<em>dieser</em> (цей), <em>jeder</em> (кожен), <em>welcher</em> (який), <em>alle</em> (усі),
+<em>solche</em> (такі). <em>dies<u>er</u> neu<u>e</u> Tisch</em> — точно як <em>der neue Tisch</em>.</p>`,
       },
       {
-        title: '3. Після неозначеного артикля (ein, kein, mein, dein …)',
+        title: '4. Таблиця 2: після ein / kein / mein — різниця лише у трьох клітинках',
         html: `
-<p>Проблема в тому, що <em>ein</em> не показує рід у трьох клітинках. Там прикметник переймає закінчення
-означеного артикля: <em>-er</em> (чол.), <em>-es</em> (серед.).</p>
+<p>Не вчіть цю таблицю заново. Візьміть попередню й змініть <strong>три клітинки</strong> —
+рівно ті, де <em>ein</em> не показує роду.</p>
 <table>
-<thead><tr><th></th><th>чоловічий</th><th>жіночий</th><th>середній</th><th>множина (kein/mein)</th></tr></thead>
+<thead><tr><th></th><th>чоловічий</th><th>жіночий</th><th>середній</th><th>множина (kein / mein)</th></tr></thead>
 <tbody>
-<tr><td><strong>Nom.</strong></td><td>ein neu<strong>er</strong> Tisch</td><td>eine neu<strong>e</strong> Lampe</td><td>ein neu<strong>es</strong> Bett</td><td>keine neu<strong>en</strong> Möbel</td></tr>
-<tr><td><strong>Akk.</strong></td><td>einen neu<strong>en</strong> Tisch</td><td>eine neu<strong>e</strong> Lampe</td><td>ein neu<strong>es</strong> Bett</td><td>keine neu<strong>en</strong> Möbel</td></tr>
-<tr><td><strong>Dat.</strong></td><td>einem neu<strong>en</strong> Tisch</td><td>einer neu<strong>en</strong> Lampe</td><td>einem neu<strong>en</strong> Bett</td><td>keinen neu<strong>en</strong> Möbel<strong>n</strong></td></tr>
+<tr><td><strong>Nom.</strong></td>
+<td>ein neu<strong>er</strong> Tisch <span class="uk">← змінилося</span></td>
+<td>eine neu<strong>e</strong> Lampe</td>
+<td>ein neu<strong>es</strong> Bett <span class="uk">← змінилося</span></td>
+<td>keine neu<strong>en</strong> Möbel</td></tr>
+<tr><td><strong>Akk.</strong></td>
+<td>einen neu<strong>en</strong> Tisch</td><td>eine neu<strong>e</strong> Lampe</td>
+<td>ein neu<strong>es</strong> Bett <span class="uk">← змінилося</span></td>
+<td>keine neu<strong>en</strong> Möbel</td></tr>
+<tr><td><strong>Dat.</strong></td>
+<td>einem neu<strong>en</strong> Tisch</td><td>einer neu<strong>en</strong> Lampe</td>
+<td>einem neu<strong>en</strong> Bett</td><td>keinen neu<strong>en</strong> Möbel<strong>n</strong></td></tr>
 </tbody></table>
-<p>Різниця з попередньою таблицею — лише <strong>три клітинки</strong>:
-<em>ein neu<u>er</u></em>, <em>ein neu<u>es</u></em> (Nom.) і <em>ein neu<u>es</u></em> (Akk. серед.).</p>`,
+<p>Порівняйте дві таблиці в лоб — саме тут видно, що вчити треба зовсім мало:</p>
+<table>
+<thead><tr><th>Клітинка</th><th>після der/das</th><th>після ein</th></tr></thead>
+<tbody>
+<tr><td>Nom. чоловічий</td><td>der neu<strong>e</strong></td><td>ein neu<strong>er</strong></td></tr>
+<tr><td>Nom. середній</td><td>das neu<strong>e</strong></td><td>ein neu<strong>es</strong></td></tr>
+<tr><td>Akk. середній</td><td>das neu<strong>e</strong></td><td>ein neu<strong>es</strong></td></tr>
+<tr><td>усі решта дев’ять</td><td colspan="2" class="center"><strong>однакові</strong></td></tr>
+</tbody></table>
+<div class="callout"><strong>Пастка з множиною.</strong> Самого <em>ein</em> у множині не буває —
+але <em>kein</em>, <em>mein</em>, <em>deine</em> у множині є. І там прикметник поводиться
+як після означеного артикля: <em>keine neu<u>en</u> Möbel</em>, а не «<s>keine neue Möbel</s>».
+Причина та сама: <em>kein<u>e</u></em> вже показує множину, отже сигнал поданий.</div>`,
       },
       {
-        title: '4. Без артикля',
+        title: '5. Таблиця 3: коли артикля немає зовсім',
         html: `
-<p>Коли артикля немає взагалі (часто в множині, з речовинними іменниками, у рекламі й меню),
-прикметник бере на себе всі закінчення означеного артикля:</p>
+<p>Без артикля сигнал подавати нікому — тому прикметник бере <strong>повний набір</strong>
+закінчень означеного артикля. Це найрідший випадок, але саме він трапляється
+в меню, оголошеннях і на цінниках.</p>
 <table>
 <thead><tr><th></th><th>чоловічий</th><th>жіночий</th><th>середній</th><th>множина</th></tr></thead>
 <tbody>
-<tr><td><strong>Nom.</strong></td><td>gut<strong>er</strong> Wein</td><td>frisch<strong>e</strong> Milch</td><td>kalt<strong>es</strong> Wasser</td><td>nett<strong>e</strong> Leute</td></tr>
-<tr><td><strong>Akk.</strong></td><td>gut<strong>en</strong> Wein</td><td>frisch<strong>e</strong> Milch</td><td>kalt<strong>es</strong> Wasser</td><td>nett<strong>e</strong> Leute</td></tr>
-<tr><td><strong>Dat.</strong></td><td>gut<strong>em</strong> Wein</td><td>frisch<strong>er</strong> Milch</td><td>kalt<strong>em</strong> Wasser</td><td>nett<strong>en</strong> Leute<strong>n</strong></td></tr>
+<tr><td><strong>Nom.</strong></td>
+<td>gut<strong>er</strong> Wein</td><td>frisch<strong>e</strong> Milch</td>
+<td>kalt<strong>es</strong> Wasser</td><td>neu<strong>e</strong> Möbel</td></tr>
+<tr><td><strong>Akk.</strong></td>
+<td>gut<strong>en</strong> Wein</td><td>frisch<strong>e</strong> Milch</td>
+<td>kalt<strong>es</strong> Wasser</td><td>neu<strong>e</strong> Möbel</td></tr>
+<tr><td><strong>Dat.</strong></td>
+<td>gut<strong>em</strong> Wein</td><td>frisch<strong>er</strong> Milch</td>
+<td>kalt<strong>em</strong> Wasser</td><td>neu<strong>en</strong> Möbel<strong>n</strong></td></tr>
 </tbody></table>
-<p><strong>Дрібні орфографічні особливості:</strong></p>
+<div class="callout callout--tip"><strong>Де ви це побачите насправді.</strong>
+<em>Ich trinke gern kalt<u>es</u> Wasser</em> — з речовинними іменниками артикль часто зайвий.
+<em>Frisch<u>e</u> Brötchen!</em> — вивіска пекарні. <em>Mit freundlich<u>en</u> Grüßen</em> —
+кінцівка листа, теж без артикля. Помітьте: закінчення тут точно ті самі, що в
+<em>der / die / das</em>, тільки переїхали на прикметник.</div>`,
+      },
+      {
+        title: '6. Як вибрати закінчення за три секунди',
+        html: `
+<p>Не тримайте в голові три таблиці. Тримайте цей порядок питань — він дає відповідь завжди.</p>
+<table>
+<thead><tr><th>Крок</th><th>Питання до себе</th><th>Дія</th></tr></thead>
+<tbody>
+<tr><td><strong>1</strong></td><td>Прикметник стоїть <u>перед іменником</u>?</td>
+<td>Ні → закінчення немає, готово. Так → крок 2.</td></tr>
+<tr><td><strong>2</strong></td><td>Це Dativ <u>або</u> множина?</td>
+<td>Так → <strong>-en</strong>, готово. (Єдиний виняток — множина без артикля: <em>neue Möbel</em>.)</td></tr>
+<tr><td><strong>3</strong></td><td>Це Akkusativ чоловічого роду?</td>
+<td>Так → <strong>-en</strong>, готово.</td></tr>
+<tr><td><strong>4</strong></td><td>Артикль показує рід (<em>der, das, die</em>, <em>eine</em>)?</td>
+<td>Так → <strong>-e</strong>, готово.</td></tr>
+<tr><td><strong>5</strong></td><td>Артикля немає або він «сліпий» (<em>ein</em>)?</td>
+<td>Прикметник бере літеру артикля: <strong>-er</strong> (чол.), <strong>-es</strong> (серед.),
+<strong>-e</strong> (жін.).</td></tr>
+</tbody></table>
+<p><strong>Перевіримо алгоритм на трьох реченнях:</strong></p>
 <ul>
-<li><em>teuer → ein te<u>ur</u>es Auto</em> (випадає -e-) <span class="uk">дороге авто</span></li>
-<li><em>dunkel → ein dun<u>kl</u>es Zimmer</em> <span class="uk">темна кімната</span></li>
-<li><em>hoch → ein ho<u>h</u>es Haus</em> <span class="uk">високий будинок</span></li>
-</ul>`,
+<li><em>Ich kaufe ein<u>en</u> neu___ Tisch.</em> → перед іменником (так) → не Dativ і не множина →
+<u>Akkusativ чоловічого</u> → <strong>-en</strong>: <em>einen neuen Tisch</em>.</li>
+<li><em>Ich wohne in ein___ klein___ Wohnung.</em> → перед іменником → <u>Dativ</u> →
+<strong>-en</strong>: <em>in einer kleinen Wohnung</em>.</li>
+<li><em>Das ist ein___ schön___ Bild.</em> → перед іменником → не Dativ, не множина, не Akk. чоловічого →
+артикль <em>ein</em> <u>не</u> показує роду → <strong>-es</strong>: <em>ein schönes Bild</em>.</li>
+</ul>
+<div class="callout"><strong>Чому цей порядок саме такий.</strong> Кроки 2 і 3 відсіюють
+більшість випадків одним махом: разом вони покривають майже дві третини всіх клітинок,
+і в усіх стоїть <em>-en</em>. Тому спершу перевіряйте їх, а до складнішого доходьте
+лише тоді, коли вони не спрацювали.</div>`,
       },
       {
-        title: '5. Слова з прикладів цієї теми',
+        title: '7. Три ситуації, про які зазвичай не розповідають',
         html: `
-<p>Прикметники в цій темі відпрацьовуються переважно на описі житла й речей — ось уся лексика,
-що трапляється в прикладах і таблицях вище.</p>
 <table>
-<thead><tr><th>Слово</th><th>Переклад</th><th>Приклад із теми</th></tr></thead>
+<thead><tr><th>Ситуація</th><th>Як поводиться прикметник</th><th>Приклад</th></tr></thead>
 <tbody>
-<tr><td><em>der Tisch, -e</em></td><td>стіл</td><td><em>der neue Tisch</em><span class="uk">новий стіл</span></td></tr>
-<tr><td><em>die Lampe, -n</em></td><td>лампа</td><td><em>eine neue Lampe</em><span class="uk">нова лампа</span></td></tr>
-<tr><td><em>das Bett, -en</em></td><td>ліжко</td><td><em>ein neues Bett</em><span class="uk">нове ліжко</span></td></tr>
-<tr><td><em>die Möbel</em> (мн.)</td><td>меблі</td><td><em>die neuen Möbel</em><span class="uk">нові меблі</span></td></tr>
-<tr><td><em>der Wein</em></td><td>вино</td><td><em>guter Wein</em><span class="uk">хороше вино</span></td></tr>
-<tr><td><em>frisch</em></td><td>свіжий</td><td><em>frische Milch</em><span class="uk">свіже молоко</span></td></tr>
-<tr><td><em>die Leute</em> (мн.)</td><td>люди</td><td><em>nette Leute</em><span class="uk">приємні люди</span></td></tr>
-<tr><td><em>hell / dunkel</em></td><td>світлий / темний</td><td><em>eine helle Wohnung</em><span class="uk">світла квартира</span></td></tr>
-<tr><td><em>gemütlich</em></td><td>затишний</td><td><em>eine kleine gemütliche Wohnung</em><span class="uk">маленька затишна квартира</span></td></tr>
-<tr><td><em>günstig</em></td><td>вигідний за ціною</td><td><em>ein günstiges Hotel</em><span class="uk">недорогий готель</span></td></tr>
-<tr><td><em>der Schlüssel, -</em></td><td>ключ</td><td><em>der kleine Schlüssel</em><span class="uk">маленький ключ</span></td></tr>
-<tr><td><em>möbliert</em></td><td>мебльований</td><td>з оголошень про житло</td></tr>
-<tr><td><em>die Kaution</em></td><td>застава</td><td>з оголошень про житло</td></tr>
+<tr><td>після <em>viele, einige, mehrere, wenige, andere</em></td>
+<td>як <u>без артикля</u> в множині: <strong>-e</strong> (Nom./Akk.), <strong>-en</strong> (Dativ)</td>
+<td><em>viele gut<strong>e</strong> Ideen</em><span class="uk">багато добрих ідей</span></td></tr>
+<tr><td>після <em>etwas, nichts, viel, wenig</em></td>
+<td>прикметник стає іменником: з великої літери й <strong>-es</strong></td>
+<td><em>etwas Neu<strong>es</strong></em><span class="uk">щось нове</span><br>
+<em>nichts Interessant<strong>es</strong></em><span class="uk">нічого цікавого</span></td></tr>
+<tr><td>два прикметники поспіль</td>
+<td>обидва беруть <u>однакове</u> закінчення</td>
+<td><em>ein klein<strong>es</strong>, gemütlich<strong>es</strong> Zimmer</em>
+<span class="uk">маленька затишна кімната</span></td></tr>
 </tbody></table>
-<div class="callout callout--tip"><strong>Як тренувати.</strong> Беріть будь-який предмет навколо
-й проговорюйте його у трьох формах: <em>der neue Tisch</em> (Nom.) → <em>Ich kaufe den neuen Tisch</em> (Akk.)
-→ <em>auf dem neuen Tisch</em> (Dat.). Три повтори закріплюють таблицю краще, ніж її переписування.</div>`,
+<div class="callout callout--tip"><strong>І ще дві дрібниці, які псують гарні тексти.</strong>
+Прикметник <em>hoch</em> перед іменником втрачає <em>-c-</em>: <em>ein <u>hohes</u> Haus</em>,
+а не «<s>hochhes</s>». А <em>teuer</em> викидає <em>-e-</em> з основи:
+<em>ein <u>teures</u> Auto</em>, не «<s>teueres</s>».</div>`,
+      },
+      {
+        title: '8. Слова з прикладів цієї теми',
+        html: `
+<table>
+<thead><tr><th>Слово</th><th>Переклад</th><th>Як ужито в темі</th></tr></thead>
+<tbody>
+<tr><td><em>die Möbel (Pl.)</em></td><td>меблі</td><td>Завжди множина: <em>die neuen Möbel</em>.</td></tr>
+<tr><td><em>gemütlich</em></td><td>затишний</td><td><em>ein kleines, gemütliches Zimmer</em></td></tr>
+<tr><td><em>frisch</em></td><td>свіжий</td><td><em>frische Milch</em>, <em>frische Brötchen</em></td></tr>
+<tr><td><em>hoch → hoh-</em></td><td>високий</td><td><em>ein hohes Haus</em> (без -c- перед закінченням)</td></tr>
+<tr><td><em>teuer → teur-</em></td><td>дорогий</td><td><em>ein teures Auto</em> (без -e- в основі)</td></tr>
+<tr><td><em>solche</em></td><td>такі</td><td>Відмінюється як означений артикль.</td></tr>
+<tr><td><em>mehrere</em></td><td>кілька, декілька</td><td><em>mehrere gute Ideen</em></td></tr>
+<tr><td><em>etwas Neues</em></td><td>щось нове</td><td>Прикметник як іменник, з великої літери.</td></tr>
+<tr><td><em>der Wein</em></td><td>вино</td><td><em>guter Wein</em> — без артикля.</td></tr>
+<tr><td><em>Mit freundlichen Grüßen</em></td><td>З повагою</td><td>Кінцівка листа без артикля, Dativ множини.</td></tr>
+</tbody></table>`,
       },
     ],
+
     exercises: [
       { type: 'gap', q: 'Das ist der neu___ Tisch.', answers: ['e'] },
       { type: 'gap', q: 'Ich kaufe den neu___ Tisch.', answers: ['en'] },
@@ -501,6 +638,7 @@ Andrij Bondar`,
     ],
   },
 
+  ...part4,
   ...part2,
   ...part3,
   ],
