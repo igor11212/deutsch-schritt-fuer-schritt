@@ -853,34 +853,37 @@ table.vt tr.is-learning .vt__no::after { content: " •"; color: var(--warn); }
   transition: width .25s ease;
 }
 
-/* Перспектива має стояти на БЕЗПОСЕРЕДНЬОМУ батькові того, що обертається.
-   Якщо поставити її на зовнішню обгортку, картка з transform-style: flat
-   сплющить обертання дитини в свою площину — і воно зникне. */
-.flash__stage { position: relative; }
+/* Перегортання робимо двовимірним: картка стискається по горизонталі до
+   ребра, у цей момент міняється бік, і вона розкривається знову. Виглядає як
+   поворот, але не залежить від 3D-контексту, який легко зламати одним
+   transform на будь-якому з батьків. */
+.flash__stage { position: relative; transition: transform .18s ease; }
 
 .flash__card {
   position: relative;
   display: flex; flex-direction: column;
-  perspective: 1400px;
   min-height: 210px; border-radius: var(--r-lg); cursor: pointer;
   background: linear-gradient(150deg, var(--accent-soft), var(--surface-2));
   border: 1.5px solid var(--line-soft);
-  transition: transform .18s ease, box-shadow .18s ease, background .25s ease;
+  transition: box-shadow .18s ease, background .25s ease;
 }
-/* Внутрішній шар обертається; обидві сторони існують одночасно. */
-.flash__inner {
-  position: relative; flex: 1 1 auto;
-  transform-style: preserve-3d;
-  transition: transform .5s cubic-bezier(.2, .7, .3, 1);
+.flash__inner { position: relative; flex: 1 1 auto; min-height: 210px; }
+.flash__inner.is-turning { animation: flashTurn .42s ease; }
+@keyframes flashTurn {
+  0%   { transform: scaleX(1); }
+  48%  { transform: scaleX(.06); }
+  100% { transform: scaleX(1); }
 }
-.flash__inner.is-flipped { transform: rotateY(180deg); }
+/* Обидва боки лежать один на одному — висота картки не стрибає. */
 .flash__side {
+  position: absolute; inset: 0;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: .45rem; text-align: center; min-height: 210px; padding: 1.6rem 1.3rem;
-  backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  gap: .45rem; text-align: center; padding: 1.6rem 1.3rem;
+  transition: opacity .1s linear;
 }
-.flash__side--back { position: absolute; inset: 0; transform: rotateY(180deg); }
-.flash__card.is-done .flash__inner { transform: none; }
+.flash__side--back { opacity: 0; pointer-events: none; }
+.flash__inner.is-flipped .flash__side--front { opacity: 0; pointer-events: none; }
+.flash__inner.is-flipped .flash__side--back  { opacity: 1; pointer-events: auto; }
 
 /* Свайп-сортування: картка від'їжджає в бік вердикту. */
 .flash__stage.is-swipe-right { transform: translateX(70px) rotate(6deg); opacity: .35; }
@@ -889,7 +892,7 @@ table.vt tr.is-learning .vt__no::after { content: " •"; color: var(--warn); }
 /* Зірочка «повернутися до цього слова». */
 .flash__star {
   position: absolute; top: .5rem; left: 50%; transform: translateX(-50%);
-  z-index: 2; border: 0; background: none; cursor: pointer;
+  z-index: 3; border: 0; background: none; cursor: pointer;
   font-size: 1.35rem; line-height: 1; color: var(--muted);
   padding: .2rem .5rem; border-radius: 99px;
   transition: color .18s ease, transform .18s ease;
@@ -909,8 +912,9 @@ table.vt tr.is-learning .vt__no::after { content: " •"; color: var(--warn); }
   display: flex; flex-direction: column; justify-content: center; overflow: auto;
 }
 .flash-deck.is-full .flash__card,
-.flash-deck.is-full .flash__side { min-height: clamp(240px, 46vh, 460px); }
+.flash-deck.is-full .flash__inner { min-height: clamp(240px, 46vh, 460px); }
 .flash-deck.is-full .flash__front { font-size: clamp(1.6rem, 4.5vw, 2.6rem); }
+
 .flash__card.is-known { border-color: var(--ok); }
 .flash__mark {
   position: absolute; z-index: 2; top: .8rem; right: 1rem;
@@ -923,11 +927,9 @@ table.vt tr.is-learning .vt__no::after { content: " •"; color: var(--warn); }
   position: absolute; z-index: 2; top: .8rem; left: 1rem; max-width: 40%;
   font-size: .74rem; color: var(--muted); text-align: left; line-height: 1.25;
 }
-/* Підіймаємо не картку, а сцену: transform на самій картці зруйнував би 3D. */
-.flash__stage:hover { transform: translateY(-2px); }
-.flash__stage { transition: transform .18s ease; }
-.flash__card:hover { box-shadow: var(--shadow); }
 .flash__card:has(.is-flipped) { background: var(--surface); }
+.flash__stage:hover { transform: translateY(-2px); }
+.flash__card:hover { box-shadow: var(--shadow); }
 
 .flash__front { font-size: 1.45rem; font-weight: 650; line-height: 1.3; }
 .flash__front.de, .flash__back.de { font-family: var(--font-de); }
@@ -952,7 +954,7 @@ table.vt tr.is-learning .vt__no::after { content: " •"; color: var(--warn); }
 
 @media (max-width: 720px) {
   table.vt .vt__ex { display: none; }
-  .flash__card, .flash__side { min-height: 180px; }
+  .flash__card, .flash__inner { min-height: 180px; }
   .flash__side { padding: 1.2rem 1rem; }
   .flash__front { font-size: 1.25rem; }
   .vocab-group__head .btn { margin-left: 0; }
