@@ -50,7 +50,7 @@ const mPrep = {
 У Dativ змінюється <u>все</u>. Тому Akkusativ дається легко, а Dativ треба вчити свідомо.</div>`,
     },
     {
-      title: '2. Прийменники з Akkusativ — п’ять слів',
+      title: '2. Прийменники з Akkusativ — шість слів',
       html: `
 <p>Їх шість, і вони завжди з Akkusativ, без винятків. Німці запам’ятовують їх
 одним рядком: <strong>bis, durch, für, gegen, ohne, um</strong>.</p>
