@@ -146,7 +146,7 @@ function viewHome() {
 
   const overview = course.passed ? el('section', { class: 'card resume' },
     el('div', {},
-      el('strong', {}, `Пройдено ${course.passed} ${plural(course.passed, 'модуль', 'модулі', 'модулів')} зі ${course.total}`),
+      el('strong', {}, `Пройдено ${course.passed} ${plural(course.passed, 'модуль', 'модулі', 'модулів')} з ${course.total}`),
       el('p', { class: 'muted', style: 'margin:.2rem 0 0' }, 'Прогрес зберігається у вашому браузері.')),
     el('span', { class: 'grow' }),
     el('a', { class: 'btn btn--soft', href: '#/progress' }, 'Мій прогрес'),
@@ -1637,7 +1637,7 @@ function viewProgress() {
 
   const top = el('section', { class: 'card stack' },
     el('div', { class: 'flash__bar' },
-      el('strong', {}, `Пройдено ${course.passed} ${plural(course.passed, 'модуль', 'модулі', 'модулів')} зі ${course.total}`),
+      el('strong', {}, `Пройдено ${course.passed} ${plural(course.passed, 'модуль', 'модулі', 'модулів')} з ${course.total}`),
       el('span', { class: 'grow' }),
       el('span', { class: 'tag tag--accent' }, course.pct + ' %')),
     el('div', { class: 'progress-line' }, el('i', { style: `width:${course.pct}%` })),
