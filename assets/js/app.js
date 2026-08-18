@@ -1,21 +1,21 @@
 /* Роутер + сторінки. Хеш-навігація, щоб працювало на GitHub Pages без сервера. */
 
-import { LEVELS, loadLevel } from '../data/index.js?v=20260819e';
-import { el, renderExercise, renderExerciseSet } from './exercises.js?v=20260819e';
-import { speak, speakDialogue, stop as stopSpeech, ttsSupported, hasGermanVoice } from './tts.js?v=20260819e';
-import { checkWriting } from './writing-check.js?v=20260819e';
-import { glossTerms } from './glossary.js?v=20260819e';
+import { LEVELS, loadLevel } from '../data/index.js?v=20260819f';
+import { el, renderExercise, renderExerciseSet } from './exercises.js?v=20260819f';
+import { speak, speakDialogue, stop as stopSpeech, ttsSupported, hasGermanVoice } from './tts.js?v=20260819f';
+import { checkWriting } from './writing-check.js?v=20260819f';
+import { glossTerms } from './glossary.js?v=20260819f';
 import {
   load as srsLoad, save as srsSave, stats as srsStats, isKnown as srsIsKnown,
   isDue as srsIsDue, boxOf as srsBox, promote as srsPromote, demote as srsDemote,
   cleanWord, buildQuiz as buildQuizData, quizableThemes,
   pickForWriting, containsWord, knownCount,
   loadStars, toggleStar,
-} from './vocab-srs.js?v=20260819e';
-import * as prog from './progress.js?v=20260819e';
-import { renderExam } from './exam.js?v=20260819e';
-import { EXAM, PART_META } from '../data/exam.js?v=20260819e';
-import { buildIndex, search as runSearch, snippet, TYPE_LABEL } from './search.js?v=20260819e';
+} from './vocab-srs.js?v=20260819f';
+import * as prog from './progress.js?v=20260819f';
+import { renderExam } from './exam.js?v=20260819f';
+import { EXAM, PART_META } from '../data/exam.js?v=20260819f';
+import { buildIndex, search as runSearch, snippet, TYPE_LABEL } from './search.js?v=20260819f';
 
 const main = document.getElementById('main');
 
@@ -1143,9 +1143,9 @@ function buildFlashcards(groups, map, levelId, onChange) {
     // «Ще вчу» повертає слово в кінець колоди — один раз, щоб підхід не став нескінченним.
     if (!good && !repeated.has(it.de)) { repeated.add(it.de); deck.push(it); }
     onChange();
-    card.classList.add(good ? 'is-swipe-right' : 'is-swipe-left');
+    stage.classList.add(good ? 'is-swipe-right' : 'is-swipe-left');
     setTimeout(() => {
-      card.classList.remove('is-swipe-right', 'is-swipe-left');
+      stage.classList.remove('is-swipe-right', 'is-swipe-left');
       if (pos < deck.length - 1) pos++;
       else done = true;
       render();
@@ -1227,12 +1227,12 @@ function buildFlashcards(groups, map, levelId, onChange) {
     const dx = e.touches[0].clientX - x0;
     const dy = e.touches[0].clientY - y0;
     if (Math.abs(dx) < Math.abs(dy)) return;
-    card.style.transform = `translateX(${dx * 0.4}px) rotate(${dx * 0.02}deg)`;
+    stage.style.transform = `translateX(${dx * 0.4}px) rotate(${dx * 0.02}deg)`;
   }, { passive: true });
   card.addEventListener('touchend', e => {
     if (!dragging) return;
     dragging = false;
-    card.style.transform = '';
+    stage.style.transform = '';
     const dx = e.changedTouches[0].clientX - x0;
     const dy = e.changedTouches[0].clientY - y0;
     x0 = null;
