@@ -194,3 +194,71 @@ export function buildQuiz(groups, map, { size = 12, groupIndex = null, withAudio
   // завдання з неповним набором варіантів краще не показувати зовсім
   return out.filter(ex => ex.type !== 'choice' || ex.options.length === 4);
 }
+
+/* ───────────────────── речення з новим словом ───────────────────── */
+
+/** Прибирає службові позначки: «sich freuen über + Akk.» → «sich freuen über». */
+function bareWord(de) {
+  return cleanWord(de).replace(/\s*\+\s*(Akk|Dat|Gen)\.?/g, '').trim();
+}
+
+const NO_UMLAUT = { ä: 'a', ö: 'o', ü: 'u', ß: 's' };
+/** Зводимо ä і ae до одного вигляду — учень може написати будь-як. */
+function norm(s) {
+  return String(s).toLowerCase()
+    .replace(/[äöüß]/g, c => NO_UMLAUT[c])
+    .replace(/ae/g, 'a').replace(/oe/g, 'o').replace(/ue/g, 'u').replace(/ss/g, 's');
+}
+
+/** Префікси, які в реченні відриваються: Ich stehe … auf. */
+const SEPARABLE = ['zurück', 'wieder', 'durch', 'unter', 'statt', 'über', 'nach', 'vor',
+  'aus', 'ein', 'mit', 'weg', 'los', 'bei', 'her', 'hin', 'an', 'auf', 'ab', 'zu', 'um'];
+
+/**
+ * Форми, за якими шукаємо слово в реченні. Німецьке слово змінюється
+ * (wohnen → wohne, der Tisch → dem Tisch), тому шукаємо не ціле слово,
+ * а достатньо довгу основу — і окремо частини складених дієслів.
+ */
+export function wordForms(de) {
+  const bare = bareWord(de);
+  const words = bare.split(/\s+/).filter(w => !/^(der|die|das|sich|ein|eine)$/i.test(w));
+  const forms = new Set();
+  words.forEach(w => {
+    const n = norm(w).replace(/[^a-z]/g, '');
+    if (n.length >= 3) forms.add(n);
+    if (n.length >= 5) forms.add(n.slice(0, -2));   // wohnen → wohn, machen → mach
+    if (n.length >= 6) forms.add(n.slice(0, -3));   // arbeiten → arbei
+
+    // відокремлюване дієслово: у реченні лишається сама основа — «stehe … auf»
+    const pref = SEPARABLE.find(p => n.startsWith(norm(p)) && n.length - norm(p).length >= 4);
+    if (pref) {
+      const stem = n.slice(norm(pref).length);
+      forms.add(stem);
+      if (stem.length >= 5) forms.add(stem.slice(0, -2));
+    }
+  });
+  return [...forms].filter(f => f.length >= 3);
+}
+
+/** Чи вжито слово в реченні (з поправкою на відмінювання й умлаути). */
+export function containsWord(sentence, de) {
+  const hay = norm(sentence);
+  return wordForms(de).some(f => hay.includes(f));
+}
+
+/**
+ * Слова для письмової практики: спершу ті, що сьогодні на повторення,
+ * потім ті, що в роботі, потім нові. Пари й схеми відкидаємо — з них
+ * речення не складеш.
+ */
+export function pickForWriting(groups, map, { count = 5, groupIndex = null } = {}) {
+  const source = groupIndex === null ? groups : [groups[groupIndex]];
+  const pool = source
+    .flatMap(g => g.items.map(it => ({ ...it, group: g.group })))
+    .filter(it => usable(it) && bareWord(it.de).split(/\s+/).length <= 4);
+
+  const due      = pool.filter(it => isDue(map, it.de));
+  const learning = pool.filter(it => boxOf(map, it.de) > 0 && !isDue(map, it.de));
+  const fresh    = pool.filter(it => boxOf(map, it.de) === 0);
+  return [...shuffle(due), ...shuffle(fresh), ...shuffle(learning)].slice(0, count);
+}

@@ -1,15 +1,16 @@
 /* Роутер + сторінки. Хеш-навігація, щоб працювало на GitHub Pages без сервера. */
 
-import { LEVELS, loadLevel } from '../data/index.js?v=20260818b';
-import { el, renderExercise, renderExerciseSet } from './exercises.js?v=20260818b';
-import { speak, speakDialogue, stop as stopSpeech, ttsSupported, hasGermanVoice } from './tts.js?v=20260818b';
-import { checkWriting } from './writing-check.js?v=20260818b';
-import { glossTerms } from './glossary.js?v=20260818b';
+import { LEVELS, loadLevel } from '../data/index.js?v=20260818c';
+import { el, renderExercise, renderExerciseSet } from './exercises.js?v=20260818c';
+import { speak, speakDialogue, stop as stopSpeech, ttsSupported, hasGermanVoice } from './tts.js?v=20260818c';
+import { checkWriting } from './writing-check.js?v=20260818c';
+import { glossTerms } from './glossary.js?v=20260818c';
 import {
   load as srsLoad, save as srsSave, stats as srsStats, isKnown as srsIsKnown,
   isDue as srsIsDue, boxOf as srsBox, promote as srsPromote, demote as srsDemote,
   cleanWord, buildQuiz as buildQuizData, quizableThemes,
-} from './vocab-srs.js?v=20260818b';
+  pickForWriting, containsWord,
+} from './vocab-srs.js?v=20260818c';
 
 const main = document.getElementById('main');
 
@@ -453,44 +454,39 @@ function renderVocabulary(groups, levelId) {
   });
 
   /* — перемикач режимів — */
-  const panelCards = el('div', { class: 'flash', hidden: 'hidden' });
-  const panelQuiz  = el('div', { class: 'vquiz', hidden: 'hidden' });
-  let cardsBuilt = false, quizBuilt = false;
+  const modes = [
+    { id: 'cards', label: '🃏 Картки',  panel: el('div', { class: 'flash', hidden: 'hidden' }),
+      build: p => p.append(buildFlashcards(groups, map, commit)) },
+    { id: 'quiz',  label: '✍ Вправи',  panel: el('div', { class: 'vquiz', hidden: 'hidden' }),
+      build: p => p.append(buildVocabQuiz(groups, map, commit)) },
+    { id: 'write', label: '📝 Речення', panel: el('div', { class: 'vsent', hidden: 'hidden' }),
+      build: p => p.append(buildSentencePractice(groups, map, levelId, commit)) },
+  ];
 
-  const cardsBtn = el('button', { class: 'btn btn--soft', type: 'button' }, '🃏 Картки');
-  const quizBtn  = el('button', { class: 'btn btn--soft', type: 'button' }, '✍ Вправи');
-
-  function togglePanel(panel, btn, labelOn, labelOff, build) {
-    const opening = panel.hasAttribute('hidden');
-    [[panelCards, cardsBtn, '🃏 Картки'], [panelQuiz, quizBtn, '✍ Вправи']].forEach(([p, b, l]) => {
-      p.setAttribute('hidden', 'hidden'); b.textContent = l; b.classList.remove('btn--active');
+  modes.forEach(m => {
+    m.btn = el('button', { class: 'btn btn--soft', type: 'button' }, m.label);
+    m.btn.addEventListener('click', () => {
+      const opening = m.panel.hasAttribute('hidden');
+      modes.forEach(x => {
+        x.panel.setAttribute('hidden', 'hidden');
+        x.btn.textContent = x.label;
+        x.btn.classList.remove('btn--active');
+      });
+      if (!opening) return;
+      if (!m.built) { m.build(m.panel); m.built = true; }
+      m.panel.removeAttribute('hidden');
+      m.btn.textContent = '✕ Сховати';
+      m.btn.classList.add('btn--active');
+      m.panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
-    if (!opening) return;
-    build();
-    panel.removeAttribute('hidden');
-    btn.textContent = labelOn;
-    btn.classList.add('btn--active');
-    panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-
-  cardsBtn.addEventListener('click', () => togglePanel(panelCards, cardsBtn, '✕ Сховати картки', '🃏 Картки', () => {
-    if (cardsBuilt) return;
-    panelCards.append(buildFlashcards(groups, map, commit));
-    cardsBuilt = true;
-  }));
-
-  quizBtn.addEventListener('click', () => togglePanel(panelQuiz, quizBtn, '✕ Сховати вправи', '✍ Вправи', () => {
-    if (quizBuilt) return;
-    panelQuiz.append(buildVocabQuiz(groups, map, commit));
-    quizBuilt = true;
-  }));
+  });
 
   box.append(el('div', { class: 'section-note' },
     `Словник рівня: ${total} ${plural(total, 'слово', 'слова', 'слів')} у ${groups.length} ${plural(groups.length, 'темі', 'темах', 'темах')}. `,
     'Слова в кожній темі стоять не за абеткою, а в логічному порядку — так їх легше запам’ятати. ',
-    el('div', { class: 'ex__actions', style: 'margin-top:.8rem' }, cardsBtn, quizBtn)));
+    el('div', { class: 'ex__actions', style: 'margin-top:.8rem' }, modes.map(m => m.btn))));
 
-  box.append(progressBox, panelCards, panelQuiz);
+  box.append(progressBox, ...modes.map(m => m.panel));
 
   if (ttsSupported && !hasGermanVoice()) {
     box.append(el('div', { class: 'no-tts' },
@@ -622,6 +618,135 @@ function buildVocabQuiz(groups, map, onChange) {
     body, scoreBox);
 
   run();
+  return wrap;
+}
+
+/** Речення з новим словом: власна фраза замість вибору з готового — і перевірка тексту. */
+function buildSentencePractice(groups, map, levelId, onChange) {
+  const wrap = el('div', { class: 'card stack' });
+
+  const themeSel = el('select', { class: 'flash__select', 'aria-label': 'Тема' },
+    el('option', { value: 'all' }, 'Усі теми'),
+    groups.map((g, i) => el('option', { value: String(i) }, `${i + 1}. ${g.group}`)));
+  const newBtn = el('button', { class: 'btn', type: 'button' }, 'Нові слова');
+
+  const counter = el('span', { class: 'flash__counter' });
+  const wordBox = el('div', { class: 'vsent__word' });
+  const ta = el('textarea', { class: 'write', rows: '3', spellcheck: 'true', lang: 'de',
+    placeholder: 'Напишіть одне речення з цим словом…' });
+  const report = el('div', { class: 'report' });
+  const modelBox = el('div');
+
+  const checkBtn = el('button', { class: 'btn', type: 'button' }, '✓ Перевірити');
+  const skipBtn  = el('button', { class: 'btn btn--ghost', type: 'button' }, 'Пропустити →');
+  const speakBtn = el('button', { class: 'btn btn--ghost btn--sm', type: 'button' }, '🔊 Вимова');
+
+  let list = [], pos = 0;
+
+  function load() {
+    list = pickForWriting(groups, map, {
+      count: 5,
+      groupIndex: themeSel.value === 'all' ? null : Number(themeSel.value),
+    });
+    pos = 0;
+    show();
+  }
+
+  function show() {
+    report.replaceChildren();
+    modelBox.replaceChildren();
+    ta.value = '';
+    checkBtn.disabled = false;
+
+    if (!list.length || pos >= list.length) {
+      counter.textContent = list.length ? `${list.length} / ${list.length}` : '0 / 0';
+      wordBox.replaceChildren(el('div', { class: 'flash__done' },
+        el('strong', {}, list.length ? 'Раунд завершено 🎉' : 'У цій темі немає слів для речень'),
+        el('p', { class: 'muted' }, list.length
+          ? 'Натисніть «Нові слова», щоб узяти наступні п’ять.'
+          : 'Оберіть іншу тему — у цій самі пари й схеми, з яких речення не складеш.')));
+      [ta, checkBtn, skipBtn, speakBtn].forEach(b => b.disabled = true);
+      return;
+    }
+
+    [ta, checkBtn, skipBtn, speakBtn].forEach(b => b.disabled = false);
+    const it = list[pos];
+    counter.textContent = `${pos + 1} / ${list.length}`;
+    wordBox.replaceChildren(
+      el('span', { class: 'vsent__de de' }, cleanWord(it.de)),
+      el('span', { class: 'vsent__uk' }, it.uk),
+      it.ex ? el('span', { class: 'vsent__note muted' }, it.ex) : null,
+      el('span', { class: 'tag' }, it.group),
+    );
+    ta.focus();
+  }
+
+  function check() {
+    const text = ta.value.trim();
+    if (!text) return;
+    const it = list[pos];
+
+    // жанр «Satz» навмисне не схожий на лист — тому перевірка не вимагає
+    // звертання й прощання, а дивиться лише на саме речення
+    const res = checkWriting(text, { exam: 'Satz', title: 'Satz mit neuem Wort', minWords: 4 },
+      { levelId, moduleId: 'satz', vocab: groups });
+
+    // Для окремого речення дві базові вимоги суворіші, ніж у листі:
+    // велика літера на початку й розділовий знак у кінці.
+    if (!/^[A-ZÄÖÜ]/.test(text)) {
+      res.issues.unshift({ kind: 'error', title: 'Речення починається з малої літери',
+        detail: 'Кожне німецьке речення починається з великої літери — так само, як українське.' });
+    }
+    if (!/[.!?]$/.test(text)) {
+      res.issues.unshift({ kind: 'error', title: 'У кінці немає розділового знака',
+        detail: 'Поставте крапку, знак питання або оклику — інакше це не речення, а фрагмент.' });
+    }
+
+    const used = containsWord(text, it.de);
+    if (!used) {
+      res.issues.unshift({
+        kind: 'error', title: 'У реченні немає самого слова',
+        detail: `Завдання — ужити «${cleanWord(it.de)}». Перевірте написання: саме це слово (у будь-якій формі) має бути в реченні.`,
+      });
+    }
+
+    report.replaceChildren(renderReport(res));
+    const clean = used && !res.issues.some(i => i.kind === 'error');
+    if (clean) { srsPromote(map, it.de); onChange(); }
+
+    modelBox.replaceChildren(el('div', { class: clean ? 'vsent__ok' : 'vsent__again' },
+      el('strong', {}, clean ? '✓ Слово зараховано' : 'Спробуйте ще раз'),
+      el('p', { class: 'muted', style: 'margin:.3rem 0 0' }, clean
+        ? 'Слово піднялося на коробку вище — воно повернеться на повторення пізніше.'
+        : 'Виправте помічене вище й перевірте знову. Коробка не змінилася.'),
+      it.ex ? el('p', { style: 'margin:.5rem 0 0' },
+        el('span', { class: 'muted' }, 'Приклад зі словника: '),
+        el('span', { class: 'de' }, it.ex)) : null,
+    ));
+    checkBtn.disabled = clean;
+    if (clean) setTimeout(() => { pos++; show(); }, 1600);
+  }
+
+  checkBtn.addEventListener('click', check);
+  skipBtn.addEventListener('click', () => { pos++; show(); });
+  speakBtn.addEventListener('click', () => { if (list[pos]) speak(cleanWord(list[pos].de)); });
+  newBtn.addEventListener('click', load);
+  themeSel.addEventListener('change', load);
+  ta.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) { e.preventDefault(); check(); }
+  });
+
+  wrap.append(
+    el('div', { class: 'flash__bar' }, themeSel, el('span', { class: 'grow' }), counter, newBtn),
+    el('p', { class: 'muted', style: 'margin:0;font-size:.85rem' },
+      'Складіть власне речення зі словом — це найкоротший шлях від «упізнаю» до «вживаю». ' +
+      'Текст перевіряється тими самими правилами, що й у модулі письма: великі літери в іменниках, ' +
+      'кома перед підрядним, порядок слів. Вдале речення піднімає слово на коробку вище.'),
+    wordBox, ta,
+    el('div', { class: 'ex__actions' }, checkBtn, skipBtn, ttsSupported ? speakBtn : null),
+    report, modelBox);
+
+  load();
   return wrap;
 }
 
