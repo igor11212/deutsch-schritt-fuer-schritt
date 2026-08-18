@@ -143,15 +143,15 @@ export function levelStats(state, levelId, moduleCount) {
     .filter(([k]) => Number(k) >= 1 && Number(k) <= moduleCount)
     .map(([, v]) => v);
   const passed = tests.filter(t => t.pct >= PASS).length;
+
   const avg = tests.length ? Math.round(tests.reduce((s, t) => s + t.pct, 0) / tests.length) : 0;
-  const started = tests.length;
   const exam = L.exam || null;
   return {
-    passed, started, avg, total: moduleCount,
+    passed, started: tests.length, avg, total: moduleCount,
     pct: moduleCount ? Math.round((passed / moduleCount) * 100) : 0,
     exam,
     skills: L.skills || {},
-    touched: started > 0 || !!exam || Object.keys(L.skills || {}).length > 0,
+    touched: tests.length > 0 || !!exam || Object.keys(L.skills || {}).length > 0,
   };
 }
 
@@ -176,19 +176,4 @@ export function resetLevel(levelId) {
 export function resetAll() {
   const state = { v: 1, levels: {}, last: null };
   return save(state);
-}
-
-/* ------------------------------------------------------ перенесення ---- */
-
-/** Увесь прогрес одним об'єктом — щоб зберегти у файл і перенести
-    на інший пристрій. Словник (інтервальні повторення) додається ззовні. */
-export function exportAll(extra = {}) {
-  return JSON.stringify({ app: 'dssf', v: 1, date: today(), progress: load(), ...extra }, null, 2);
-}
-
-export function importAll(text) {
-  const data = JSON.parse(text);
-  if (!data || data.app !== 'dssf') throw new Error('Це не файл прогресу цього сайту.');
-  if (data.progress?.levels) save({ v: 1, levels: data.progress.levels, last: data.progress.last || null });
-  return data;
 }

@@ -1,19 +1,19 @@
 /* Роутер + сторінки. Хеш-навігація, щоб працювало на GitHub Pages без сервера. */
 
-import { LEVELS, loadLevel } from '../data/index.js?v=20260819a';
-import { el, renderExercise, renderExerciseSet } from './exercises.js?v=20260819a';
-import { speak, speakDialogue, stop as stopSpeech, ttsSupported, hasGermanVoice } from './tts.js?v=20260819a';
-import { checkWriting } from './writing-check.js?v=20260819a';
-import { glossTerms } from './glossary.js?v=20260819a';
+import { LEVELS, loadLevel } from '../data/index.js?v=20260819b';
+import { el, renderExercise, renderExerciseSet } from './exercises.js?v=20260819b';
+import { speak, speakDialogue, stop as stopSpeech, ttsSupported, hasGermanVoice } from './tts.js?v=20260819b';
+import { checkWriting } from './writing-check.js?v=20260819b';
+import { glossTerms } from './glossary.js?v=20260819b';
 import {
   load as srsLoad, save as srsSave, stats as srsStats, isKnown as srsIsKnown,
   isDue as srsIsDue, boxOf as srsBox, promote as srsPromote, demote as srsDemote,
   cleanWord, buildQuiz as buildQuizData, quizableThemes,
   pickForWriting, containsWord, knownCount,
-} from './vocab-srs.js?v=20260819a';
-import * as prog from './progress.js?v=20260819a';
-import { renderExam } from './exam.js?v=20260819a';
-import { EXAM, PART_META } from '../data/exam.js?v=20260819a';
+} from './vocab-srs.js?v=20260819b';
+import * as prog from './progress.js?v=20260819b';
+import { renderExam } from './exam.js?v=20260819b';
+import { EXAM, PART_META } from '../data/exam.js?v=20260819b';
 
 const main = document.getElementById('main');
 
@@ -722,17 +722,23 @@ function buildSentencePractice(groups, map, levelId, onChange) {
   const newBtn = el('button', { class: 'btn', type: 'button' }, 'Нові слова');
 
   const counter = el('span', { class: 'flash__counter' });
+  const barFill = el('span', { class: 'flash__progress__fill' });
+  const bar = el('div', { class: 'flash__progress', role: 'presentation' }, barFill);
+  const scoreTag = el('span', { class: 'tag' });
+
   const wordBox = el('div', { class: 'vsent__word' });
   const ta = el('textarea', { class: 'write', rows: '3', spellcheck: 'true', lang: 'de',
     placeholder: 'Напишіть одне речення з цим словом…' });
   const report = el('div', { class: 'report' });
   const modelBox = el('div');
 
+  const prevBtn  = el('button', { class: 'btn btn--ghost', type: 'button', title: 'Alt + ←' }, '←');
+  const nextBtn  = el('button', { class: 'btn btn--ghost', type: 'button', title: 'Alt + →' }, '→');
   const checkBtn = el('button', { class: 'btn', type: 'button' }, '✓ Перевірити');
-  const skipBtn  = el('button', { class: 'btn btn--ghost', type: 'button' }, 'Пропустити →');
   const speakBtn = el('button', { class: 'btn btn--ghost btn--sm', type: 'button' }, '🔊 Вимова');
 
-  let list = [], pos = 0;
+  // Чернетки живуть по кожному слову окремо: пішли назад — текст на місці.
+  let list = [], pos = 0, drafts = [], solved = [];
 
   function load() {
     list = pickForWriting(groups, map, {
@@ -740,42 +746,84 @@ function buildSentencePractice(groups, map, levelId, onChange) {
       groupIndex: themeSel.value === 'all' ? null : Number(themeSel.value),
     });
     pos = 0;
+    drafts = list.map(() => '');
+    solved = list.map(() => false);
     show();
+  }
+
+  function okBox(it) {
+    return el('div', { class: 'vsent__ok' },
+      el('strong', {}, '✓ Слово зараховано'),
+      el('p', { class: 'muted', style: 'margin:.3rem 0 0' },
+        'Слово піднялося на коробку вище — воно повернеться на повторення пізніше.'),
+      it.ex ? el('p', { style: 'margin:.5rem 0 0' },
+        el('span', { class: 'muted' }, 'Приклад зі словника: '),
+        el('span', { class: 'de' }, it.ex)) : null);
   }
 
   function show() {
     report.replaceChildren();
     modelBox.replaceChildren();
-    ta.value = '';
-    checkBtn.disabled = false;
 
-    if (!list.length || pos >= list.length) {
-      counter.textContent = list.length ? `${list.length} / ${list.length}` : '0 / 0';
+    if (!list.length) {
+      counter.textContent = '0 / 0';
+      barFill.style.width = '0%';
+      scoreTag.textContent = '';
       wordBox.replaceChildren(el('div', { class: 'flash__done' },
-        el('strong', {}, list.length ? 'Раунд завершено 🎉' : 'У цій темі немає слів для речень'),
-        el('p', { class: 'muted' }, list.length
-          ? 'Натисніть «Нові слова», щоб узяти наступні п’ять.'
-          : 'Оберіть іншу тему — у цій самі пари й схеми, з яких речення не складеш.')));
-      [ta, checkBtn, skipBtn, speakBtn].forEach(b => b.disabled = true);
+        el('strong', {}, 'У цій темі немає слів для речень'),
+        el('p', { class: 'muted' },
+          'Оберіть іншу тему — у цій самі пари й схеми, з яких речення не складеш.')));
+      [ta, checkBtn, speakBtn, prevBtn, nextBtn].forEach(b => b.disabled = true);
       return;
     }
 
-    [ta, checkBtn, skipBtn, speakBtn].forEach(b => b.disabled = false);
-    const it = list[pos];
+    const okCount = solved.filter(Boolean).length;
+    [ta, speakBtn].forEach(b => b.disabled = false);
+    prevBtn.disabled = pos === 0;
+    nextBtn.disabled = pos === list.length - 1;
     counter.textContent = `${pos + 1} / ${list.length}`;
+    barFill.style.width = `${Math.round((okCount / list.length) * 100)}%`;
+    scoreTag.textContent = `Зараховано: ${okCount} з ${list.length}`;
+    scoreTag.className = 'tag' + (okCount === list.length ? ' tag--accent' : '');
+
+    const it = list[pos];
     wordBox.replaceChildren(
       el('span', { class: 'vsent__de de' }, cleanWord(it.de)),
       el('span', { class: 'vsent__uk' }, it.uk),
       it.ex ? el('span', { class: 'vsent__note muted' }, it.ex) : null,
       el('span', { class: 'tag' }, it.group),
+      solved[pos] ? el('span', { class: 'vsent__mark' }, '✓ зараховано') : null,
     );
+
+    ta.value = drafts[pos] || '';
+    checkBtn.disabled = solved[pos];
+    if (solved[pos]) modelBox.replaceChildren(okBox(it));
+    else if (okCount === list.length) modelBox.replaceChildren(roundDone());
     ta.focus();
+  }
+
+  function roundDone() {
+    return el('div', { class: 'vsent__ok' },
+      el('strong', {}, 'Раунд завершено 🎉'),
+      el('p', { class: 'muted', style: 'margin:.3rem 0 0' },
+        'Усі п’ять слів ужито в реченнях. Натисніть «Нові слова» — або поверніться стрілками й перечитайте свої речення.'));
+  }
+
+  /** Перехід між словами: спершу зберігаємо те, що вже написано. */
+  function go(step) {
+    if (!list.length) return;
+    const next = pos + step;
+    if (next < 0 || next >= list.length) return;
+    drafts[pos] = ta.value;
+    pos = next;
+    show();
   }
 
   function check() {
     const text = ta.value.trim();
     if (!text) return;
     const it = list[pos];
+    drafts[pos] = ta.value;
 
     // жанр «Satz» навмисне не схожий на лист — тому перевірка не вимагає
     // звертання й прощання, а дивиться лише на саме речення
@@ -806,38 +854,54 @@ function buildSentencePractice(groups, map, levelId, onChange) {
 
     report.replaceChildren(renderReport(res));
     const clean = used && !res.issues.some(i => i.kind === 'error');
-    if (clean) { srsPromote(map, it.de); onChange(); }
+    if (clean && !solved[pos]) { solved[pos] = true; srsPromote(map, it.de); onChange(); }
 
-    modelBox.replaceChildren(el('div', { class: clean ? 'vsent__ok' : 'vsent__again' },
-      el('strong', {}, clean ? '✓ Слово зараховано' : 'Спробуйте ще раз'),
-      el('p', { class: 'muted', style: 'margin:.3rem 0 0' }, clean
-        ? 'Слово піднялося на коробку вище — воно повернеться на повторення пізніше.'
-        : 'Виправте помічене вище й перевірте знову. Коробка не змінилася.'),
-      it.ex ? el('p', { style: 'margin:.5rem 0 0' },
-        el('span', { class: 'muted' }, 'Приклад зі словника: '),
-        el('span', { class: 'de' }, it.ex)) : null,
-    ));
-    checkBtn.disabled = clean;
-    if (clean) setTimeout(() => { pos++; show(); }, 1600);
+    if (clean) {
+      // Слово зараховано: самі переходимо далі, але лише якщо попереду є що робити.
+      const nextUnsolved = solved.findIndex((v, i) => !v && i > pos);
+      const anyUnsolved = solved.findIndex(v => !v);
+      checkBtn.disabled = true;
+      modelBox.replaceChildren(okBox(it));
+      const target = nextUnsolved !== -1 ? nextUnsolved : anyUnsolved;
+      if (target !== -1) setTimeout(() => { pos = target; show(); }, 1600);
+      else setTimeout(show, 1600);
+    } else {
+      modelBox.replaceChildren(el('div', { class: 'vsent__again' },
+        el('strong', {}, 'Спробуйте ще раз'),
+        el('p', { class: 'muted', style: 'margin:.3rem 0 0' },
+          'Виправте помічене вище й перевірте знову. Коробка не змінилася.'),
+        it.ex ? el('p', { style: 'margin:.5rem 0 0' },
+          el('span', { class: 'muted' }, 'Приклад зі словника: '),
+          el('span', { class: 'de' }, it.ex)) : null));
+    }
   }
 
   checkBtn.addEventListener('click', check);
-  skipBtn.addEventListener('click', () => { pos++; show(); });
+  prevBtn.addEventListener('click', () => go(-1));
+  nextBtn.addEventListener('click', () => go(1));
   speakBtn.addEventListener('click', () => { if (list[pos]) speak(cleanWord(list[pos].de)); });
   newBtn.addEventListener('click', load);
   themeSel.addEventListener('change', load);
+  ta.addEventListener('input', () => { drafts[pos] = ta.value; });
   ta.addEventListener('keydown', e => {
-    if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) { e.preventDefault(); check(); }
+    if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) { e.preventDefault(); check(); return; }
+    // Прості стрілки лишаємо курсору — гортаємо з Alt.
+    if (e.altKey && e.key === 'ArrowRight') { e.preventDefault(); go(1); }
+    if (e.altKey && e.key === 'ArrowLeft')  { e.preventDefault(); go(-1); }
   });
 
   wrap.append(
-    el('div', { class: 'flash__bar' }, themeSel, el('span', { class: 'grow' }), counter, newBtn),
+    el('div', { class: 'flash__bar' }, themeSel, el('span', { class: 'grow' }), scoreTag, counter, newBtn),
+    bar,
     el('p', { class: 'muted', style: 'margin:0;font-size:.85rem' },
       'Складіть власне речення зі словом — це найкоротший шлях від «упізнаю» до «вживаю». ' +
       'Текст перевіряється тими самими правилами, що й у модулі письма: великі літери в іменниках, ' +
       'кома перед підрядним, порядок слів. Вдале речення піднімає слово на коробку вище.'),
     wordBox, ta,
-    el('div', { class: 'ex__actions' }, checkBtn, skipBtn, ttsSupported ? speakBtn : null),
+    el('div', { class: 'ex__actions' }, prevBtn, checkBtn, nextBtn, ttsSupported ? speakBtn : null),
+    el('p', { class: 'muted', style: 'margin:0;font-size:.82rem' },
+      'Стрілки ← та → гортають між словами — написане не губиться. '
+      + 'З клавіатури: Alt + ← або Alt + →, перевірка — Ctrl (⌘) + Enter.'),
     report, modelBox);
 
   load();
@@ -1631,8 +1695,7 @@ function viewProgress() {
     el('h1', {}, '📊 Мій прогрес'),
     el('p', { class: 'lead' },
       'Усі результати зберігаються лише у вашому браузері: ані реєстрації, ані сервера. '
-      + 'Якщо очистити дані сайту або відкрити його в іншому браузері, прогрес не перенесеться — '
-      + 'тому нижче є кнопка збереження у файл.'),
+      + 'Якщо очистити дані сайту або відкрити його в іншому браузері, прогрес почнеться з нуля.'),
   );
 
   const top = el('section', { class: 'card stack' },
@@ -1708,40 +1771,6 @@ function viewProgress() {
     body.append(card);
   });
 
-  /* ── збереження й перенесення ─────────────────────────────────────── */
-  const io = el('section', { class: 'card stack' },
-    el('h3', { style: 'margin:0' }, 'Перенести прогрес на інший пристрій'),
-    el('p', { class: 'muted', style: 'margin:0' },
-      'Файл містить лише ваші результати й вивчені слова. Він зберігається на ваш пристрій, '
-      + 'а не надсилається кудись.'));
-
-  const saveBtn = el('button', { class: 'btn btn--soft btn--sm', type: 'button' }, '⬇ Зберегти у файл');
-  saveBtn.addEventListener('click', () => {
-    const vocab = Object.fromEntries(LEVELS.map(l => [l.id, srsLoad(l.id)]));
-    const blob = new Blob([prog.exportAll({ vocab })], { type: 'application/json' });
-    const a = el('a', { href: URL.createObjectURL(blob), download: `deutsch-progress-${prog.today()}.json` });
-    document.body.append(a); a.click(); a.remove();
-    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
-  });
-
-  const file = el('input', { type: 'file', accept: 'application/json,.json', style: 'display:none' });
-  const loadBtn = el('button', { class: 'btn btn--ghost btn--sm', type: 'button' }, '⬆ Завантажити з файлу');
-  const ioNote = el('span', { class: 'muted', style: 'font-size:.85rem' });
-  loadBtn.addEventListener('click', () => file.click());
-  file.addEventListener('change', async () => {
-    const f = file.files?.[0];
-    if (!f) return;
-    try {
-      const data = prog.importAll(await f.text());
-      if (data.vocab) Object.entries(data.vocab).forEach(([lvl, map]) => srsSave(lvl, map));
-      ioNote.textContent = 'Прогрес відновлено.';
-      setTimeout(route, 600);
-    } catch (err) {
-      ioNote.textContent = 'Не вдалося прочитати файл: ' + (err?.message || err);
-    }
-  });
-  io.append(el('div', { class: 'ex__actions' }, saveBtn, loadBtn, file, ioNote));
-
   const wipe = el('button', { class: 'btn btn--ghost btn--sm', type: 'button' }, 'Стерти весь прогрес');
   wipe.addEventListener('click', () => {
     if (!confirm('Стерти геть усе: результати тестів, іспитів і вивчені слова? Це не можна скасувати.')) return;
@@ -1752,7 +1781,7 @@ function viewProgress() {
 
   setView(el('div', {},
     crumbs({ label: 'Головна', href: '#/' }, { label: 'Мій прогрес' }),
-    head, top, body, io,
+    head, top, body,
     el('div', { class: 'ex__actions', style: 'margin-top:1.5rem' }, wipe),
   ), 'Мій прогрес');
 }
