@@ -1,59 +1,60 @@
 /* ==========================================================================
    Deutsch Schritt für Schritt — оформлення
-   Округлі форми й м'які підкладки; кольори — насичені, але не кислотні.
+   Округлі форми й м'які підкладки. Палітра — приглушений індиго на прохолодному
+   папері: помітна, але без різких кольорів; світла й темна теми рівноцінні.
    ========================================================================== */
 
 :root {
   color-scheme: light;
 
-  --bg:          #f8f6f1;
-  --bg-tint:     #f0ece2;
+  --bg:          #f4f5f8;
+  --bg-tint:     #e9ebf2;
   --surface:     #ffffff;
-  --surface-2:   #f3f1ea;
-  --surface-3:   #e9e6dc;
-  --line:        #dfdace;
-  --line-soft:   #ece8de;
+  --surface-2:   #f0f2f7;
+  --surface-3:   #e4e7f0;
+  --line:        #d7dbe6;
+  --line-soft:   #e8eaf1;
 
-  --text:        #2e2b26;
-  --text-soft:   #5b564d;
-  --muted:       #857f73;
+  --text:        #232735;
+  --text-soft:   #4f5568;
+  --muted:       #7d8397;
 
-  --accent:      #0f9488;   /* насичена бірюза — тон тримає контраст із білим текстом */
-  --accent-deep: #0a6f65;   /* для посилань і ховера на світлому тлі */
-  --accent-vivid:#19c2ad;   /* тільки декор: смужки карток, градієнти */
-  --accent-soft: #d6f2ec;
+  --accent:      #4b5aa7;   /* приглушений індиго — спокійний, але помітний */
+  --accent-deep: #38457f;   /* посилання й ховер на світлому тлі */
+  --accent-vivid:#6f7fd0;   /* тільки декор: смужки карток, градієнти */
+  --accent-soft: #e2e6f7;
   --on-accent:   #ffffff;   /* що пишемо поверх --accent */
 
-  --ok:          #1f9d55;
-  --ok-soft:     #dcf3e4;
-  --warn:        #cf8500;
-  --warn-soft:   #fbeed2;
-  --err:         #d64545;
-  --err-soft:    #fbe3e3;
+  --ok:          #2e8b6a;
+  --ok-soft:     #ddf1ea;
+  --warn:        #b8761c;
+  --warn-soft:   #f9ecd7;
+  --err:         #c9484f;
+  --err-soft:    #fae2e4;
 
-  --a1: #12a892;
-  --a2: #2b86df;
-  --b1: #7a5af0;
-  --b2: #e0508e;
-  --c1: #e08a12;
+  --a1: #2f9e77;
+  --a2: #3b7fc4;
+  --b1: #6a63c8;
+  --b2: #c05a95;
+  --c1: #c08526;
 
-  --r-xs: 8px;
-  --r-sm: 12px;
-  --r:    18px;
-  --r-lg: 26px;
-  --r-xl: 34px;
+  --r-xs: 10px;
+  --r-sm: 14px;
+  --r:    20px;
+  --r-lg: 28px;
+  --r-xl: 38px;
   --pill: 999px;
 
-  --shadow-sm: 0 1px 2px rgba(60, 52, 40, .05), 0 2px 8px rgba(60, 52, 40, .04);
-  --shadow:    0 2px 6px rgba(60, 52, 40, .05), 0 10px 28px rgba(60, 52, 40, .07);
+  --shadow-sm: 0 1px 2px rgba(35, 39, 53, .05), 0 2px 8px rgba(35, 39, 53, .05);
+  --shadow:    0 2px 6px rgba(35, 39, 53, .05), 0 12px 32px rgba(35, 39, 53, .09);
 
   /* Гуманістичний гротеск для інтерфейсу — тепліший і округліший за Inter.
      Жодних завантажень зі сторонніх серверів: тільки системні гарнітури. */
-  --font: "Avenir Next", Avenir, "Segoe UI Variable Text", "Segoe UI", "Noto Sans",
-          system-ui, -apple-system, Roboto, sans-serif;
+  --font: "SF Pro Rounded", ui-rounded, "Nunito", "Avenir Next", Avenir,
+          "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, sans-serif;
   /* Німецький матеріал — перехідна антиква з виразнішим контрастом, ніж Georgia. */
-  --font-de: "Charter", "Iowan Old Style", "Palatino Linotype", Palatino,
-             "Book Antiqua", Georgia, serif;
+  --font-de: "Iowan Old Style", "Charter", "Palatino Linotype", Palatino,
+             "Hoefler Text", "Book Antiqua", Georgia, serif;
 
   --wrap: 1080px;
 }
@@ -61,36 +62,36 @@
 :root[data-theme="dark"] {
   color-scheme: dark;
 
-  --bg:          #191a19;
-  --bg-tint:     #1f211e;
-  --surface:     #242621;
-  --surface-2:   #2b2d27;
-  --surface-3:   #34372f;
-  --line:        #3c4038;
-  --line-soft:   #33362f;
+  --bg:          #16181f;
+  --bg-tint:     #1c1f28;
+  --surface:     #202430;
+  --surface-2:   #262b38;
+  --surface-3:   #303646;
+  --line:        #394051;
+  --line-soft:   #2e3442;
 
-  --text:        #eeeae1;
-  --text-soft:   #c6c0b4;
-  --muted:       #968f82;
+  --text:        #e8eaf2;
+  --text-soft:   #bcc2d4;
+  --muted:       #8b92a6;
 
-  --accent:      #2dd4bf;
-  --accent-deep: #6ee7d5;
-  --accent-vivid:#3ae6cf;
-  --accent-soft: #10332e;
-  --on-accent:   #06322c;   /* на світлій бірюзі текст має бути темним */
+  --accent:      #8b9aed;
+  --accent-deep: #aab6f5;
+  --accent-vivid:#9dabf2;
+  --accent-soft: #262c46;
+  --on-accent:   #171c33;   /* на світлому індиго текст має бути темним */
 
-  --ok:          #45c37a;
-  --ok-soft:     #14301f;
-  --warn:        #e5ac3f;
-  --warn-soft:   #342810;
-  --err:         #f2726e;
-  --err-soft:    #3a201f;
+  --ok:          #4cc294;
+  --ok-soft:     #16302a;
+  --warn:        #dda548;
+  --warn-soft:   #33280f;
+  --err:         #ef7078;
+  --err-soft:    #381f22;
 
-  --a1: #2dd4bf;
-  --a2: #5aa9f5;
-  --b1: #a78bfa;
-  --b2: #f472b6;
-  --c1: #f0b429;
+  --a1: #4ecfa0;
+  --a2: #6aaef0;
+  --b1: #9b93f0;
+  --b2: #ec86bd;
+  --c1: #e5b256;
 
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, .35);
   --shadow:    0 2px 8px rgba(0, 0, 0, .3), 0 14px 34px rgba(0, 0, 0, .35);
@@ -103,36 +104,36 @@
   :root:not([data-theme="light"]) {
     color-scheme: dark;
 
-    --bg:          #191a19;
-    --bg-tint:     #1f211e;
-    --surface:     #242621;
-    --surface-2:   #2b2d27;
-    --surface-3:   #34372f;
-    --line:        #3c4038;
-    --line-soft:   #33362f;
+    --bg:          #16181f;
+    --bg-tint:     #1c1f28;
+    --surface:     #202430;
+    --surface-2:   #262b38;
+    --surface-3:   #303646;
+    --line:        #394051;
+    --line-soft:   #2e3442;
 
-    --text:        #eeeae1;
-    --text-soft:   #c6c0b4;
-    --muted:       #968f82;
+    --text:        #e8eaf2;
+    --text-soft:   #bcc2d4;
+    --muted:       #8b92a6;
 
-    --accent:      #2dd4bf;
-    --accent-deep: #6ee7d5;
-    --accent-vivid:#3ae6cf;
-    --accent-soft: #10332e;
-    --on-accent:   #06322c;   /* на світлій бірюзі текст має бути темним */
+    --accent:      #8b9aed;
+    --accent-deep: #aab6f5;
+    --accent-vivid:#9dabf2;
+    --accent-soft: #262c46;
+    --on-accent:   #171c33;   /* на світлому індиго текст має бути темним */
 
-    --ok:          #45c37a;
-    --ok-soft:     #14301f;
-    --warn:        #e5ac3f;
-    --warn-soft:   #342810;
-    --err:         #f2726e;
-    --err-soft:    #3a201f;
+    --ok:          #4cc294;
+    --ok-soft:     #16302a;
+    --warn:        #dda548;
+    --warn-soft:   #33280f;
+    --err:         #ef7078;
+    --err-soft:    #381f22;
 
-    --a1: #2dd4bf;
-    --a2: #5aa9f5;
-    --b1: #a78bfa;
-    --b2: #f472b6;
-    --c1: #f0b429;
+    --a1: #4ecfa0;
+    --a2: #6aaef0;
+    --b1: #9b93f0;
+    --b2: #ec86bd;
+    --c1: #e5b256;
 
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, .35);
     --shadow:    0 2px 8px rgba(0, 0, 0, .3), 0 14px 34px rgba(0, 0, 0, .35);
@@ -153,8 +154,8 @@ body {
   color: var(--text);
   background: var(--bg);
   background-image:
-    radial-gradient(70rem 40rem at 12% -10%, var(--accent-soft) 0%, transparent 60%),
-    radial-gradient(60rem 36rem at 100% 0%, var(--bg-tint) 0%, transparent 55%);
+    radial-gradient(64rem 34rem at 8% -12%, var(--accent-soft) 0%, transparent 62%),
+    radial-gradient(52rem 30rem at 102% 4%, var(--bg-tint) 0%, transparent 58%);
   background-attachment: fixed;
   -webkit-font-smoothing: antialiased;
 }
