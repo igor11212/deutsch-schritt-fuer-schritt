@@ -1,21 +1,21 @@
 /* Роутер + сторінки. Хеш-навігація, щоб працювало на GitHub Pages без сервера. */
 
-import { LEVELS, loadLevel } from '../data/index.js?v=20260819i';
-import { el, renderExercise, renderExerciseSet } from './exercises.js?v=20260819i';
-import { speak, speakDialogue, stop as stopSpeech, ttsSupported, hasGermanVoice } from './tts.js?v=20260819i';
-import { checkWriting } from './writing-check.js?v=20260819i';
-import { glossTerms } from './glossary.js?v=20260819i';
+import { LEVELS, loadLevel } from '../data/index.js?v=20260819k';
+import { el, renderExercise, renderExerciseSet } from './exercises.js?v=20260819k';
+import { speak, speakDialogue, stop as stopSpeech, ttsSupported, hasGermanVoice } from './tts.js?v=20260819k';
+import { checkWriting } from './writing-check.js?v=20260819k';
+import { glossTerms } from './glossary.js?v=20260819k';
 import {
   load as srsLoad, save as srsSave, stats as srsStats, isKnown as srsIsKnown,
   isDue as srsIsDue, boxOf as srsBox, promote as srsPromote, demote as srsDemote,
   cleanWord, buildQuiz as buildQuizData, quizableThemes,
   pickForWriting, containsWord, knownCount,
   loadStars, toggleStar, wordStatus, whenBack, schedule,
-} from './vocab-srs.js?v=20260819i';
-import * as prog from './progress.js?v=20260819i';
-import { renderExam } from './exam.js?v=20260819i';
-import { EXAM, PART_META } from '../data/exam.js?v=20260819i';
-import { buildIndex, search as runSearch, snippet, TYPE_LABEL } from './search.js?v=20260819i';
+} from './vocab-srs.js?v=20260819k';
+import * as prog from './progress.js?v=20260819k';
+import { renderExam } from './exam.js?v=20260819k';
+import { EXAM, PART_META } from '../data/exam.js?v=20260819k';
+import { buildIndex, search as runSearch, snippet, TYPE_LABEL } from './search.js?v=20260819k';
 
 const main = document.getElementById('main');
 
@@ -131,7 +131,7 @@ function viewHome() {
       el('h3', {}, l.title),
       el('p', {}, l.desc),
       el('div', { class: 'level-card__meta' },
-        el('span', { class: 'tag' }, l.words),
+        el('span', { class: 'tag' }, `🗂 ${l.vocab} ${plural(l.vocab, 'слово', 'слова', 'слів')} у курсі`),
         el('span', { class: 'tag' }, l.hours),
         l.status === 'full'
           ? el('span', { class: 'tag tag--accent' }, 'Повний курс')
@@ -197,7 +197,8 @@ async function viewLevel(levelId) {
     el('h1', {}, `${meta.code} — ${meta.title}`),
     el('p', { class: 'lead' }, level.intro || meta.desc),
     el('div', { class: 'hero__facts' },
-      el('span', { class: 'tag' }, meta.words),
+      el('span', { class: 'tag' }, `🗂 Словник курсу: ${meta.vocab} ${plural(meta.vocab, 'слово', 'слова', 'слів')}`),
+      el('span', { class: 'tag' }, `🎯 Іспит вимагає ${meta.examWords}`),
       el('span', { class: 'tag' }, meta.hours),
       el('span', { class: 'tag' }, `${level.modules.length} ${plural(level.modules.length, 'модуль', 'модулі', 'модулів')}`),
     ),
@@ -675,7 +676,7 @@ function renderVocabulary(groups, levelId) {
       const status = el('td', { class: 'vt__state' });
       const tr = el('tr', {},
         el('td', { class: 'vt__no' }, String(i + 1)),
-        el('td', { class: 'vt__de' }, el('span', { class: 'de' }, it.de), btn),
+        el('td', { class: 'vt__de' }, el('span', { class: 'de', lang: 'de' }, it.de), btn),
         el('td', { class: 'vt__uk' }, it.uk),
         status,
         el('td', { class: 'vt__ex' }, it.ex || ''),
@@ -701,7 +702,7 @@ function renderVocabulary(groups, levelId) {
 
     const section = el('section', { class: 'vocab-group' },
       el('div', { class: 'vocab-group__head' },
-        el('h3', {}, `${gi + 1}. ${group.group}`), counter, playBtn),
+        el('h2', {}, `${gi + 1}. ${group.group}`), counter, playBtn),
       group.note ? el('p', { class: 'vocab-group__note' }, group.note) : null,
       el('div', { class: 'tbl-scroll' },
         el('table', { class: 'tbl vt' },
@@ -874,7 +875,7 @@ function buildSentencePractice(groups, map, levelId, onChange) {
 
     const it = list[pos];
     wordBox.replaceChildren(
-      el('span', { class: 'vsent__de de' }, cleanWord(it.de)),
+      el('span', { class: 'vsent__de de', lang: 'de' }, cleanWord(it.de)),
       el('span', { class: 'vsent__uk' }, it.uk),
       it.ex ? el('span', { class: 'vsent__note muted' }, it.ex) : null,
       el('span', { class: 'tag' }, it.group),
@@ -1183,16 +1184,19 @@ function buildFlashcards(groups, map, levelId, onChange) {
     const it = deck[pos];
     if (!toBack) {
       face.replaceChildren(
-        el('span', { class: 'flash__front' + (dirSel.value === 'de' ? ' de' : '') },
+        el('span', { class: 'flash__front' + (dirSel.value === 'de' ? ' de' : ''),
+          lang: dirSel.value === 'de' ? 'de' : 'uk' },
           dirSel.value === 'de' ? cleanWord(it.de) : it.uk));
       return;
     }
     face.replaceChildren(...[
-      el('span', { class: 'flash__front' + (dirSel.value === 'de' ? ' de' : '') },
+      el('span', { class: 'flash__front' + (dirSel.value === 'de' ? ' de' : ''),
+        lang: dirSel.value === 'de' ? 'de' : 'uk' },
         dirSel.value === 'de' ? it.de : it.uk),
-      el('span', { class: 'flash__back' + (dirSel.value === 'uk' ? ' de' : '') },
+      el('span', { class: 'flash__back' + (dirSel.value === 'uk' ? ' de' : ''),
+        lang: dirSel.value === 'de' ? 'uk' : 'de' },
         dirSel.value === 'de' ? it.uk : it.de),
-      it.ex ? el('span', { class: 'flash__ex' }, it.ex) : null,
+      it.ex ? el('span', { class: 'flash__ex', lang: 'de' }, it.ex) : null,
     ].filter(Boolean));
   }
 
@@ -1403,7 +1407,7 @@ function renderSpeaking(items, meta) {
   items.forEach((task, ti) => {
     const card = el('section', { class: 'writing-card' },
       el('span', { class: 'tag tag--accent' }, task.exam),
-      el('h3', { style: 'margin-top:.6rem' }, `${task.title} — ${task.titleUk}`),
+      el('h2', { style: 'margin-top:.6rem' }, `${task.title} — ${task.titleUk}`),
       el('p', { class: 'muted' }, task.instruction),
     );
 
@@ -1497,7 +1501,7 @@ function renderSpeaking(items, meta) {
         el('summary', {}, 'Корисні фрази (Redemittel)'),
         el('div', { class: 'transcript__body' },
           task.phrases.map(ph => el('p', { class: 'line' },
-            el('span', {}, ph.de), el('span', { class: 'tr' }, ph.uk))))));
+            el('span', { lang: 'de' }, ph.de), el('span', { class: 'tr' }, ph.uk))))));
     }
 
     /* ── зразок ──────────────────────────────────────────────────── */
@@ -1506,12 +1510,12 @@ function renderSpeaking(items, meta) {
         'Спершу скажіть своє — і лише потім відкривайте зразок. Інакше ви запам’ятаєте чужі слова замість власних.'));
 
     if (task.modelLines) {
-      modelBody.append(el('div', { class: 'model-answer' },
+      modelBody.append(el('div', { class: 'model-answer', lang: 'de' },
         task.modelLines.map(l => el('p', { class: 'line' },
           el('b', {}, l.speaker + ': '), el('span', {}, l.de),
           l.uk ? el('span', { class: 'tr' }, l.uk) : null))));
     } else {
-      modelBody.append(el('div', { class: 'model-answer' }, task.model));
+      modelBody.append(el('div', { class: 'model-answer', lang: 'de' }, task.model));
     }
 
     if (ttsSupported) {
@@ -1565,9 +1569,9 @@ function renderReading(items, levelId) {
   items.forEach(t => {
     const card = el('section', { class: 'audio-card' },
       el('span', { class: 'tag tag--accent' }, t.exam),
-      el('h3', { style: 'margin-top:.6rem' }, t.title),
+      el('h2', { style: 'margin-top:.6rem' }, t.title),
       el('p', { class: 'muted' }, t.instruction),
-      el('div', { class: 'reading-text', html: t.text }),
+      el('div', { class: 'reading-text', lang: 'de', html: t.text }),
     );
 
     if (t.glossary?.length) {
@@ -1576,7 +1580,7 @@ function renderReading(items, levelId) {
         el('div', { class: 'transcript__body' },
           el('div', { class: 'vocab-list' },
             t.glossary.map(([de, uk]) => el('div', { class: 'vocab-item' },
-              el('span', { class: 'vocab-item__de' }, de),
+              el('span', { class: 'vocab-item__de', lang: 'de' }, de),
               el('span', {}),
               el('span', { class: 'vocab-item__uk' }, uk))))),
       ));
@@ -1601,7 +1605,7 @@ const RENDERERS = {
       mod.grammar.map(g => {
         const body = el('div', { html: g.html });
         glossTerms(body);           // німецькі терміни отримують переклад при першій появі
-        return el('section', { class: 'gram' }, el('h3', {}, g.title), body);
+        return el('section', { class: 'gram' }, el('h2', {}, g.title), body);
       }),
     );
   },
@@ -1645,7 +1649,7 @@ const RENDERERS = {
       const card = el('section', { class: 'audio-card' },
         el('span', { class: 'tag tag--accent' }, task.exam || 'Hörverstehen'),
         task.from ? el('span', { class: 'tag', style: 'margin-left:.4rem' }, task.from) : null,
-        el('h3', { style: 'margin-top:.6rem' }, task.title),
+        el('h2', { style: 'margin-top:.6rem' }, task.title),
         el('p', { class: 'muted' }, task.instruction),
       );
 
@@ -1698,7 +1702,7 @@ const RENDERERS = {
         el('div', { class: 'transcript__body' },
           task.lines.map(l => el('p', { class: 'line' },
             l.speaker ? el('b', {}, l.speaker + ': ') : null,
-            el('span', {}, l.de),
+            el('span', { lang: 'de' }, l.de),
             l.uk ? el('span', { class: 'tr' }, l.uk) : null,
           )),
         ),
@@ -1722,7 +1726,7 @@ const RENDERERS = {
       const card = el('section', { class: 'writing-card' },
         el('span', { class: 'tag tag--accent' }, task.exam),
         task.from ? el('span', { class: 'tag', style: 'margin-left:.4rem' }, task.from) : null,
-        el('h3', { style: 'margin-top:.6rem' }, task.title),
+        el('h2', { style: 'margin-top:.6rem' }, task.title),
       );
 
       card.append(el('div', { class: 'prompt' },
@@ -1797,7 +1801,7 @@ const RENDERERS = {
           el('p', { class: 'muted', style: 'margin-top:0' },
             'Це один із можливих варіантів, а не єдина правильна відповідь. ' +
             'Порівняйте зі своїм текстом: що ви сказали інакше, а яких зворотів вам бракувало?'),
-          el('div', { class: 'model-answer' }, task.model),
+          el('div', { class: 'model-answer', lang: 'de' }, task.model),
           task.modelUk ? el('p', { class: 'muted', style: 'margin-top:1rem' }, task.modelUk) : null),
       ));
 
@@ -2030,7 +2034,7 @@ function viewProgress() {
     const card = el('section', { class: 'card stack', style: `--c: var(--${l.id})` });
 
     card.append(el('div', { class: 'flash__bar' },
-      el('h3', { style: 'margin:0' }, `${l.code} — ${l.title}`),
+      el('h2', { style: 'margin:0;font-size:1.12rem' }, `${l.code} — ${l.title}`),
       el('span', { class: 'grow' }),
       el('a', { class: 'btn btn--ghost btn--sm', href: `#/${l.id}` }, 'До рівня')));
 
