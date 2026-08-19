@@ -1,21 +1,21 @@
 /* Роутер + сторінки. Хеш-навігація, щоб працювало на GitHub Pages без сервера. */
 
-import { LEVELS, loadLevel } from '../data/index.js?v=20260819k';
-import { el, renderExercise, renderExerciseSet } from './exercises.js?v=20260819k';
-import { speak, speakDialogue, stop as stopSpeech, ttsSupported, hasGermanVoice } from './tts.js?v=20260819k';
-import { checkWriting } from './writing-check.js?v=20260819k';
-import { glossTerms } from './glossary.js?v=20260819k';
+import { LEVELS, loadLevel } from '../data/index.js?v=20260819m';
+import { el, renderExercise, renderExerciseSet } from './exercises.js?v=20260819m';
+import { speak, speakDialogue, stop as stopSpeech, ttsSupported, hasGermanVoice } from './tts.js?v=20260819m';
+import { checkWriting } from './writing-check.js?v=20260819m';
+import { glossTerms } from './glossary.js?v=20260819m';
 import {
   load as srsLoad, save as srsSave, stats as srsStats, isKnown as srsIsKnown,
   isDue as srsIsDue, boxOf as srsBox, promote as srsPromote, demote as srsDemote,
   cleanWord, buildQuiz as buildQuizData, quizableThemes,
   pickForWriting, containsWord, knownCount,
   loadStars, toggleStar, wordStatus, whenBack, schedule,
-} from './vocab-srs.js?v=20260819k';
-import * as prog from './progress.js?v=20260819k';
-import { renderExam } from './exam.js?v=20260819k';
-import { EXAM, PART_META } from '../data/exam.js?v=20260819k';
-import { buildIndex, search as runSearch, snippet, TYPE_LABEL } from './search.js?v=20260819k';
+} from './vocab-srs.js?v=20260819m';
+import * as prog from './progress.js?v=20260819m';
+import { renderExam } from './exam.js?v=20260819m';
+import { EXAM, PART_META } from '../data/exam.js?v=20260819m';
+import { buildIndex, search as runSearch, snippet, TYPE_LABEL } from './search.js?v=20260819m';
 
 const main = document.getElementById('main');
 

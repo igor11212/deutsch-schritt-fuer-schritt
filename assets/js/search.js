@@ -3,7 +3,7 @@
    Індекс будується один раз при першому пошуку — для цього доводиться
    довантажити всі п'ять рівнів, тому робимо це на вимогу, а не на старті. */
 
-import { LEVELS, loadLevel } from '../data/index.js?v=20260819k';
+import { LEVELS, loadLevel } from '../data/index.js?v=20260819m';
 
 const NO_UMLAUT = { ä: 'a', ö: 'o', ü: 'u', ß: 's' };
 
